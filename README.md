@@ -1,7 +1,11 @@
 # js-spielplatz
 # ######################################################################
-node -version: v12.16.1  
+<b>Anforderung:</b>
+Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)  
+Online/Offline APP (IndexedDb)  
 
+node -version: v12.16.1  
+  
 folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:  
 npm install --save xml2json  
 npm install --save xml-js  
@@ -29,7 +33,7 @@ Module -> Clientside Javascript
 
 oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)  
 test.html -> Startet Test APP (Serverseitig -> note_js/test)  
-  
+
 # ######################################################################
 node_js -> Serverside Javascript  
 
