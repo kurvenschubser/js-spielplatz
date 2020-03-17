@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- f_sprache constructor(id,name,desc,date,edit)-->
+<DB v="1">
+<lst_f_sprache>
+	<f_sprache id='1' >
+		<name>C#</name>
+		<desc>Programmiersprache C# auf der .NET-Plattform</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sprache>
+	<f_sprache id='2' >
+		<name>Javascript</name>
+		<desc>Skriptsprache für Webseiten</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sprache>
+	<f_sprache id='3' >
+		<name>SQL</name>
+		<desc>Programmiersprache für Datenbanken</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sprache>
+</lst_f_sprache>
+</DB>

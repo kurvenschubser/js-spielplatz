@@ -1,0 +1,116 @@
+{
+  "f_sprache": [
+    {
+      "id": 15,
+      "bez": "Crystalreport",
+      "beschr": ".rpt",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 1,
+      "bez": "CSharp",
+      "beschr": ".cs",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 17,
+      "bez": "Excel",
+      "beschr": ".xslt",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 3,
+      "bez": "FSharp",
+      "beschr": ".fs",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 7,
+      "bez": "Html",
+      "beschr": ".html",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 19,
+      "bez": "Javascript",
+      "beschr": ".js",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 4,
+      "bez": "MSSQL",
+      "beschr": ".sql",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 5,
+      "bez": "MYSQL",
+      "beschr": ".sql",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 8,
+      "bez": "Php",
+      "beschr": ".php",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 14,
+      "bez": "Regular Expression",
+      "beschr": ".req",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 2,
+      "bez": "VB",
+      "beschr": ".vb",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 16,
+      "bez": "VBA",
+      "beschr": ".vba",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 13,
+      "bez": "Windows",
+      "beschr": ".bat",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 18,
+      "bez": "Word",
+      "beschr": ".docx",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 11,
+      "bez": "WPF",
+      "beschr": ".xaml",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 9,
+      "bez": "Xml",
+      "beschr": ".xml",
+      "datum": "1583020800",
+      "edit": "1583020800"
+    }
+  ]
+}

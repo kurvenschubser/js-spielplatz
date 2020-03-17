@@ -1,0 +1,116 @@
+{
+  "f_eigenschaften": [
+    {
+      "id": 6,
+      "name": "Anz",
+      "beschreibung": "",
+      "farbe": "255,120,79,255",
+      "sortfield": 7
+    },
+    {
+      "id": 8,
+      "name": "Dauer",
+      "beschreibung": "min",
+      "farbe": "255,115,15,107",
+      "sortfield": 13
+    },
+    {
+      "id": 11,
+      "name": "Endpuls",
+      "beschreibung": "",
+      "farbe": "255,205,79,57",
+      "sortfield": 16
+    },
+    {
+      "id": 4,
+      "name": "Geschw",
+      "beschreibung": "km/h",
+      "farbe": "255,0,134,139",
+      "sortfield": 17
+    },
+    {
+      "id": 15,
+      "name": "Gewichte_Dyn",
+      "beschreibung": "kilo",
+      "farbe": "255,154,15,206",
+      "sortfield": 6
+    },
+    {
+      "id": 1,
+      "name": "Kg",
+      "beschreibung": "kilo",
+      "farbe": "255,255,0,128",
+      "sortfield": 5
+    },
+    {
+      "id": 2,
+      "name": "Leistung",
+      "beschreibung": "watt",
+      "farbe": "255,255,0,255",
+      "sortfield": 9
+    },
+    {
+      "id": 14,
+      "name": "Leistung bis",
+      "beschreibung": "watt",
+      "farbe": "236,145,33,12",
+      "sortfield": 10
+    },
+    {
+      "id": 10,
+      "name": "Startpuls",
+      "beschreibung": "",
+      "farbe": "255,113,198,113",
+      "sortfield": 15
+    },
+    {
+      "id": 3,
+      "name": "Steigung",
+      "beschreibung": "",
+      "farbe": "255,179,170,60",
+      "sortfield": 12
+    },
+    {
+      "id": 9,
+      "name": "Strecke",
+      "beschreibung": "km",
+      "farbe": "255,255,97,3",
+      "sortfield": 14
+    },
+    {
+      "id": 5,
+      "name": "Stufe",
+      "beschreibung": "",
+      "farbe": "255,242,0,0",
+      "sortfield": 11
+    },
+    {
+      "id": 7,
+      "name": "Wdh",
+      "beschreibung": "",
+      "farbe": "255,100,0,0",
+      "sortfield": 8
+    },
+    {
+      "id": 27,
+      "name": "Z1",
+      "beschreibung": "hin",
+      "farbe": "255,115,15,107",
+      "sortfield": 18
+    },
+    {
+      "id": 30,
+      "name": "Z2",
+      "beschreibung": "halten",
+      "farbe": "255,115,15,117",
+      "sortfield": 19
+    },
+    {
+      "id": 31,
+      "name": "Z3",
+      "beschreibung": "zurück",
+      "farbe": "255,115,15,127",
+      "sortfield": 20
+    }
+  ]
+}

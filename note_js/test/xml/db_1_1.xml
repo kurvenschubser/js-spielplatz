@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- //f_sub_thema constructor(id,name,desc,spr,date,edit)-->
+<DB v="1">
+<lst_f_sub_thema>
+	<f_sub_thema id='1'>
+		<name>Dateien</name>
+		<desc>C# Dateihandling</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sub_thema>
+	<f_sub_thema id='2'>
+		<name>System</name>
+		<desc>SQL Datenbank Verwaltung</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sub_thema>
+	<f_sub_thema id='3'>
+		<name>Linq</name>
+		<desc>Abfragen</desc>	
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_sub_thema>
+</lst_f_sub_thema>
+</DB>

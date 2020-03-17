@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DB v="1">
+<lst_f_eigenschaft>
+	<f_eigenschaft id='1' sort='5' >
+		<name>Dauer</name>
+		<desc>Minuten</desc>	
+		<farbe r="255" g="115" b="15"/>
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>
+	</f_eigenschaft>
+	<f_eigenschaft id='8' sort='13' >
+		<name>Kg</name>
+		<desc>Kilogramm</desc>	
+		<farbe r="255" g="255" b="0"/>
+		<date>1582641949849</date>
+	<edit>1582641949849</edit>
+	</f_eigenschaft>
+</lst_f_eigenschaft>
+</DB>

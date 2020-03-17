@@ -1,0 +1,459 @@
+{
+  "f_geraete": [
+    {
+      "id": 62,
+      "name": "Balancebord",
+      "beschreibung": "Wackelbrett für Gleichgewicht",
+      "art": 2,
+      "bild": "balancebord.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Bauchtrainer",
+      "beschreibung": "Bauchtrainer",
+      "art": 1,
+      "bild": "bauchtrainer.jpg"
+    },
+    {
+      "id": 33,
+      "name": "Bauchwippe",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Bauchwippe.jpg"
+    },
+    {
+      "id": 37,
+      "name": "Beinbeuger",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Beinbeuger.jpg"
+    },
+    {
+      "id": 23,
+      "name": "Beine aussen",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "BeineAussen.gif"
+    },
+    {
+      "id": 24,
+      "name": "Beine innen",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "BeineInnen.gif"
+    },
+    {
+      "id": 9,
+      "name": "Beinpresse",
+      "beschreibung": "Beinpresse",
+      "art": 1,
+      "bild": "beinpresse.jpg"
+    },
+    {
+      "id": 38,
+      "name": "Beinstrecker",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Beinstrecker.jpg"
+    },
+    {
+      "id": 25,
+      "name": "Bizep Maschine",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "BizepMaschine.gif"
+    },
+    {
+      "id": 59,
+      "name": "Boldergriffe",
+      "beschreibung": "Boldergriffe",
+      "art": 2,
+      "bild": "boldergriffe.jpg"
+    },
+    {
+      "id": 56,
+      "name": "Brustpresse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Brustpresse.jpg"
+    },
+    {
+      "id": 47,
+      "name": "Butterfly",
+      "beschreibung": "Butterfly",
+      "art": 1,
+      "bild": "Butterfly_Geraet.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Butterfly 90 Grad",
+      "beschreibung": "Butterfly",
+      "art": 1,
+      "bild": "buterfly90_Geraet.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Crosstrainer",
+      "beschreibung": "Crosstrainer",
+      "art": 2,
+      "bild": "crosstrainer.jpg"
+    },
+    {
+      "id": 26,
+      "name": "Crunshes",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Crunshes.gif"
+    },
+    {
+      "id": 65,
+      "name": "Elevate Core",
+      "beschreibung": "",
+      "art": 1,
+      "bild": "elevate_core.jpg"
+    },
+    {
+      "id": 66,
+      "name": "Elevate Jump",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "elevate_jump.jpg"
+    },
+    {
+      "id": 64,
+      "name": "Elevate Press",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "elevate_presse.jpg"
+    },
+    {
+      "id": 68,
+      "name": "Elevate Pullup",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "elevate_pullup.jpg"
+    },
+    {
+      "id": 67,
+      "name": "Elevate Row",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "elevate_row.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Fahrad",
+      "beschreibung": "Fahrad",
+      "art": 2,
+      "bild": "fahrad.jpg"
+    },
+    {
+      "id": 69,
+      "name": "Flachbank",
+      "beschreibung": "",
+      "art": 1,
+      "bild": "flachbank.jpg"
+    },
+    {
+      "id": 41,
+      "name": "Hantelscheibe",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "seildrehen.jpg"
+    },
+    {
+      "id": 43,
+      "name": "Hüftbeuger",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Hueftbeuger.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Kurzhantel",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Kurzhantel.jpg"
+    },
+    {
+      "id": 42,
+      "name": "Langhantel",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "langhantel.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Laufband",
+      "beschreibung": "Laufband",
+      "art": 2,
+      "bild": "laufband.jpg"
+    },
+    {
+      "id": 61,
+      "name": "Liegestüzgriffe",
+      "beschreibung": "Griffe für Liegestüze",
+      "art": 1,
+      "bild": "liegestuez_Griffe.jpg"
+    },
+    {
+      "id": 15,
+      "name": "Milon Bauchtrainer",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Bauchtrainer.jpg"
+    },
+    {
+      "id": 16,
+      "name": "Milon Beinbeuger",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Beinbeuger.jpg"
+    },
+    {
+      "id": 51,
+      "name": "Milon Beine außen",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_beineAußen.jpg"
+    },
+    {
+      "id": 50,
+      "name": "Milon Beine innen",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_BeineInnen.jpg"
+    },
+    {
+      "id": 52,
+      "name": "Milon Beinpresse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Beinpresse.jpg"
+    },
+    {
+      "id": 17,
+      "name": "Milon Beinstrecker",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Beinstrecker.jpg"
+    },
+    {
+      "id": 14,
+      "name": "Milon Brustpresse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Bankdruecken.jpg"
+    },
+    {
+      "id": 54,
+      "name": "Milon Butterfly",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Butterfly.jpg"
+    },
+    {
+      "id": 53,
+      "name": "Milon Butterfly Reverse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_ButterflyReverse.jpg"
+    },
+    {
+      "id": 13,
+      "name": "Milon Crosswalker",
+      "beschreibung": "-",
+      "art": 2,
+      "bild": "Milon_Crosswalker.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Milon Fahrad",
+      "beschreibung": "-",
+      "art": 2,
+      "bild": "Milon_Bike.jpg"
+    },
+    {
+      "id": 48,
+      "name": "Milon Latzug",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Latzug.jpg"
+    },
+    {
+      "id": 19,
+      "name": "Milon Rückenstrecker",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Rueckentrainer.jpg"
+    },
+    {
+      "id": 18,
+      "name": "Milon Rudern",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Rudern.jpg"
+    },
+    {
+      "id": 49,
+      "name": "Milon Schulterpresse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Milon_Schulterpresse.jpg"
+    },
+    {
+      "id": 22,
+      "name": "Multipresse",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Multipresse.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Nackenzug",
+      "beschreibung": "Nackenzug",
+      "art": 1,
+      "bild": "nackenzug.jpg"
+    },
+    {
+      "id": 46,
+      "name": "Po-Trainer",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "poGeraet.jpg"
+    },
+    {
+      "id": 60,
+      "name": "Rotationsmaschine seitlicher Bauch",
+      "beschreibung": "seitliche Rumpfmuskulatur",
+      "art": 1,
+      "bild": "rotationsmaschine.jpg"
+    },
+    {
+      "id": 27,
+      "name": "Rückenstrecker",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "rueckenstrecker.gif"
+    },
+    {
+      "id": 36,
+      "name": "Rückenstreckermaschine",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Rueckenstrecker.jpg"
+    },
+    {
+      "id": 30,
+      "name": "Rudergerät",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Rudern.gif"
+    },
+    {
+      "id": 1,
+      "name": "Rudergerät",
+      "beschreibung": "Rudergerät",
+      "art": 2,
+      "bild": "rudegerät.jpg"
+    },
+    {
+      "id": 31,
+      "name": "Rudern",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Rudern.gif"
+    },
+    {
+      "id": 55,
+      "name": "Schulterprese",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Schulterpresse.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Seilzug",
+      "beschreibung": "Seilzug",
+      "art": 1,
+      "bild": "seilzug.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Seitheben",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Seitheben.jpg"
+    },
+    {
+      "id": 28,
+      "name": "Seitlicherbauch",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "SeitlicherBauch.gif"
+    },
+    {
+      "id": 34,
+      "name": "Situp",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "Situps.jpg"
+    },
+    {
+      "id": 35,
+      "name": "SZ_Hantel",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "szHantel.jpg"
+    },
+    {
+      "id": 40,
+      "name": "Terraband",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "terraband.jpg"
+    },
+    {
+      "id": 45,
+      "name": "Trizepmaschine",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "trizepmaschineGeraet.jpg"
+    },
+    {
+      "id": 57,
+      "name": "TRX",
+      "beschreibung": "Schlingentrainig",
+      "art": 1,
+      "bild": "TRX.JPG"
+    },
+    {
+      "id": 39,
+      "name": "Unterbauch-Bank",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "UntererBauch.jpg"
+    },
+    {
+      "id": 29,
+      "name": "Wade",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "wade.jpg"
+    },
+    {
+      "id": 32,
+      "name": "Wadenmaschine",
+      "beschreibung": "-",
+      "art": 1,
+      "bild": "wade.jpg"
+    },
+    {
+      "id": 63,
+      "name": "WII",
+      "beschreibung": "WII",
+      "art": 2,
+      "bild": "wii_fit.jpg"
+    }
+  ]
+}

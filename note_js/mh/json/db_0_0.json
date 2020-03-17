@@ -1,0 +1,14 @@
+{
+  "f_arten": [
+    {
+      "id": 2,
+      "name": "Cardio",
+      "beschreibung": "Ausdauer Sport"
+    },
+    {
+      "id": 1,
+      "name": "Kraft",
+      "beschreibung": "Kraftsport Muskelaufbau"
+    }
+  ]
+}

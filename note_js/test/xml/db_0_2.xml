@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DB v="1">
+<lst_f_geraete>
+	<f_geraete id='7' art='1' >
+		<name>Seilzug</name>
+		<desc>Seilzugbeschreibung</desc>	
+		<bild>seilzug.jpg</bild>
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>		
+	</f_geraete>
+	<f_geraete id='41' art='2' >
+		<name>Langhantel</name>
+		<desc>-</desc>	
+		<bild>langhantel.jpg</bild>
+		<date>1582641949849</date>
+		<edit>1582641949849</edit>		
+	</f_geraete>
+</lst_f_geraete>
+</DB>

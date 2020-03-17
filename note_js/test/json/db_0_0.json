@@ -1,0 +1,44 @@
+{
+  "f_arten": [
+    {
+      "id": 2,
+      "name": "update test",
+      "beschreibung": "update test beschreibung"
+    },
+    {
+      "id": 1,
+      "name": "Kraft",
+      "beschreibung": "Kraftsport Muskelaufbau"
+    },
+    {
+      "id": 24,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    },
+    {
+      "id": 25,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    },
+    {
+      "id": 26,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    },
+    {
+      "id": 27,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    },
+    {
+      "id": 28,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    },
+    {
+      "id": 29,
+      "name": "test",
+      "beschreibung": "test beschreibung"
+    }
+  ]
+}

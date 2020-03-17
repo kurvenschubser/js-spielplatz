@@ -1,0 +1,130 @@
+{
+  "f_sub_thema": [
+    {
+      "id": 18,
+      "sub_desc": "-",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 19,
+      "sub_desc": "-",
+      "spr": 15,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 15,
+      "sub_desc": "Crystal x32 x64",
+      "spr": 11,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 1,
+      "sub_desc": "Dateien",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 12,
+      "sub_desc": "Datenbank abfragen",
+      "spr": 4,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 8,
+      "sub_desc": "Datenbank in c#",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 2,
+      "sub_desc": "Datenbank System",
+      "spr": 4,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 4,
+      "sub_desc": "Datenbank System Funktionen",
+      "spr": 5,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 20,
+      "sub_desc": "Excell VBA",
+      "spr": 16,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 11,
+      "sub_desc": "FSharp",
+      "spr": 3,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 9,
+      "sub_desc": "Linq Abfragen",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 10,
+      "sub_desc": "Office 2003",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 16,
+      "sub_desc": "Pattern für Reguläre Ausdrücke",
+      "spr": 14,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 13,
+      "sub_desc": "System",
+      "spr": 13,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 14,
+      "sub_desc": "The Ribbon",
+      "spr": 11,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 6,
+      "sub_desc": "Visual Studio",
+      "spr": 1,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 17,
+      "sub_desc": "WPF Dateihandling",
+      "spr": 11,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    },
+    {
+      "id": 7,
+      "sub_desc": "WPF Oberfläche",
+      "spr": 11,
+      "datum": "1583020800",
+      "edit": "1583020800"
+    }
+  ]
+}
