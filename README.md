@@ -14,22 +14,22 @@ Module -> Clientside Javascript
   img -> Bilder für Fitness-Übungsgeräte  
   lib -> Javascript Dateien  
 
-      lib_0 -> Javascript Dateien für Fitness APP  
-        ctrl.js -> Steuerung  
-        daoXXX.js -> Speicherzpezifische Datenschnittstellen  
-        domain -> Geschäftsmodel  
+    lib_0 -> Javascript Dateien für Fitness APP  
+    ctrl.js -> Steuerung  
+    daoXXX.js -> Speicherzpezifische Datenschnittstellen  
+    domain -> Geschäftsmodel  
 
-      lib_1 -> Javascript Dateien für Programierhilfe APP  
-        siehe lib_0  
+    lib_1 -> Javascript Dateien für Programierhilfe APP  
+    siehe lib_0  
 
-      hlp.js -> Hilfe Funktionen  
-      init.js -> Inizialisiert die Anwendung  
-      view.js -> erzeugt die Darstellung  
-      view_h.js -> Hilfe Funktionen für die Darstellung  
+    hlp.js -> Hilfe Funktionen  
+    init.js -> Inizialisiert die Anwendung  
+    view.js -> erzeugt die Darstellung  
+    view_h.js -> Hilfe Funktionen für die Darstellung  
 
-  oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)  
-  test.html -> Startet Test APP (Serverseitig -> note_js/test)  
-
+oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)  
+test.html -> Startet Test APP (Serverseitig -> note_js/test)  
+  
 # ######################################################################
 node_js -> Serverside Javascript  
 
