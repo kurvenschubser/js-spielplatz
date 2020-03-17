@@ -11,17 +11,18 @@ Online/Offline APP (IndexedDb)</P>
 </p>
 <p>--------------------------------------------------------------------------<p/>
 <p><b>Module</b> -> Clientside Javascript<br/>
+  <p style="tab-size:30;-moz-tab-size:30;-ms-tab-size:30">
   CSS -> css Datei<br/>
   img -> Bilder für Fitness-Übungsgeräte<br/>
   lib -> Javascript Dateien<br/>
   <br/>
-  lib_0 -> Javascript Dateien für Fitness APP<br/>
-  ctrl.js -> Steuerung<br/>
-  daoXXX.js -> Speicherzpezifische Datenschnittstellen<br/>
-  domain -> Geschäftsmodel<br/>
+    lib_0 -> Javascript Dateien für Fitness APP<br/>
+    ctrl.js -> Steuerung<br/>
+    daoXXX.js -> Speicherzpezifische Datenschnittstellen<br/>
+    domain -> Geschäftsmodel<br/>
   <br/>
-  lib_1 -> Javascript Dateien für Programierhilfe APP<br/>
-  siehe lib_0<br/>
+    lib_1 -> Javascript Dateien für Programierhilfe APP<br/>
+    siehe lib_0<br/>
   <br/>
   hlp.js -> Hilfe Funktionen<br/>
   init.js -> Inizialisiert die Anwendung<br/>
@@ -30,19 +31,20 @@ Online/Offline APP (IndexedDb)</P>
   <br/>
   oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)<br/>
   test.html -> Startet Test APP (Serverseitig -> note_js/test)<br/>
+  </p>
 </p>
 <p>--------------------------------------------------------------------------<p/>
 <p><b>node_js</b> -> Serverside Javascript<br/>
   mh -> Fitness oder Programierhilfe APP<br/>
-  dao -> Datenschnitstellen<br/>
-  hlp -> Hilfe Funktionen<br/>
-  json -> lowDb Dateien<br/>
-  xml -> XML Dateien<br/>
-  mh.js -> Startet Fitness oder Programierhilfe APP<br/>
+    dao -> Datenschnitstellen<br/>
+    hlp -> Hilfe Funktionen<br/>
+    json -> lowDb Dateien<br/>
+    xml -> XML Dateien<br/>
+    mh.js -> Startet Fitness oder Programierhilfe APP<br/>
   <br/>
   test -> Test APP<br/>
-  dao -> Datenschnittstellen<br/>
-  json -> lowDb Dateien<br/>
-  xml -> XML Dateien<br/>
-  test.js -> Startet Test APP
+    dao -> Datenschnittstellen<br/>
+    json -> lowDb Dateien<br/>
+    xml -> XML Dateien<br/>
+    test.js -> Startet Test APP
 </p>
