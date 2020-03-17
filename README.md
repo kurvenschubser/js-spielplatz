@@ -1,48 +1,51 @@
 # js-spielplatz
-<p>--------------------------------------------------------------------------<p/>
-<p><b>Anforderung:</b><br/>
-Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)<br/>
-Online/Offline APP (IndexedDb)</P>
-<p><b>node -version:</b> v12.16.1 </p>
-<p><b>folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:</b><br/>
-    npm install --save xml2json<br/>
-    npm install --save xml-js<br/>
-    npm install --save mssql<br/>
-</p>
-<p>--------------------------------------------------------------------------<p/>
-<p><b>Module</b> -> Clientside Javascript<br/></p>
-    <p>CSS -> css Datei<br/>
-    img -> Bilder für Fitness-Übungsgeräte<br/>
-    lib -> Javascript Dateien<br/>
-<br/>
-      lib_0 -> Javascript Dateien für Fitness APP<br/>
-        ctrl.js -> Steuerung<br/>
-        daoXXX.js -> Speicherzpezifische Datenschnittstellen<br/>
-        domain -> Geschäftsmodel<br/>
-<br/>
-      lib_1 -> Javascript Dateien für Programierhilfe APP<br/>
-        siehe lib_0<br/>
-<br/>
-    hlp.js -> Hilfe Funktionen<br/>
-    init.js -> Inizialisiert die Anwendung<br/>
-    view.js -> erzeugt die Darstellung<br/>
-    view_h.js -> Hilfe Funktionen für die Darstellung<br/>
-<br/>
-    oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)<br/>
-    test.html -> Startet Test APP (Serverseitig -> note_js/test)<br/>
-</p>
-<p>--------------------------------------------------------------------------<p/>
-<p><b>node_js</b> -> Serverside Javascript</p>
-<p><b>mh</b> -> Fitness oder Programierhilfe APP<br/>
-        dao -> Datenschnitstellen<br/>
-        hlp -> Hilfe Funktionen<br/>
-        json -> lowDb Dateien<br/>
-        xml -> XML Dateien<br/>
-        mh.js -> Startet Fitness oder Programierhilfe APP<br/>
-<br/>
-    <b>test</b> -> Test APP<br/>
-        dao -> Datenschnittstellen<br/>
-        json -> lowDb Dateien<br/>
-        xml -> XML Dateien<br/>
-        test.js -> Startet Test APP
-</p>
+--------------------------------------------------------------------------  
+
+**Anforderung:**  
+Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)  
+Online/Offline APP
+
+**node -version:** v12.16.1  
+
+folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:  
+    $ npm install --save xml2json
+    $ npm install --save xml-js
+    $ npm install --save mssql  
+
+
+--------------------------------------------------------------------------  
+
+* **Module** -> Clientside Javascript<br/>  
+    * CSS -> css Datei    
+    * img -> Bilder für Fitness-Übungsgeräte    
+    * lib -> Javascript Dateien    
+        * lib_0 -> Javascript Dateien für Fitness APP  
+            * ctrl.js -> Steuerung  
+            * daoXXX.js -> Speicherzpezifische Datenschnittstellen  
+            * domain -> Geschäftsmodel  
+
+        * lib_1 -> Javascript Dateien für Programierhilfe APP  
+            * siehe lib_0  
+
+        * hlp.js -> Hilfe Funktionen  
+        * init.js -> Inizialisiert die Anwendung  
+        * view.js -> erzeugt die Darstellung  
+        * view_h.js -> Hilfe Funktionen für die Darstellung  
+
+    * oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)  
+    * test.html -> Startet Test APP (Serverseitig -> note_js/test)  
+
+
+* **node_js** -> Serverside Javascript  
+    * mh -> Fitness oder Programierhilfe APP  
+        * dao -> Datenschnitstellen  
+        * hlp -> Hilfe Funktionen  
+        * json -> lowDb Dateien  
+        * xml -> XML Dateien  
+        * mh.js -> Startet Fitness oder Programierhilfe APP  
+
+    * test -> Test APP  
+        * dao -> Datenschnittstellen<br/>
+        * json -> lowDb Dateien<br/>
+        * xml -> XML Dateien<br/>
+        * test.js -> Startet Test APP
