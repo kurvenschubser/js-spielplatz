@@ -1,0 +1,94 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><title>MH Test Node</title>
+  <style>
+#wait {display:none;position:absolute;top:0px;lef:0px;width:100%;height:100%;background:#ddd;zIndex = 1000;line-height:500px;vertical-align:center;text-align:center;font-size:25pt}
+</style>
+</head>
+<body style="text-align:center;" id="body">
+    <button onclick="getData(0)">Get</button>
+    <button onclick="getData(1)">Insert</button>
+    <button onclick="getData(2)">Update</button>
+    <button onclick="getData(3)">Delete</button>
+    <p class="result"></p>
+    <div id="wait"><b>warte auf Server...</b></div>
+  <script>
+    let lst=[];
+    async function data(x){
+      return new Promise(function(resolve,reject){
+        //let result;
+          let xhr = new XMLHttpRequest();
+          let url = `http://localhost:8889/?p=0&s=4&a=0&ac=${x}`;
+          if(x===0){
+              xhr.open("GET", url, true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+          }
+          else{
+              xhr.open("POST", url, true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+          }
+          xhr.onreadystatechange = function () {
+            console.log(`Ready: ${xhr.readyState} Status: ${xhr.status}`);
+              //xhr.status =0 UNSENT/OPENED
+              //xhr.status =200 LOADING/DONE
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve(this.responseText);
+              }
+              else if(xhr.status != 200){
+                reject(new URIError(`Ready: ${xhr.readyState} Status: ${xhr.status}\r\nDie Abfrage ist fehlgeschlagen`));
+              }
+          };
+          var data =[]
+          if(x===1){
+              //insert
+              data =JSON.stringify([
+                  {id:0,name:'test',beschreibung:'test beschreibung'}
+              ])
+          }
+          else if(x===2){
+              //update
+              data =JSON.stringify([
+                  {id:2,name:'update test',beschreibung:'update test beschreibung'}
+              ])
+          }
+          else if(x===3){
+              //delete
+              data =JSON.stringify([{id:30}])
+          }
+          xhr.send(data);
+      });//ende promise
+    }
+    let getData=(x)=>{
+      let resdiv = document.querySelector('.result');
+      try {
+        setWait(true);
+        data(x).then(res=>{
+          resdiv.innerHTML=res;
+          setWait(false);
+        },reject=>{
+          resdiv.innerHTML=reject;
+          setWait(false);
+        });
+  		}
+  		catch (e) {resdiv.innerHTML=e}
+  	}
+    function setWait(a){
+  		document.getElementById("wait").style.display=(a==true?'block':'none');
+  	}
+
+    /*
+    //Fehler Arten
+    let getError=(err)=>{
+  		if(err instanceof EvalError){}
+  		else if(err instanceof EvalError){}
+  		else if(err instanceof InternalError){}
+  		else if(err instanceof ReferenceError){}
+  		else if(err instanceof SyntaxError){}
+  		else if(err instanceof TypeError){}
+  		else if(err instanceof URIError){}
+  		else{}
+  		return err
+  	}
+    */
+
+    </script>
+  </body>
+</html>
