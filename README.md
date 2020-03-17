@@ -1,2 +1,3 @@
 # js-spielplatz
-Javascript Übungsplatform 
+Javascript Übungsplatform
+1.) Test Promise
