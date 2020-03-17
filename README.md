@@ -7,11 +7,10 @@ Online/Offline APP
 
 **node -version:** v12.16.1  
 
-folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:  
-    $ npm install --save xml2json
-    $ npm install --save xml-js
-    $ npm install --save mssql  
-
+**folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:**  
+`$ npm install --save xml2json`  
+`$ npm install --save xml-js`  
+`$ npm install --save mssql`    
 
 --------------------------------------------------------------------------  
 
@@ -35,6 +34,7 @@ folgende Erweiterungen müssen für die Anwendungen mh und test installiert werd
     * oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/mh)  
     * test.html -> Startet Test APP (Serverseitig -> note_js/test)  
 
+--------------------------------------------------------------------------  
 
 * **node_js** -> Serverside Javascript  
     * mh -> Fitness oder Programierhilfe APP  
