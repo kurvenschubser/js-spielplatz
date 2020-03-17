@@ -1,18 +1,17 @@
 # js-spielplatz
 # ######################################################################
-<b>Anforderung:</b>
-Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)  
-Online/Offline APP (IndexedDb)  
+<p><b>Anforderung:</b><br/>
+Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)<br/>
+Online/Offline APP (IndexedDb)</P>
+<p><b>node -version:</b> v12.16.1 </p>
 
-node -version: v12.16.1  
-  
-folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:  
-npm install --save xml2json  
-npm install --save xml-js  
-npm install --save mssql  
-
+<b>folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:</b><br/>
+npm install --save xml2json<br/>
+npm install --save xml-js<br/>
+npm install --save mssql<br/>
+<br/>
 # ######################################################################
-Module -> Clientside Javascript  
+<b>Module</b> -> Clientside Javascript  
 
   CSS -> css Datei  
   img -> Bilder für Fitness-Übungsgeräte  
@@ -35,7 +34,7 @@ oop.html -> Startet Fitness oder Programierhilfe APP  (Serverseitig -> note_js/m
 test.html -> Startet Test APP (Serverseitig -> note_js/test)  
 
 # ######################################################################
-node_js -> Serverside Javascript  
+<b>node_js</b> -> Serverside Javascript  
 
   mh -> Fitness oder Programierhilfe APP  
     dao -> Datenschnitstellen  
