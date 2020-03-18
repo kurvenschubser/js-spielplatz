@@ -2,19 +2,24 @@
 --------------------------------------------------------------------------  
 
 **Anforderung:**  
-Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)  
-Online/Offline APP
+* Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)
+* Datenbindung an MSSQL, MySql, Xml oder LowDb  
+* Online/Offline mit indexedDB  
+* ECMA6 Standard  
 
-**node -version:** v12.16.1  
+**Serverseitige wird Note für die Datenlieferung verwendet**  
+**Node Version:** v12.16.1  
 
 **folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:**  
 `$ npm install --save xml2json`  
 `$ npm install --save xml-js`  
 `$ npm install --save mssql`    
+`$ npm install lowdb`  
+`$ npm install http`  
 
 --------------------------------------------------------------------------  
 
-* **Module** -> Clientside Javascript<br/>  
+* **Module** -> Client Javascript    
     * CSS -> css Datei    
     * img -> Bilder für Fitness-Übungsgeräte    
     * lib -> Javascript Dateien    
@@ -36,8 +41,8 @@ Online/Offline APP
 
 --------------------------------------------------------------------------  
 
-* **node_js** -> Serverside Javascript  
-    * mh -> Fitness oder Programierhilfe APP  
+* **node_js** -> Server Javascript  
+    * mh -> Fitness oder Programierhilfe Server  
         * dao -> Datenschnitstellen  
         * hlp -> Hilfe Funktionen  
         * json -> lowDb Dateien  
@@ -45,7 +50,7 @@ Online/Offline APP
         * mh.js -> Startet Fitness oder Programierhilfe APP  
 
     * test -> Test APP  
-        * dao -> Datenschnittstellen<br/>
-        * json -> lowDb Dateien<br/>
-        * xml -> XML Dateien<br/>
-        * test.js -> Startet Test APP
+        * dao -> Datenschnittstellen  
+        * json -> lowDb Dateien  
+        * xml -> XML Dateien  
+        * test.js -> Startet Test APP  
