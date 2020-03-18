@@ -8,14 +8,14 @@
 * ECMA6 Standard  
 
 **Serverseitige wird Note für die Datenlieferung verwendet**  
-**Node Version:** v12.16.1  
+Node Version: v12.16.1  
 
 **folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:**  
 `$ npm install --save xml2json`  
 `$ npm install --save xml-js`  
 `$ npm install --save mssql`    
-`$ npm install lowdb`  
-`$ npm install http`  
+`$ npm install --save lowdb`  
+`$ npm install --save http`  
 
 --------------------------------------------------------------------------  
 
@@ -42,15 +42,15 @@
 --------------------------------------------------------------------------  
 
 * **node_js** -> Server Javascript  
-    * mh -> Fitness oder Programierhilfe Server  
+    * mh -> Fitness und Programierhilfe Server  
         * dao -> Datenschnitstellen  
         * hlp -> Hilfe Funktionen  
         * json -> lowDb Dateien  
         * xml -> XML Dateien  
-        * mh.js -> Startet Fitness oder Programierhilfe APP  
+        * mh.js -> Startet Fitness und Programierhilfe Server  
 
     * test -> Test APP  
         * dao -> Datenschnittstellen  
         * json -> lowDb Dateien  
         * xml -> XML Dateien  
-        * test.js -> Startet Test APP  
+        * test.js -> Startet Test Server  
