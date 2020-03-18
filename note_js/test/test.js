@@ -119,7 +119,6 @@ http.createServer(function (req, res) {
 					let val=ms.ldbDao.getData(p,a);
 					setTimeout(() => resolve(val), 1000);
 				}).then(val=>{
-					//console.log(val);
 					res.write(val?val:'object is null')
 					res.end()
 				})

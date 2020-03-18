@@ -5,121 +5,142 @@ Fitness Stammdaten DAO
 let dao=(function(){
 	let artDao=(function(){
 		let lst=[];
-		async function fillLst(){
-			return fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
-				function(response) {
-					response.text().then(function(text) {
-							if(text.startsWith("<p><b>ACHTUNG")){
-								cont.setError(text);
-								return '';
-							}
-							if(text==='') return;
-							let doc=JSON.parse(text);
-							let ge =null;
-							for (let val of JSON.parse(doc)) {
-								ge = new dom.f_arten(val.id,val.name,val.beschreibung);
-								lst.push(ge);
-							}
-							return 'response done';
-						})//ende response.then
-				}//ende function (response)
-				//return 'fetch done';
-			)//ende fetch.then
-		}
-		let getList=()=>{
-			return new Promise((resolve, reject) => {
-			if(lst===null || lst.length ==0){
-				view_h.setWait(true);
-				fillLst().then(result=>{
-					//console.log(lst);
-					setTimeout(() => view_h.setWait(false), 1000);
-					return lst;
-				});
-			}
-			else
-				return lst;
+		let fillLst=async()=>{
+			return new Promise((resolve,reject) => {
+				fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
+					function(response) {
+						response.text().then(function(text) {
+								if(text.startsWith("<p><b>ACHTUNG")){
+									cont.setError(text);
+									return '';
+								}
+								if(text==='') return;
+								let doc=JSON.parse(text);
+								let ge =null;
+								for (let val of JSON.parse(doc)) {
+									ge = new dom.f_arten(val.id,val.name,val.beschreibung);
+									lst.push(ge);
+								}
+								return lst;
+							})//ende response.then
+							return lst;
+					}//ende function (response)
+				)//ende fetch.then
+				resolve(lst);
 			});
 		}
-		let getById=(nr)=>{for (let key of dao.artDao.getList()) {
-			if(key.Id === parseInt(nr)){
-				return key;
-				break;
-			}
-		}}
+		let getList=async ()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					fillLst().then(result=>{
+						setTimeout(() => view_h.setWait(false), 1000);
+						resolve(result);
+					});
+				}
+				else {resolve(lst)}
+			});
+		}
+		let getById=async (nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				getList().then(result=>{
+					for (let key of result) {
+						if(key.Id === parseInt(nr)){
+							ret= key;
+							break;
+						}
+					}
+					return ret;
+				}).then(res=>{resolve(ret)});
+			});
+		}
 		let insert=async (m,p,s,a)=>{
 			let val = await data(m,p,s,a,1)
-			console.log(val)
+console.log(val)
 		}
 		let update=async (m,p,s,a)=>{
-			console.log(m,p,s,a)
 			let val = await data(m,p,s,a,2)
-			console.log(val)
+console.log(val)
 		}
 		let del=async (m,p,s,a)=>{
 			let val = await data(m,p,s,a,3)
-			console.log(val)
+console.log(val)
 		}
 		return {getList: getList,getById: getById,fillLst:fillLst,insert:insert,update:update,del:del};
 	})();
 	let egDao=(function(){
 		let lst=[];
-		async function fillLst(){
-			let promise = new Promise((resolve, reject) => {
+		let fillLst=async()=>{
+			return new Promise((resolve, reject) => {
 				fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
-				function(response) {
-				  response.text().then(function(text) {
-					if(text.startsWith("<p><b>ACHTUNG")){
-						cont.setError(text);
-						return;
-					}
-					if(text==='') return;
-					let doc=JSON.parse(text);
-					//Liste füllen
-					let ge =null;
-					for (let val of JSON.parse(doc)) {
-						let tmp=val.farbe.split(',');
-						let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
-							ge = new dom.f_eigenschaft(val.id,val.name,val.beschreibung,cl,val.sortfield);
-							lst.push(ge);
-					}
-				  },
-				  function(err){cont.setError(err)}
-				)});
+					function(response) {
+					  response.text().then(function(text) {
+							if(text.startsWith("<p><b>ACHTUNG")){
+								cont.setError(text);
+								return;
+							}
+							if(text==='') return;
+							let doc=JSON.parse(text);
+							//Liste füllen
+							let ge =null;
+							for (let val of JSON.parse(doc)) {
+								let tmp=val.farbe.split(',');
+								let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
+									ge = new dom.f_eigenschaft(val.id,val.name,val.beschreibung,cl,val.sortfield);
+									lst.push(ge);
+								}
+								return lst;
+							})//ende response.then
+							return lst;
+					}//ende function (response)
+				)//ende fetch.then
+				resolve(lst);
 			});
-			await promise;
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0){
-				(async () => {
-					let promise = new Promise((resolve, reject) => {
-						view_h.setWait(true);
-						fillLst();
-						setTimeout(() => resolve("done!"), 1000);
-						view_h.setWait(false);
+		let getList=async ()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					fillLst().then(result=>{
+						setTimeout(() => view_h.setWait(false), 1000);
+						resolve(result);
 					});
-					let result = await promise;
-				})();
-			}
-			else return lst;
+				}
+				else {resolve(lst)}
+			});
 		}
-		let getById=(nr)=>{for (let key of getList()) if(key.Id === parseInt(nr)){return key;break;}}
+		let getById=async (nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				getList().then(result=>{
+					for (let key of result) {
+						if(key.Id === parseInt(nr)){
+							ret= key;
+							break;
+						}
+					}
+					return ret;
+				}).then(res=>{resolve(ret)});
+			});
+		}
 		let insert=(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
-			console.log(val)
+console.log(val)
 		}
 		let update=(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
-			console.log(val)
+console.log(val)
 		}
 		let del=(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
-			console.log(val)
+console.log(val)
 		}
 		return {getList: getList,getById: getById,fillLst:fillLst,insert:insert,update:update,del:del};
 	})();
 	let gerDao=(function(){
 		let lst=[];
-		async function fillLst(){
+		let fillLst=async()=>{
 			let promise = new Promise((resolve, reject) => {
 				fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
 					function(response) {
@@ -135,44 +156,65 @@ let dao=(function(){
 							ge = new dom.f_geraete(val.id,val.name,val.beschreibung,val.art,val.bild);
 							lst.push(ge);
 						}
-					},
-					function(err){cont.setError(err)}
-				)});
-			});
-			await promise;
+						return lst;
+					})
+					return lst;
+				}
+			);
+			resolve(lst);
+		});
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0){
-				(async () => {
-					let promise = new Promise((resolve, reject) => {
-						view_h.setWait(true);
-						fillLst();
-						setTimeout(() => resolve("done!"), 1000);
-						view_h.setWait(false);
+		let getList=async ()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					fillLst().then(result=>{
+						setTimeout(() => view_h.setWait(false), 1000);
+						resolve(result);
 					});
-					let result = await promise;
-				})();
-			}
-			else return lst;
+				}
+				else {resolve(lst)}
+			});
+		}
+		let getById=async (nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				getList().then(result=>{
+					for (let key of result) {
+						if(key.Id === parseInt(nr)){
+							ret= key;
+							break;
+						}
+					}
+					return ret;
+				}).then(res=>{resolve(ret)});
+			});
 		}
 		let getLstByArt=(nr)=>{
-			let nLst=[];
-			for (let key of getList()) {if(key.Art === parseInt(nr))nLst.push(key)};
-			return nLst;
+			return new Promise((resolve, reject) => {
+				let nLst=[];
+				getList().then(result=>{
+					for (let key of lst) {
+						console.log('dao getById for ',key.Art,parseInt(nr));
+						if(key.Art === parseInt(nr))
+							nLst.push(key)
+					};
+					return nLst;
+				}).then(res=>{resolve(nLst)});
+			});
 		}
 		let insert=(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
-			console.log(val)
+console.log(val)
 		}
 		let update=(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
-			console.log(val)
+console.log(val)
 		}
 		let del=(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
-			console.log(val)
+console.log(val)
 		}
-		let getById=(nr)=>{for (let key of getList()) if(key.Id === parseInt(nr)){return key;break;}}
 		return {getList: getList,getById: getById,getLstByArt: getLstByArt,fillLst:fillLst,insert:insert,update:update,del:del};
 	})();
 	let data = (m,p,s,a,ac) => {

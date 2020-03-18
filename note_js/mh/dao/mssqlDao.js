@@ -1,7 +1,7 @@
 "use strict";
 exports.mssqlDao=(function(){
 	let getConf=(p)=>{
-		const config={user:'michi',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
+		const config={user:'michi',password:'wer',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
 		return config;
 	}
 	let getQueryStr=(p,a)=>{
@@ -26,9 +26,8 @@ exports.mssqlDao=(function(){
 		}
 		return val
 	}
-	let insert=async function(m,p,a){}
-	let update=async function(m,p,a){}
-	let del=async function(m,p,a){}
-
+	let insert=async (m,p,a)=>{}
+	let update=async (m,p,a)=>{}
+	let del=async (m,p,a)=>{}
 	return {insert:insert,update:update,del:del,getQueryStr:getQueryStr,getConf:getConf};
 })();

@@ -11,9 +11,9 @@ let cont =(function(){
 	let aktEntry;
 	let setError=(e)=>{
 		try {
-			view_h.clear_r();
-			document.getElementById('div_edit').style.visibility='hidden';
-			document.getElementById('right').insertAdjacentHTML('beforeend',`<p><b>${e}</b></p>`)
+			//view_h.clear_r();
+			//document.getElementById('div_edit').style.visibility='hidden';
+			//document.getElementById('right').insertAdjacentHTML('beforeend',`<p><b>${e}</b></p>`)
 			console.log(JSON.stringify(e));
 		}
 		catch (e){alert(e)}
@@ -22,21 +22,6 @@ let cont =(function(){
 		try {
 			viewer.createMain();
 			viewer.createMenu();
-			//view_h.setWait(true);
-/*
-			(async () => {
-				let promise = new Promise((resolve, reject) => {
-					dao.artDao.fillLst();
-					dao.egDao.fillLst();
-					dao.gerDao.fillLst();
-					setTimeout(() => resolve("done!"), 500);
-				});
-				let result = await promise;
-				view_h.setWait(false);
-				fillListMenu();
-				viewer.createMenu();
-			})();
-			*/
 		}
 		catch (e) {setError(e)}
 	}
@@ -50,72 +35,93 @@ let cont =(function(){
 		catch (e) {setError(e)}
 	}
 	let fillNForm=()=>{viewer.display(getNewModel(getAktMenu().type))}
-	let set_view=(nr)=>{
-		let akm=getModel(nr);
-		viewer.display(getModel(nr));
+
+	let set_view=async (nr)=>{
+		getModel(nr).then(result=>{
+console.log('ctrl set_view ' ,result);
+					viewer.display(result);
+		});
 	}
+
 	//MODEL wird in view.js verwendet siehe: edit_click() und menu_click()
 	let getNewModel=(art)=>{
 		if( art==="f_eigenschaft") return F_EG;
 		else if(art==="f_arten") return F_Art;
 		else if(art==="f_geraete") return F_Ger;
 	}
-	let getModel=(nr)=>{
-		if(aktMenu==null) return;
-		try {
-			if(aktMenu.type==="f_arten") return dao.artDao.getById(nr);
-			else if(aktMenu.type==="f_eigenschaft") return dao.egDao.getById(nr);
-			else if(aktMenu.type==="f_geraete"){
-				let m=dao.gerDao.getById(nr);
-				return m;
+
+	let getModel=async(nr)=>{
+		return new Promise((resolve, reject) => {
+			if(aktMenu==null) resolve({});
+			else{
+				let ret={};
+				try {
+					if(aktMenu.type==="f_arten") {
+//console.log('ctrl getModel ' ,aktMenu.type);
+						dao.artDao.getById(nr).then(result=>{
+console.log('ctrl getModel getById ' ,result);
+							resolve(result)
+						});
+					}
+					else if(aktMenu.type==="f_eigenschaft") {
+						dao.egDao.getById(nr).then(result=>{resolve(result)});
+					}
+					else if(aktMenu.type==="f_geraete") {
+						dao.gerDao.getById(nr).then(result=>{resolve(result)});
+					}
+					else {resolve({})}
+				}
+				catch (e) {setError(e)}
 			}
-		}
-		catch (e) {setError(e)}
-		return {};
+		});
 	}
-	let getList=(art)=>{
+
+	let getList=async (art)=>{
 		try {
 			return new Promise((resolve, reject) => {
-				if(art=="f_arten") return dao.artDao.getList();
-				else if(art=="f_eigenschaft") return dao.egDao.getList();
-				else if(art=="f_geraete") return dao.gerDao.getList();
+				if(art=="f_arten") {
+
+					dao.artDao.getList().then(result=>{
+						//console.log('Ctrl getList',result);
+						resolve(result);
+					});
+				}
+				else if(art=="f_eigenschaft") {
+					dao.egDao.getList().then(result=>{resolve(result)});
+				}
+				else if(art=="f_geraete") {
+					dao.gerDao.getList().then(result=>{resolve(result)});
+				}
 				else return [];
 			});
-			/*
-			.then(resVal => {
-				console.log(resVal);
-				return resVal;
-			});
-			*/
 		}
 		catch (e) {setError(e)}
 	}
-	let getLstByArt=(nr)=>{
-		return new Promise((resolve, reject) => {
-			if(aktMenu==null) resolve([]);
-			try {
-				if(aktMenu.type==="f_geraete"){
-						resolve(dao.gerDao.getLstByArt(nr));
-				}
-				else{
-					resolve([]);
-				}
+	let getLstByArt=async(nr)=>{
+		try {
+				return new Promise((resolve, reject) => {
+					if(aktMenu==null) return [];
+					if(aktMenu.type==="f_geraete"){
+						dao.gerDao.getLstByArt(nr).then(result=>{
+console.log('ctrl getLstByArt dao.gerDao.getLstByArt',result);
+							resolve(result)});
+					}
+					else{resolve([])}
+				});
 			}
-			catch (e) {setError(e)}
-		}).then(res=>{
-			return res;
-		});
+		catch (e) {setError(e)}
 	}
 	let getMId=(m,feld)=>{if(feld=="Art") return m.Art;}
 	let getMBild=(m,feld)=>{if(feld=="Bild") return m.Bild;}
 	let getMEdit=(m,feld)=>{if(feld=="Edit") return m.Edit;}
+
 	//MENU
 	let aktMenu;
 	let getListMenu=()=>{
 		if(menuList==null || menuList.length ==0) fillListMenu();
 		return menuList;
 	}
-	let getMenuBytyp=function(t){
+	let getMenuBytyp=(t)=>{
 		let lst=getListMenu();
 		for (let r of lst){
 			if(r.type===t){
@@ -197,7 +203,7 @@ let cont =(function(){
 		getMId: getMId,
 		getLstByArt: getLstByArt,
 		getList: getList,
-		getModel: setAktMenu,
+		getModel: getModel,
 		set_view: set_view,
 		createNForm: createNForm,
 		setForm: setForm,

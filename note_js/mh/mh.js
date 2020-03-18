@@ -1,7 +1,7 @@
 //node -version
 //v12.16.1
 //npm install --save xml2json
-//npm install --save xml-js  oder  npm install --global xml-js
+//npm install --save xml-js
 //npm install mssql
 //http://localhost:8888/?p=0&s=4&a=0&ac=0
 "use strict";
@@ -41,12 +41,10 @@ http.createServer(function (req, res) {
 				const ms=require('./dao/ldbDao.js');
 				if(ac > 0){
 					let data = []
-
 					req.on('data', chunk => {
 						const jsObj=JSON.parse(chunk)
 						for(const x of jsObj){data.push(x)}
 					})
-
 					req.on('end', () => {
 						let outp='['
 						for(const x of data){
@@ -56,7 +54,7 @@ http.createServer(function (req, res) {
 									let prom=new Promise((resolve,reject) => {
 										let oid= ms.ldbDao.getMaxId(p,a);
 										resolve(oid);
-									}).then(function(val){
+									}).then(val => {
 										if(val>0){
 											x.id=val;
 											ms.ldbDao.insert(x,p,a)
@@ -81,15 +79,13 @@ http.createServer(function (req, res) {
 						res.write(outp)
 						res.end()
 					})
-
-
 				}
 				if(ac==0){
 					let prom=new Promise((resolve, reject) => {
 						let val= ms.ldbDao.getData(p,a)
 						resolve(val);
-					  }).then(function(val){
-						res.write(val?JSON.stringify(val):'object is null')	
+					}).then(val => {
+						res.write(val?JSON.stringify(val):'object is null')
 						res.end()
 					});
 				}
@@ -129,7 +125,7 @@ http.createServer(function (req, res) {
 					let prom=new Promise((resolve, reject) => {
 						let val= ms.xmlDao.getData(p,a)
 						resolve(val);
-					 }).then(function(val){
+					}).then(val => {
 						res.write(val?JSON.stringify(val):'object is null')
 						res.end()
 					});
@@ -152,44 +148,3 @@ http.createServer(function (req, res) {
 	}
 	catch(err){console.log(err)}
 }).listen(8888,'localhost')
-
-/*
-const { Worker,p,a } = require('worker_threads');
-//als worker.js speichern
-const { workerData, parentPort } = require('worker_threads');
-const sum = async (n) => {
-  return new Promise((resolve, reject) => {
-    let sum = 0;
-    for (let i = 0; i < n; i++)  sum += i;
-    resolve(sum);
-  });
-};
-const { n } = workerData;
-(async () => {
-  const result = await sum(n);
-  parentPort.postMessage({ result, status: 'Done' });
-})();
-
-//in mh.js einbauen
-const { Worker } = require('worker_threads');
-const n = process.argv[2] || 500;
-function runService(workerData) {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker('./worker.js', { workerData });
-    worker.on('message', resolve);
-    worker.on('error', reject);
-    worker.on('exit', (code) => {
-      if (code !== 0)
-        reject(new Error(`Worker stopped with exit code ${code}`));
-    });
-  });
-}
-async function run() {
-  const result = await runService({ n});
-  console.log(result.result);
-}
-setInterval(() => {
-  console.log('Hello world');
-}, 500);
-run().catch((error) => console.error(error));
-*/

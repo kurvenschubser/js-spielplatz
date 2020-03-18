@@ -1,14 +1,14 @@
 "use strict";
 exports.ldbDao=(function(){
-	const low = require('lowdb'),FileAsync = require('lowdb/adapters/FileAsync')	
+	const low = require('lowdb'),FileAsync = require('lowdb/adapters/FileAsync')
 	let adapter,db;
-	let insert=async function(m,p,a){
-		if(m.id > 0){				
+	let insert=async(m,p,a)=>{
+		if(m.id > 0){
 			await setDefaultDb(p,a);
-			if(p==0){																
+			if(p==0){
 				if(a==0) db.get('f_arten').push(m).write()
-				else if(a==1) db.get('f_eigenschaften').push(m).write()				
-				else if(a==2) db.get('f_geraete').push(m).write()				
+				else if(a==1) db.get('f_eigenschaften').push(m).write()
+				else if(a==2) db.get('f_geraete').push(m).write()
 			}
 			else if(p==1){
 				if(a==0) db.get('f_sprache').push(m).write()
@@ -18,48 +18,48 @@ exports.ldbDao=(function(){
 			}
 		}
 	}
-	let update=async function(m,p,a){
+	let update=async (m,p,a)=>{
 		await setDefaultDb(p,a);
 		if(p==0){
-			if(a==0){					
+			if(a==0){
 				db.get('f_arten')
 				.find({id:m.id})
 				.assign({name:m.name,beschreibung:m.beschreibung})
-				.write();								
+				.write();
 			}
-			else if(a==1){ 				
+			else if(a==1){
 				db.get('f_eigenschaften')
 				.find({id:m.id})
 				.assign({name:m.name,beschreibung:m.beschreibung,farbe:m.farbe,sort:m.sort})
 				.write();
 			}
-			else if(a==2){ 
+			else if(a==2){
 				db.get('f_geraete')
 				.find({id:m.id})
 				.assign({name:m.name,beschreibung:m.beschreibung,art:m.art,bild:m.bild})
 				.write();
 			}
 		}
-		else if(p==1){			
-			if(a==0){ 
+		else if(p==1){
+			if(a==0){
 				db.get('f_sprache')
 				.find({id:m.id})
 				.assign({bez:m.bez,beschr:m.beschr,datum:m.datum,edit:m.edit})
-				.write();					
+				.write();
 			}
-			else if(a==1){ 
+			else if(a==1){
 				db.get('f_sub_thema')
 				.find({id:m.id})
 				.assign({sub_desc:m.sub_desc,spr:m.spr,datum:m.datum,edit:m.edit})
 				.write();
 			}
-			else if(a==2){ 			
+			else if(a==2){
 				db.get('f_thema')
 				.find({id:m.id})
 				.assign({titel:m.titel,sub_lang:m.sub_lang,datum:m.datum,edit:m.edit})
 				.write();
 			}
-			else if(a==3){ 
+			else if(a==3){
 				db.get('f_eintrag')
 				.find({id:m.id})
 				.assign({titel:m.titel,text:m.text,sub_sub:m.sub_sub,sub:m.sub,lang:m.lang,sort:m.sort,datum:m.datum,edit:m.edit})
@@ -67,7 +67,7 @@ exports.ldbDao=(function(){
 			}
 		}
 	}
-	let del=async function(m,p,a){
+	let del=async (m,p,a)=>{
 		await setDefaultDb(p,a);
 		if(p==0){
 			if(a==0) {
@@ -92,11 +92,11 @@ exports.ldbDao=(function(){
 			else if(a==2) db.get('f_thema').remove({id:m.id}).write()
 			else if(a==3) db.get('f_eintrag').remove({id:m.id}).write()
 		}
-	}	
-	let getData=async function(p,a){		
+	}
+	let getData=async (p,a)=>{
 		let val;
 		await setDefaultDb(p,a);
-		if(p==0){			
+		if(p==0){
 			if(a==0) val=db.get('f_arten').value()
 			else if(a==1) val=db.get('f_eigenschaften').value()
 			else if(a==2) val=db.get('f_geraete').value()
@@ -109,38 +109,38 @@ exports.ldbDao=(function(){
 		}
 		return JSON.stringify(val);
 	}
-	let getMaxId=async function(p,a){				
+	let getMaxId=async (p,a)=>{
 		let dbVal;
 		await setDefaultDb(p,a);
 		if(p==0){
-			if(a==0) dbVal=db.get('f_arten').value()			
-			else if(a==1) dbVal=db.get('f_eigenschaften').value()			
-			else if(a==2) dbVal=db.get('f_geraete').value()			
+			if(a==0) dbVal=db.get('f_arten').value()
+			else if(a==1) dbVal=db.get('f_eigenschaften').value()
+			else if(a==2) dbVal=db.get('f_geraete').value()
 		}
 		else if(p==1){
-			if(a==0) dbVal=db.get('f_sprache').value()			
-			else if(a==1) dbVal=db.get('f_sub_thema').value()			
+			if(a==0) dbVal=db.get('f_sprache').value()
+			else if(a==1) dbVal=db.get('f_sub_thema').value()
 			else if(a==2) dbVal=db.get('f_thema').value()
-			else if(a==3) dbVal=db.get('f_eintrag').value()			
+			else if(a==3) dbVal=db.get('f_eintrag').value()
 		}
 		let getMax = (accu, curVal) => accu.id < curVal.id? curVal: accu;
 		let lastId = dbVal.reduce(getMax);
 		let ret=parseInt(lastId.id) + 1;
 		return ret;
 	}
-	let setDefaultDb=async function(p,a){
-		adapter = new FileAsync(`./json/db_${p}_${a}.json`)		
-		db = await low(adapter)	
+	let setDefaultDb=async (p,a)=>{
+		adapter = new FileAsync(`./json/db_${p}_${a}.json`)
+		db = await low(adapter)
 		if(p==0){
 			if(a==0) db.defaults({f_arten:[]}).write()
 			else if(a==1) db.defaults({f_eigenschaften:[]}).write()
-			else if(a==2) db.defaults({f_geraete:[]}).write()																				
+			else if(a==2) db.defaults({f_geraete:[]}).write()
 		}
 		else if(p==1){
 			if(a==0) db.defaults({f_sprache:[]}).write()
 			else if(a==1) db.defaults({f_sub_thema:[]}).write()
 			else if(a==2) db.defaults({f_thema:[]}).write()
-			else if(a==3) db.defaults({f_eintrag:[]}).write()			
+			else if(a==3) db.defaults({f_eintrag:[]}).write()
 		}
 	}
 	return {getData:getData,insert:insert,update:update,del:del,getMaxId:getMaxId};

@@ -4,12 +4,7 @@ exports.msDao=(function(){
 		console.log(err)
 	})
 	let getData=async function(p,a){
-
-
-
-
 		const config={user:'michi',password:'wer',server:'ARBEIT',database:parseInt(p)==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}};
-		//const sqlcon=new sql.ConnectionPool(config);
 		let val;
 		sql.connect(config).then(pool => {
 			if(parseInt(p)==0){//Fitness App
@@ -31,9 +26,7 @@ exports.msDao=(function(){
 			sql.close()
 			return val
 		})
-		//.then(()=>{sql.close()})
 		.catch(e => {throw e})
-		//return val
 	}
 	let getOut=()=>{return 'Hello World!'}
 	let getOut2=()=>{return 'und nochmal Hello World!'}

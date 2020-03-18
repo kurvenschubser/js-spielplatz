@@ -1,6 +1,6 @@
 "use strict";
 let viewer =(function(){
-	function click(event){
+	let click=(event)=>{
 		/*bubbling ul click from li*/
 		let ele = event.target;
 		if(ele===null) return;
@@ -11,12 +11,14 @@ let viewer =(function(){
 		let ak = cont.getAktMenu()
 		let lstTree=cont.getLstForTree(ak.type);
 		if(lstTree.length>0 && level==0){
+console.log('viewer click lstTree.length>0  ',level);
 			if(ele.lastChild.nodeName==='UL'){
 				cont.fillNForm();
 				return;
 			}
+			console.log('viewer click vor getLstByArt ',level);
 			cont.getLstByArt(nr).then(resVal=>{
-				console.log(resVal)
+console.log('viewer click getLstByArt.then ',resVal);
 				let ul = document.createElement("ul");
 				let value=null;
 				let child=null;
@@ -28,10 +30,11 @@ let viewer =(function(){
 			});
 		}
 		else{
+//console.log('viewer click cont.set_view ',nr)
 			cont.set_view(nr);
 		}
 	}
-	function edit_click(event){
+	let edit_click=(event)=>{
 		/*bubbling save del new click from edit div*/
 		let ele = event.target;
 		if(ele===null) return;
@@ -68,7 +71,7 @@ let viewer =(function(){
 			}
 		}
 	}
-	function menu_click(event){
+	let menu_click=(event)=>{
 		/*bubbling div click from menu div*/
 		let ele = event.target;
 		if(ele===null) return;
@@ -92,7 +95,7 @@ let viewer =(function(){
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
 			cont.getList(lstTree[0].type).then(resVal=>{
-				console.log('view.js 95: ',resVal);
+//console.log('view.js 95: ',resVal);
 				for (let key of resVal) {
 					child=view_h.createLi(key,lstTree.length>0?0:-1);
 					ul.appendChild(child);
@@ -103,31 +106,34 @@ let viewer =(function(){
 			});
 		}
 		else{
+//console.log('view.js 106: vor getList.then');
 			cont.getList(art).then(resVal=>{
-				console.log('view.js 106: ',resVal);
 				for (let key of resVal) {
+//console.log('view.js key: ',key);
 					child=view_h.createLi(key,lstTree.length>0?0:-1);
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
 				view_h.setLblStatus(art);
 				view_h.setLeftHead(art);
-			});			
+			});
 		}
 	}
-	function err_click(event){
+	let err_click=(event)=>{
 		let ele = event.target;
-		console.log(ele);
+console.log(ele);
 	}
-	function display(m){
+	let display=(m)=>{
 		let value=null;
 		let lbl=null;
 		let txt=null;
 		let opt=null;
 		let ak=	cont.getAktMenu();
 		cont.aktEntry=m;
+//console.log('view display: ',ak);
 		for (let r of ak.dsRules){
 			value = m[r.feld];
+
 			lbl = document.getElementById(`lbl_${r.feld}`);
 			lbl.innerText=`${r.feld}:`;
 			txt = document.getElementById(`txt_${r.feld}`);
@@ -153,7 +159,7 @@ let viewer =(function(){
 		let js = document.getElementById('btnJST').style.visibility = "hidden";
 		if(ak.type==='f_eintrag') document.getElementById('btnJST').style.visibility = "visible";
 	}
-	function createForm(m){
+	let createForm=(m)=>{
 		view_h.clear_r();
 		let currentDiv = document.getElementById("right");
 		let lbl=null;
@@ -208,7 +214,7 @@ let viewer =(function(){
 		let edit = document.getElementById("div_edit");
 		edit.style.visibility='visible';
 	}
-	function createMenu(){
+	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
 		let menuDiv =view_h.createEle('div','','menu','Menu',[],'');
 		menuDiv.onclick = function(){view_h.toogleMenu();};
@@ -226,10 +232,9 @@ let viewer =(function(){
 		navDiv.addEventListener('click', viewer.menu_click, false);
 		menuDiv.appendChild(navDiv);
 	}
-	function createMain (){
+	let createMain=()=>{
 		let currentDiv = document.body;
 		//header
-		//createEle:function(typ,id='',clN='',val='',lstAtr=[],title='')
 		let newDiv=view_h.createEle('div','head','header','',[],'');
 		let subdiv=view_h.createEle('div','','top-head',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
 		newDiv.appendChild(subdiv);
@@ -269,12 +274,6 @@ let viewer =(function(){
 		leftdiv.appendChild(subdiv);
 		newDiv.appendChild(leftdiv);
 		currentDiv.appendChild(newDiv);
-		//footer
-		//newDiv = view_h.createEle('div','foot','footer','',[],'');;
-		//let lbl =view_h.createEle('div','lbl_foot','','Stammdaten',[],'');
-		//newDiv.appendChild(lbl);
-		//currentDiv.appendChild(newDiv);
-
 		//Wait DIV
 		newDiv=view_h.createEle('div','wait','','',[],'');
 		newDiv.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
