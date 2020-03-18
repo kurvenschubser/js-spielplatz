@@ -1,14 +1,14 @@
 "use strict";
-exports.mssqlDao=(function(){				
+exports.mssqlDao=(function(){
 	let getConf=(p)=>{
-		const config={user:'michi',password:'wer',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
+		const config={user:'michi',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
 		return config;
 	}
 	let getQueryStr=(p,a)=>{
 		let val=''
 		if(p==0){//Fitness App
 			if(a==0)//f_arten
-				val='select * from f_arten order by name'				
+				val='select * from f_arten order by name'
 			else if(a==1)//f_eigenschaften
 				val='select * from f_eigenschaften order by name'
 			else if(a==2)//f_geraete
@@ -16,7 +16,7 @@ exports.mssqlDao=(function(){
 		}
 		else if(p==1){//Programierhilfe App
 			if(a==0)//f_sprache
-				val='select id,bez,beschr,datum,edit from Lang order by bez'				
+				val='select id,bez,beschr,datum,edit from Lang order by bez'
 			else if(a==1)//f_sub_sprache
 				val='select id,sub_desc,spr,datum,edit from Sub_lang order by sub_desc'
 			else if(a==2)//f_thema
@@ -29,6 +29,6 @@ exports.mssqlDao=(function(){
 	let insert=async function(m,p,a){}
 	let update=async function(m,p,a){}
 	let del=async function(m,p,a){}
-	
+
 	return {insert:insert,update:update,del:del,getQueryStr:getQueryStr,getConf:getConf};
 })();
