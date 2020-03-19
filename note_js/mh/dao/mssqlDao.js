@@ -1,7 +1,7 @@
 "use strict";
 exports.mssqlDao=(function(){
 	let getConf=(p)=>{
-		const config={user:'michi',password:'wer',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
+		const config={user:'michi',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
 		return config;
 	}
 	let getQueryStr=(p,a)=>{

@@ -85,39 +85,40 @@ console.log('viewer click getLstByArt.then ',resVal);
 		cont.setAktMenu(art);
 		cont.createNForm();
 		let leftDiv = document.getElementById("left");
-		let ul = document.createElement("ul");
-		ul.addEventListener('click', viewer.click, false);
+
 		let value={};
 		let child=null;
 		let lst=[];
 		//if tree get first level
-
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
 			cont.getList(lstTree[0].type).then(resVal=>{
 //console.log('view.js 95: ',resVal);
+				let ul = document.createElement("ul");
+				ul.addEventListener('click', viewer.click, false);
 				for (let key of resVal) {
-					child=view_h.createLi(key,lstTree.length>0?0:-1);
+					child=view_h.createLi(key,0);
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				view_h.setLblStatus(art);
-				view_h.setLeftHead(art);
 			});
 		}
 		else{
 //console.log('view.js 106: vor getList.then');
 			cont.getList(art).then(resVal=>{
+				let ul = document.createElement("ul");
+				ul.addEventListener('click', viewer.click, false);
+				setTimeout(() => {console.log('view.js 111 setTimeout: ',resVal.length)}, 1000);
+console.log('view.js 111 then: ',resVal.length);
 				for (let key of resVal) {
-//console.log('view.js key: ',key);
-					child=view_h.createLi(key,lstTree.length>0?0:-1);
+					child=view_h.createLi(key,-1);
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				view_h.setLblStatus(art);
-				view_h.setLeftHead(art);
 			});
 		}
+		view_h.setLblStatus(art);
+		view_h.setLeftHead(art);
 	}
 	let err_click=(event)=>{
 		let ele = event.target;

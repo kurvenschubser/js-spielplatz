@@ -26,7 +26,7 @@ let dao=(function(){
 							return lst;
 					}//ende function (response)
 				)//ende fetch.then
-				resolve(lst);
+				return lst;
 			});
 		}
 		let getList=async ()=>{
@@ -35,10 +35,11 @@ let dao=(function(){
 					view_h.setWait(true);
 					fillLst().then(result=>{
 						setTimeout(() => view_h.setWait(false), 1000);
-						resolve(result);
+						return result;
 					});
+
 				}
-				else {resolve(lst)}
+				else {return lst}
 			});
 		}
 		let getById=async (nr)=>{
@@ -52,7 +53,8 @@ let dao=(function(){
 						}
 					}
 					return ret;
-				}).then(res=>{resolve(ret)});
+				});
+				return ret;
 			});
 		}
 		let insert=async (m,p,s,a)=>{

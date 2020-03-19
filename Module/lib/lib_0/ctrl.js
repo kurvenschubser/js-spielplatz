@@ -97,6 +97,7 @@ console.log('ctrl getModel getById ' ,result);
 		}
 		catch (e) {setError(e)}
 	}
+
 	let getLstByArt=async(nr)=>{
 		try {
 				return new Promise((resolve, reject) => {
