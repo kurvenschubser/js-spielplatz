@@ -41,7 +41,7 @@ Node Version: v12.16.1
 
 --------------------------------------------------------------------------  
 
-* **node_js** -> Server Javascript  
+* **note_js** -> Server Javascript  
     * mh -> Fitness und Programierhilfe Server  
         * dao -> Datenschnitstellen  
         * hlp -> Hilfe Funktionen  
