@@ -7,7 +7,7 @@
 * Online/Offline mit indexedDB  
 * ECMA6 Standard  
 
-**Serverseitige wird Note für die Datenlieferung verwendet**  
+**Serverseitige wird Node für die Datenlieferung verwendet**  
 Node Version: v12.16.1  
 
 **folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:**  
