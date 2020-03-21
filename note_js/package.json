@@ -1,0 +1,6 @@
+{
+	"name": "my-package",
+	"scripts": {
+		"start": "node mh/mh.js"
+	}
+}
