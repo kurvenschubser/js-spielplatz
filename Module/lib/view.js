@@ -12,13 +12,8 @@ let viewer =(function(){
 		let ak = cont.getAktMenu()
 		let lstTree=cont.getLstForTree(ak.type);
 		if(lstTree.length>0 && level==0){
-			if(ele.lastChild.nodeName==='UL'){
-				//cont.fillNForm();
-				return;
-			}
-			view_h.setWait(true);
+			if(ele.lastChild.nodeName==='UL'){return}
 			cont.getLstByArt(nr).then(resVal=>{
-				//console.log('viewer click getLstByArt.then ',resVal);
 				let ul = document.createElement("ul");
 				let value=null;
 				let child=null;
@@ -27,13 +22,9 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				ele.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 1000);
 			});
 		}
-		else{
-
-			cont.set_view(nr);
-		}
+		else{cont.set_view(nr)}
 	}
 
 	let edit_click=(event)=>{
@@ -50,7 +41,6 @@ let viewer =(function(){
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				view_h.setWait(true);
 				let vn=document.getElementById('txt_Name').value;
 				let vd=document.getElementById('txt_Desc').value;
 				cont.aktEntry.Name=vn;
@@ -63,15 +53,12 @@ let viewer =(function(){
 					//update
 					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
 				}
-				setTimeout(() => view_h.setWait(false), 1000);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				view_h.setWait(true);
 				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
-				setTimeout(() => view_h.setWait(false), 1000);
 			}
 		}
 	}
@@ -88,16 +75,13 @@ let viewer =(function(){
 		view_h.clear_l();
 		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
-		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
 		let value={};
 		let child=null;
 		//if tree get first level
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
-			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
-				//console.log('view.js 95: ',resVal);
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
 				for (let key of resVal) {
@@ -105,13 +89,9 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 1000);
-			}).then(result=>{
-				cont.createNForm();
-			});
+			}).then(result=>{cont.createNForm()});
 		}
 		else{
-			view_h.setWait(true);
 			cont.getList(art).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
@@ -120,12 +100,8 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 1000);
-			}).then(result=>{
-				cont.createNForm();
-			});
+			}).then(result=>{cont.createNForm()});
 		}
-
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
 	}
@@ -142,10 +118,8 @@ let viewer =(function(){
 		let opt=null;
 		let ak=	cont.getAktMenu();
 		cont.aktEntry=m;
-//console.log('view display: ',ak);
 		for (let r of ak.dsRules){
 			value = m[r.feld];
-
 			lbl = document.getElementById(`lbl_${r.feld}`);
 			lbl.innerText=`${r.feld}:`;
 			txt = document.getElementById(`txt_${r.feld}`);
@@ -207,24 +181,18 @@ let viewer =(function(){
 			}
 			else if(r.art==='img'){
 				if(hlp.isFileApi()){
-					lbl=document.createElement("input")
-					lbl.type="file"
-					lbl.style.cssText = 'width:120px;;vertical-align:top'
-					lbl.onclick=function(evt){
-						let files = evt.target.files
-					}
+					lbl=document.createElement("input");
+					lbl.type="file";
+					lbl.style.cssText = 'width:120px;;vertical-align:top';
+					lbl.onclick=(evt)=>{let files = evt.target.files}
 				}
-				else{
-					lbl=document.createElement("label")
-				}
+				else {lbl=document.createElement("label")}
 			}
 			else if(r.art==='textarea'){
-				lbl=document.createElement("label")
+				lbl=document.createElement("label");
 				txt.rows="12"
 			}
-			else{
-				lbl=document.createElement("label")
-			}
+			else { lbl=document.createElement("label") }
 			txt.setAttribute('type',r.type)
 			txt.id=`txt_${r.feld}`;
 			lbl.id=`lbl_${r.feld}`;
@@ -240,8 +208,8 @@ let viewer =(function(){
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
 		let menuDiv =view_h.createEle('div','','menu','Menu',[],'');
-		menuDiv.onclick = function(){view_h.toogleMenu();};
-		menuDiv.onmouseleave = function(){view_h.toogleMenu();};
+		menuDiv.onclick = ()=>{view_h.toogleMenu();};
+		menuDiv.onmouseleave = ()=>{view_h.toogleMenu();};
 		currentDiv.appendChild(menuDiv);
 		let navDiv= view_h.createEle('div','menu','','',[],'');
 		navDiv.style.visibility='hidden';
