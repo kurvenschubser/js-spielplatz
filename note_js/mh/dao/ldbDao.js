@@ -1,4 +1,5 @@
 "use strict";
+
 exports.ldbDao=(function(){
 	const low = require('lowdb'),FileAsync = require('lowdb/adapters/FileAsync')
 	let adapter,db;
