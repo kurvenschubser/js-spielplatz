@@ -13,9 +13,10 @@ Node Version: v12.16.1
 **folgende Erweiterungen müssen für die Anwendungen mh und test installiert werden:**  
 `$ npm install --save xml2json`  
 `$ npm install --save xml-js`  
-`$ npm install --save mssql`    
+`$ npm install --save mssql`   
+`$ npm install --save mysql`   
 `$ npm install --save lowdb`  
-`$ npm install --save http`  
+`$ npm install --save http`    
 
 --------------------------------------------------------------------------  
 
