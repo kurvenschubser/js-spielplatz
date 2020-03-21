@@ -104,15 +104,15 @@ let dao=(function(){
 				});
 			});
 		}
-		let insert=(m,p,s,a)=>{
+		let insert=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
 			console.log(val)
 		}
-		let update=(m,p,s,a)=>{
+		let update=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
 			console.log(val)
 		}
-		let del=(m,p,s,a)=>{
+		let del=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
 			console.log(val)
 		}
@@ -159,7 +159,7 @@ let dao=(function(){
 				});
 			});
 		}
-		let getLstByArt=(nr)=>{
+		let getLstByArt=async(nr)=>{
 			return new Promise((resolve, reject) => {
 				let nLst=[];
 				getList().then(result=>{
@@ -171,15 +171,15 @@ let dao=(function(){
 				});
 			});
 		}
-		let insert=(m,p,s,a)=>{
+		let insert=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
 			console.log(val)
 		}
-		let update=(m,p,s,a)=>{
+		let update=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
 			console.log(val)
 		}
-		let del=(m,p,s,a)=>{
+		let del=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
 			console.log(val)
 		}
@@ -189,17 +189,10 @@ let dao=(function(){
 		let result;
 		let xhr = new XMLHttpRequest();
 		let url = `http://localhost:8888/?p=${p}&s=${s}&a=${a}&ac=${ac}`;
-		if(ac===0){
-			xhr.open("GET", url, true);
-			xhr.setRequestHeader("Content-Type", "application/json");
-		}
-		else{
-			xhr.open("POST", url, true);
-			xhr.setRequestHeader("Content-Type", "application/json");
-		}
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {result = this.responseText}
-		};
+		if(ac===0){xhr.open("GET", url, true)}
+		else{xhr.open("POST", url, true)}
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.onreadystatechange = function () {if (xhr.readyState === 4 && xhr.status === 200) {result = this.responseText}};
 		var data =[]
 		if(p==0){
 			if(a==0) data =JSON.stringify([{id:m.Id,name:m.Name,beschreibung:m.Desc}])

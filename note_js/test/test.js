@@ -1,17 +1,7 @@
 //node -version
-//
 //v12.16.1
-//
-//npm install xml2json
-//npm install  xml-js
-//npm install lowdb
-//npm install mssql
-//npm install http
-//
 //http://localhost:8889/?p=0&s=4&a=0&ac=2
-//
 const http = require('http'),url = require('url')
-
 http.createServer(function (req, res) {
 	try{
 		var q = url.parse(req.url, true).query;
@@ -50,7 +40,7 @@ http.createServer(function (req, res) {
 			let getData=async (p,a)=>{
 				return new Promise((resolve,reject) => {
 					let val=ms.ldbDao.getData(p,a);
-					setTimeout(() => resolve(val), 1000);
+					resolve(val);
 				});
 			}
 
@@ -69,7 +59,7 @@ http.createServer(function (req, res) {
 								let prom_tmp=new Promise((resolve,reject) => {
 									let oid= ms.ldbDao.getMaxId(p,a);
 									resolve(oid);
-								}).then(function(val){
+								}).then(val=>{
 									//console.log(val)
 									if(val>0){
 										x.id=val;
@@ -79,11 +69,13 @@ http.createServer(function (req, res) {
 									else{
 										outp +=`id=0 Das Element kann nicht angelegt werden!<br/> ${x.name}`;
 									}
-								})
+								});
 							}
-							setTimeout(() => resolve(outp), 1000);
-						}).then(resolve=>{
-							res.write(`<p><b>ACHTUNG</b></p><p>Insert</b><br/>${resolve}</p>`)
+							console.log('insert: ',outp)
+							resolve(outp);
+						}).then(result=>{
+							console.log('insert: ',result)
+							res.write(`<p><b>ACHTUNG</b></p><p>Insert</b><br/>${result}</p>`)
 							res.end()
 						});//ende Promise prom
 					})
@@ -97,7 +89,7 @@ http.createServer(function (req, res) {
 								ms.ldbDao.update(x,p,a)
 								outp +=JSON.stringify(x.id) +'<br/>'
 							}
-							setTimeout(() => resolve(outp), 1000);
+							resolve(outp)
 						}).then(resolve=>{
 							res.write(`<p><b>ACHTUNG</b></p><p>Update</b><br/>${resolve}</p>`)
 							res.end()
@@ -108,20 +100,17 @@ http.createServer(function (req, res) {
 					//delete
 					req.on('end', () => {
 						let outp=''
-
 						let prom=new Promise((resolve,reject) => {
 							for(const x of data){
 								//console.log(x)
 								ms.ldbDao.del(x,p,a);
 								outp +=JSON.stringify(x.id) +'<br/>'
 							}
-							setTimeout(() => resolve(outp), 1000);
+							resolve(outp)
 						}).then(resolve=>{
 							res.write(`<p><b>ACHTUNG</b></p><p>Delete OK!</b><br/>${resolve}</p>`)
 							res.end()
 						});//ende Promise prom
-
-
 					})
 				}
 			}
@@ -131,15 +120,6 @@ http.createServer(function (req, res) {
 					res.write(result?result:'object is null')
 					res.end()
 				});
-				/*
-				let prom=new Promise((resolve,reject) => {
-					let val=ms.ldbDao.getData(p,a);
-					setTimeout(() => resolve(val), 1000);
-				}).then(val=>{
-					res.write(val?val:'object is null')
-					res.end()
-				})
-				*/
 			}
 			else{
 				res.write('<p><b>ACHTUNG</b></p><p>Der Parameter ac istfalsch</b></p>')

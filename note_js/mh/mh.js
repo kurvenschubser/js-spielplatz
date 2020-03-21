@@ -1,8 +1,5 @@
 //node -version
 //v12.16.1
-//npm install --save xml2json
-//npm install --save xml-js
-//npm install mssql
 //http://localhost:8888/?p=0&s=4&a=0&ac=0
 "use strict";
 const hlp = require('./hlp/hlp'), http = require('http'),url = require('url')
@@ -64,13 +61,20 @@ http.createServer(function (req, res) {
 								}
 								else if(ac==2){
 									//Update
-									ms.ldbDao.update(x,p,a)
-									outp +='{'+JSON.stringify(x.id) +'}'
+									let prom=new Promise((resolve,reject) => {
+										ms.ldbDao.update(x,p,a)
+										outp +='{'+JSON.stringify(x.id) +'}'
+										resolve(outp);
+									});
+								})
 								}
 								else if(ac==3){
 									//Delete
-									ms.ldbDao.del(x,p,a)
-									outp +='{'+JSON.stringify(x.id) +'}'
+									let prom=new Promise((resolve,reject) => {
+										ms.ldbDao.del(x,p,a)
+										outp +='{'+JSON.stringify(x.id) +'}'
+										resolve(outp);
+									});
 								}
 							}
 							catch(err){console.log(err)}
