@@ -1,19 +1,16 @@
 /*
 Fitness Stammdaten DAO LowDb
-change:21.03-2020
 */
 "use strict";
 let dao=(function(){
-
 	let artDao=(function(){
 		let lst=[];
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					view_h.setWait(true);
 					fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
 						function(response) {
-							response.text().then(text => {
+							response.text().then(function(text) {
 									if(text.startsWith("<p><b>ACHTUNG")){
 										cont.setError(text);
 										return '';
@@ -26,10 +23,9 @@ let dao=(function(){
 										lst.push(ge);
 									}
 								}).then(result=>{
-									setTimeout(() => view_h.setWait(false), 1000);
 									resolve(lst);
 								})//ende response.then
-						}//ende  response)
+						}//ende function (response)
 					)//ende fetch.then
 				}
 				else {resolve(lst)}
@@ -63,16 +59,14 @@ let dao=(function(){
 		}
 		return {getList: getList,getById: getById,insert:insert,update:update,del:del};
 	})();
-
 	let egDao=(function(){
 		let lst=[];
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					view_h.setWait(true)
 					fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
 						function(response) {
-							response.text().then(text => {
+							response.text().then(function(text) {
 									if(text.startsWith("<p><b>ACHTUNG")){
 										cont.setError(text);
 										return '';
@@ -88,10 +82,9 @@ let dao=(function(){
 											lst.push(ge);
 									}
 								}).then(result=>{
-									setTimeout(() => view_h.setWait(false), 1000);
 									resolve(lst);
 								})//ende response.then
-						}//ende (response)
+						}//ende function (response)
 					)//ende fetch.then
 				}
 				else {resolve(lst)}
@@ -125,16 +118,14 @@ let dao=(function(){
 		}
 		return {getList: getList,getById: getById,insert:insert,update:update,del:del};
 	})();
-
 	let gerDao=(function(){
 		let lst=[];
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					view_h.setWait(true)
 					fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
 						function(response) {
-							response.text().then(text => {
+							response.text().then(function(text) {
 									if(text.startsWith("<p><b>ACHTUNG")){
 										cont.setError(text);
 									}
@@ -146,10 +137,9 @@ let dao=(function(){
 										lst.push(ge);
 									}
 								}).then(result=>{
-									setTimeout(() => view_h.setWait(false), 1000);
 									resolve(lst);
 								})//ende response.then
-						}//ende (response)
+						}//ende function (response)
 					)//ende fetch.then
 				}
 				else {resolve(lst)}
@@ -207,7 +197,7 @@ let dao=(function(){
 			xhr.open("POST", url, true);
 			xhr.setRequestHeader("Content-Type", "application/json");
 		}
-		xhr.onreadystatechange = ()=> {
+		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {result = this.responseText}
 		};
 		var data =[]

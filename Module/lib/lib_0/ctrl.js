@@ -1,6 +1,5 @@
 /*
 Fitness Stammdaten Controler
-change:21.03-2020
 */
 "use strict";
 let cont =(function(){
@@ -87,7 +86,9 @@ let cont =(function(){
 				return new Promise((resolve, reject) => {
 					if(aktMenu==null) return [];
 					if(aktMenu.type==="f_geraete"){
-						dao.gerDao.getLstByArt(nr).then(result=>{resolve(result)})
+						dao.gerDao.getLstByArt(nr).then(result=>{
+							//console.log('ctrl getLstByArt dao.gerDao.getLstByArt',result);
+							resolve(result)});
 					}
 					else{resolve([])}
 				});
