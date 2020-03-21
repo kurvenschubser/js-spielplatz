@@ -1,5 +1,6 @@
 /*
 Fitness Stammdaten Controler
+change:21.03-2020
 */
 "use strict";
 let cont =(function(){

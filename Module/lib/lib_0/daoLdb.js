@@ -1,5 +1,6 @@
 /*
 Fitness Stammdaten DAO LowDb
+change:21.03-2020
 */
 "use strict";
 let dao=(function(){

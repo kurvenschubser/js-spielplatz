@@ -1,3 +1,7 @@
+/*
+Fitness Stammdaten Viewer
+change:21.03-2020
+*/
 "use strict";
 let viewer =(function(){
 
