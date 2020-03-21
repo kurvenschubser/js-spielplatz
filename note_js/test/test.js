@@ -11,6 +11,7 @@
 //http://localhost:8889/?p=0&s=4&a=0&ac=2
 //
 const http = require('http'),url = require('url')
+
 http.createServer(function (req, res) {
 	try{
 		var q = url.parse(req.url, true).query;
@@ -45,6 +46,14 @@ http.createServer(function (req, res) {
 			let ac=parseInt(q.ac)
 			//lowdb
 			const ms=require('./dao/ldbDao.js')
+
+			let getData=async (p,a)=>{
+				return new Promise((resolve,reject) => {
+					let val=ms.ldbDao.getData(p,a);
+					setTimeout(() => resolve(val), 1000);
+				});
+			}
+
 			if(ac>0){
 				let data = []
 				req.on('data', chunk => {
@@ -99,6 +108,7 @@ http.createServer(function (req, res) {
 					//delete
 					req.on('end', () => {
 						let outp=''
+
 						let prom=new Promise((resolve,reject) => {
 							for(const x of data){
 								//console.log(x)
@@ -110,11 +120,18 @@ http.createServer(function (req, res) {
 							res.write(`<p><b>ACHTUNG</b></p><p>Delete OK!</b><br/>${resolve}</p>`)
 							res.end()
 						});//ende Promise prom
+
+
 					})
 				}
 			}
 			else if(ac===0){
 				//GET
+				getData(p,a).then(result=>{
+					res.write(result?result:'object is null')
+					res.end()
+				});
+				/*
 				let prom=new Promise((resolve,reject) => {
 					let val=ms.ldbDao.getData(p,a);
 					setTimeout(() => resolve(val), 1000);
@@ -122,6 +139,7 @@ http.createServer(function (req, res) {
 					res.write(val?val:'object is null')
 					res.end()
 				})
+				*/
 			}
 			else{
 				res.write('<p><b>ACHTUNG</b></p><p>Der Parameter ac istfalsch</b></p>')

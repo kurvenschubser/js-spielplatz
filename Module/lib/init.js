@@ -6,7 +6,7 @@ let ini=(function(){
 	const PRO=0;
 	/*hier entscheiden welcher Speicher verwendet werden soll*/
 	/*Speicher: store 0 = Dao 1 = Xml 2 = MySql 3 = MsSql 4 = LowDb*/
-	const STORE=1;	
+	const STORE=4;	
 /*##################################################################*/
 	/*Liste der Programme*/
 	const LST_CONFOBJ=[

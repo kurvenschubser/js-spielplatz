@@ -1,5 +1,6 @@
 "use strict";
 let viewer =(function(){
+
 	let click=(event)=>{
 		/*bubbling ul click from li*/
 		let ele = event.target;
@@ -11,14 +12,13 @@ let viewer =(function(){
 		let ak = cont.getAktMenu()
 		let lstTree=cont.getLstForTree(ak.type);
 		if(lstTree.length>0 && level==0){
-console.log('viewer click lstTree.length>0  ',level);
 			if(ele.lastChild.nodeName==='UL'){
-				cont.fillNForm();
+				//cont.fillNForm();
 				return;
 			}
-			console.log('viewer click vor getLstByArt ',level);
+			view_h.setWait(true);
 			cont.getLstByArt(nr).then(resVal=>{
-console.log('viewer click getLstByArt.then ',resVal);
+				//console.log('viewer click getLstByArt.then ',resVal);
 				let ul = document.createElement("ul");
 				let value=null;
 				let child=null;
@@ -27,13 +27,15 @@ console.log('viewer click getLstByArt.then ',resVal);
 					ul.appendChild(child);
 				}
 				ele.appendChild(ul);
+				setTimeout(() => view_h.setWait(false), 1000);
 			});
 		}
 		else{
-//console.log('viewer click cont.set_view ',nr)
+
 			cont.set_view(nr);
 		}
 	}
+
 	let edit_click=(event)=>{
 		/*bubbling save del new click from edit div*/
 		let ele = event.target;
@@ -44,12 +46,11 @@ console.log('viewer click getLstByArt.then ',resVal);
 			return;
 		}
 		if(cont.aktEntry){
-			if(ele.id==="btnNew") {
-				cont.fillNForm()
-			}
+			if(ele.id==="btnNew") cont.fillNForm();
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
+				view_h.setWait(true);
 				let vn=document.getElementById('txt_Name').value;
 				let vd=document.getElementById('txt_Desc').value;
 				cont.aktEntry.Name=vn;
@@ -62,15 +63,19 @@ console.log('viewer click getLstByArt.then ',resVal);
 					//update
 					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
 				}
+				setTimeout(() => view_h.setWait(false), 1000);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
+				view_h.setWait(true);
 				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
+				setTimeout(() => view_h.setWait(false), 1000);
 			}
 		}
 	}
+
 	let menu_click=(event)=>{
 		/*bubbling div click from menu div*/
 		let ele = event.target;
@@ -83,17 +88,16 @@ console.log('viewer click getLstByArt.then ',resVal);
 		view_h.clear_l();
 		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
-		cont.createNForm();
+		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
-
 		let value={};
 		let child=null;
-		let lst=[];
 		//if tree get first level
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
+			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
-//console.log('view.js 95: ',resVal);
+				//console.log('view.js 95: ',resVal);
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
 				for (let key of resVal) {
@@ -101,29 +105,36 @@ console.log('viewer click getLstByArt.then ',resVal);
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
+				setTimeout(() => view_h.setWait(false), 1000);
+			}).then(result=>{
+				cont.createNForm();
 			});
 		}
 		else{
-//console.log('view.js 106: vor getList.then');
+			view_h.setWait(true);
 			cont.getList(art).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
-				setTimeout(() => {console.log('view.js 111 setTimeout: ',resVal.length)}, 1000);
-console.log('view.js 111 then: ',resVal.length);
 				for (let key of resVal) {
 					child=view_h.createLi(key,-1);
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
+				setTimeout(() => view_h.setWait(false), 1000);
+			}).then(result=>{
+				cont.createNForm();
 			});
 		}
+
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
 	}
+
 	let err_click=(event)=>{
 		let ele = event.target;
-console.log(ele);
+		console.log(ele);
 	}
+
 	let display=(m)=>{
 		let value=null;
 		let lbl=null;
@@ -160,6 +171,7 @@ console.log(ele);
 		let js = document.getElementById('btnJST').style.visibility = "hidden";
 		if(ak.type==='f_eintrag') document.getElementById('btnJST').style.visibility = "visible";
 	}
+
 	let createForm=(m)=>{
 		view_h.clear_r();
 		let currentDiv = document.getElementById("right");
@@ -168,19 +180,28 @@ console.log(ele);
 		let opt=null;
 		let newSubDiv=null;
 		let ak=cont.getAktMenu();
+		console.log('view createForm aktuelle Menu: ',ak)
 		for (let r of ak.dsRules){
 			newSubDiv = document.createElement("div");
 			txt = document.createElement(r.art);
 			if(r.art==='select'){
-				opt = null;
-				(async () => {
-					let lst = await cont.getList(r.type);
-					for(let a of lst) {
-						opt = document.createElement('option');
-						opt.value = a.Id;
-						opt.innerText=a.Name;
-						txt.appendChild(opt);
+				console.log('view createForm select model: ',m);
+				console.log('view createForm select rule: ',r);
+				cont.getList(r.type).then(result=>{
+					//opt = null;
+					//console.log('view createForm then(result=>: ',result)
+					let options_str='';
+					for(let a of result) {
+						//console.log('view createForm for r getList a: ',a.Name)
+						options_str += `<option value='${a.Id}'>'${a.Name}'</option>`;
+						//opt = document.createElement('option');
+						//opt.value=a.Id;
+						//opt.text=a.Name;
+						//txt.appendChild(opt);
+						console.log('view createForm for r getList a options_str: ',options_str)
 					}
+					txt.innerHtml=options_str;
+					console.log('view createForm for r getList a txt.innerHtml: ',txt.innerHtml)
 				});
 				lbl=document.createElement("label");
 			}
@@ -215,6 +236,7 @@ console.log(ele);
 		let edit = document.getElementById("div_edit");
 		edit.style.visibility='visible';
 	}
+
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
 		let menuDiv =view_h.createEle('div','','menu','Menu',[],'');
@@ -233,6 +255,7 @@ console.log(ele);
 		navDiv.addEventListener('click', viewer.menu_click, false);
 		menuDiv.appendChild(navDiv);
 	}
+
 	let createMain=()=>{
 		let currentDiv = document.body;
 		//header
@@ -280,5 +303,6 @@ console.log(ele);
 		newDiv.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
 		currentDiv.appendChild(newDiv);
 	}
+
 	return {createMain: createMain,createMenu: createMenu,createForm: createForm,display: display,menu_click: menu_click,edit_click: edit_click,click: click,err_click:err_click};
 })();

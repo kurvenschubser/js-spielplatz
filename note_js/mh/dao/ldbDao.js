@@ -21,70 +21,23 @@ exports.ldbDao=(function(){
 	let update=async (m,p,a)=>{
 		await setDefaultDb(p,a);
 		if(p==0){
-			if(a==0){
-				db.get('f_arten')
-				.find({id:m.id})
-				.assign({name:m.name,beschreibung:m.beschreibung})
-				.write();
-			}
-			else if(a==1){
-				db.get('f_eigenschaften')
-				.find({id:m.id})
-				.assign({name:m.name,beschreibung:m.beschreibung,farbe:m.farbe,sort:m.sort})
-				.write();
-			}
-			else if(a==2){
-				db.get('f_geraete')
-				.find({id:m.id})
-				.assign({name:m.name,beschreibung:m.beschreibung,art:m.art,bild:m.bild})
-				.write();
-			}
+			if(a==0) db.get('f_arten').find({id:m.id}).assign({name:m.name,beschreibung:m.beschreibung}).write();
+			else if(a==1) db.get('f_eigenschaften').find({id:m.id}).assign({name:m.name,beschreibung:m.beschreibung,farbe:m.farbe,sort:m.sort}).write();
+			else if(a==2) db.get('f_geraete').find({id:m.id}).assign({name:m.name,beschreibung:m.beschreibung,art:m.art,bild:m.bild}).write();
 		}
 		else if(p==1){
-			if(a==0){
-				db.get('f_sprache')
-				.find({id:m.id})
-				.assign({bez:m.bez,beschr:m.beschr,datum:m.datum,edit:m.edit})
-				.write();
-			}
-			else if(a==1){
-				db.get('f_sub_thema')
-				.find({id:m.id})
-				.assign({sub_desc:m.sub_desc,spr:m.spr,datum:m.datum,edit:m.edit})
-				.write();
-			}
-			else if(a==2){
-				db.get('f_thema')
-				.find({id:m.id})
-				.assign({titel:m.titel,sub_lang:m.sub_lang,datum:m.datum,edit:m.edit})
-				.write();
-			}
-			else if(a==3){
-				db.get('f_eintrag')
-				.find({id:m.id})
-				.assign({titel:m.titel,text:m.text,sub_sub:m.sub_sub,sub:m.sub,lang:m.lang,sort:m.sort,datum:m.datum,edit:m.edit})
-				.write();
-			}
+			if(a==0) db.get('f_sprache').find({id:m.id}).assign({bez:m.bez,beschr:m.beschr,datum:m.datum,edit:m.edit}).write();
+			else if(a==1) db.get('f_sub_thema').find({id:m.id}).assign({sub_desc:m.sub_desc,spr:m.spr,datum:m.datum,edit:m.edit}).write();
+			else if(a==2) db.get('f_thema').find({id:m.id}).assign({titel:m.titel,sub_lang:m.sub_lang,datum:m.datum,edit:m.edit}).write();
+			else if(a==3) db.get('f_eintrag').find({id:m.id}).assign({titel:m.titel,text:m.text,sub_sub:m.sub_sub,sub:m.sub,lang:m.lang,sort:m.sort,datum:m.datum,edit:m.edit}).write();
 		}
 	}
 	let del=async (m,p,a)=>{
 		await setDefaultDb(p,a);
 		if(p==0){
-			if(a==0) {
-				db.get('f_arten')
-				.remove({id:m.id})
-				.write()
-			}
-			else if(a==1) {
-				db.get('f_eigenschaften')
-				.remove({id:m.id})
-				.write()
-			}
-			else if(a==2) {
-				db.get('f_geraete')
-				.remove({id:m.id})
-				.write()
-			}
+			if(a==0) db.get('f_arten').remove({id:m.id}).write()
+			else if(a==1) 	db.get('f_eigenschaften').remove({id:m.id})	.write()
+			else if(a==2) db.get('f_geraete').remove({id:m.id}).write()
 		}
 		else if(p==1){
 			if(a==0) db.get('f_sprache').remove({id:m.id}).write()
