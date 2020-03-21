@@ -1,12 +1,23 @@
 "use strict";
-let ini=(function(){
+const AppType = {
+	Fitness: 0,
+	Programmierhilfe: 1
+};
+const StorageType = {
+	Dao: 0,
+	Xml: 1,
+	MySql: 2,
+	MsSql: 3,
+	LowDb: 4
+};
+let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 /*##################################################################*/
 	/*hier entscheiden welches Program verwendet werden soll*/
 	/*Programm: 0 = Fitness 1 = Programmierhilfe*/
-	const PRO=0;
+	const PRO=app;
 	/*hier entscheiden welcher Speicher verwendet werden soll*/
 	/*Speicher: store 0 = Dao 1 = Xml 2 = MySql 3 = MsSql 4 = LowDb*/
-	const STORE=4;	
+	const STORE=storage;
 /*##################################################################*/
 	/*Liste der Programme*/
 	const LST_CONFOBJ=[
