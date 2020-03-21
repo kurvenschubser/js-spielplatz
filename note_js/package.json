@@ -2,7 +2,7 @@
 	"name": "js-spielplatz",
 	"version": "0.0.1",
 	"scripts": {
-		"start": "node mh/mh.js"
+		"start": "cd mh && node mh.js"
 	},
 	"dependencies": {
 		"xml2json": "^0.12.0",
