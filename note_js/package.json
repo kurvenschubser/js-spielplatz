@@ -5,10 +5,13 @@
 		"start": "cd mh && node mh.js"
 	},
 	"dependencies": {
-		"xml2json": "^0.12.0",
-		"xml-js": "^1.6.11",
-		"mssql": "^6.2.0",
+		"http": "*",
 		"lowdb": "^1.0.0",
-		"http": "*"
+		"mssql": "^6.2.0",
+		"xml-js": "^1.6.11",
+		"xml2json": "^0.12.0"
+	},
+	"devDependencies": {
+		"jest": "^25.1.0"
 	}
 }
