@@ -66,7 +66,6 @@ http.createServer(function (req, res) {
 										outp +='{'+JSON.stringify(x.id) +'}'
 										resolve(outp);
 									});
-								})
 								}
 								else if(ac==3){
 									//Delete
