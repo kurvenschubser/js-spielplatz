@@ -20,7 +20,6 @@ let viewer =(function(){
 			}
 			view_h.setWait(true);
 			cont.getLstByArt(nr).then(resVal=>{
-				//console.log('viewer click getLstByArt.then ',resVal);
 				let ul = document.createElement("ul");
 				let value=null;
 				let child=null;
@@ -98,7 +97,6 @@ let viewer =(function(){
 		if(lstTree.length>0){
 			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
-				console.log('view.js 95: ',resVal);
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
 				for (let key of resVal) {
@@ -143,10 +141,8 @@ let viewer =(function(){
 		let opt=null;
 		let ak=	cont.getAktMenu();
 		cont.aktEntry=m;
-//console.log('view display: ',ak);
 		for (let r of ak.dsRules){
 			value = m[r.feld];
-
 			lbl = document.getElementById(`lbl_${r.feld}`);
 			lbl.innerText=`${r.feld}:`;
 			txt = document.getElementById(`txt_${r.feld}`);
@@ -177,32 +173,19 @@ let viewer =(function(){
 		view_h.clear_r();
 		let currentDiv = document.getElementById("right");
 		let lbl=null;
-		let txt=null;
-		let opt=null;
 		let newSubDiv=null;
 		let ak=cont.getAktMenu();
-		console.log('view createForm aktuelle Menu: ',ak)
 		for (const r of ak.dsRules){
 			newSubDiv = document.createElement("div");
-			txt = document.createElement(r.art);
+			let txt = document.createElement(r.art);
 			if(r.art==='select'){
-				//console.log('view createForm select model: ',m);
-				console.log('view createForm select rule: ',r);
 				cont.getList(r.type).then(result=>{
-					opt = null;
-					//console.log('view createForm then(result=>: ',result)
-					let options_str='';
 					for(let a of result) {
-						console.log('view createForm for r getList a: ',a)
-						options_str += `<option value='${a.Id}'>'${a.Name}'</option>`;
-						opt = document.createElement('option');
+						let opt = document.createElement('option');
 						opt.value=a.Id;
 						opt.text=a.Name;
 						txt.appendChild(opt);
-						//console.log('view createForm for r getList a options_str: ',options_str)
 					}
-					//txt.innerHtml=options_str;
-					console.log('view createForm for r getList a txt.innerHtml: ',txt.innerHtml)
 				});
 				lbl=document.createElement("label");
 			}

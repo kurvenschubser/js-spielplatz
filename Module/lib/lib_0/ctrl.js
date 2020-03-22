@@ -32,9 +32,7 @@ let cont =(function(){
 		try {
 			let t=getAktMenu().type;
 			let ti=t==="f_geraete"?1:t==="f_arten"?2:0;
-			console.log('ctrl createNForm ',t);
 			let m = getNewModel(t);
-			console.log('ctrl new model ',m);
 			viewer.createForm(m);
 			view_h.setEditTitle(E_TITLE[ti].neu,E_TITLE[ti].edit,E_TITLE[ti].del);
 		}
@@ -86,7 +84,6 @@ let cont =(function(){
 					if(aktMenu==null) return [];
 					if(aktMenu.type==="f_geraete"){
 						dao.gerDao.getLstByArt(nr).then(result=>{
-							//console.log('ctrl getLstByArt dao.gerDao.getLstByArt',result);
 							resolve(result)});
 					}
 					else{resolve([])}
