@@ -1,24 +1,23 @@
 /*
 Fitness Stammdaten DAO
 */
-"use strict";
 let dao=(function(){
-	
+	"use strict";
 	let artDao=(function(){
 		//constructor(id,name,desc){super(id,name,desc)
 		var lst=[];
 		let fillLst=()=>{
 			let fart = new dom.f_arten(1,'Kraft','Kraftsport Muskelaufbau');
 			lst.push(fart);
-			fart = new dom.f_arten(2,'Cardio','Ausdauer Sport');	
+			fart = new dom.f_arten(2,'Cardio','Ausdauer Sport');
 			lst.push(fart);
 		}
 		let getList=()=>{
 			if(lst===null || lst.length ==0) fillLst();
 			return lst;
 		}
-		let getById=(nr)=>{for (let key of getList()) {if(key.Id === parseInt(nr)){return key;break;}}}		
-		return {getList: getList,getById: getById,fillLst:fillLst};
+		let getById=(nr)=>{for (let key of getList()) {if(key.Id === parseInt(nr)){return key;break;}}}
+		return {getList,getById,fillLst};
 	})();
 	let egDao=(function(){
 		//constructor(id,name,desc,farbe,sort)
@@ -34,30 +33,30 @@ let dao=(function(){
 			return lst;
 		}
 		let getById=(nr)=>{for (let key of getList()) if(key.Id === parseInt(nr)){return key;break;}}
-		return {getList: getList,getById: getById,fillLst:fillLst};
-	})();	
+		return {getList,getById,fillLst};
+	})();
 	let gerDao=(function(){
 		//constructor(id,name,desc,art,bild)
 		var lst=[];
 		let fillLst=()=>{
-			let ge = new dom.f_geraete(7,'Seilzug','Seilzugbeschreibung',1,'seilzug.jpg');			
+			let ge = new dom.f_geraete(7,'Seilzug','Seilzugbeschreibung',1,'seilzug.jpg');
 			lst.push(ge);
-			ge = new dom.f_geraete(41,'Langhantel','-',2,'langhantel.jpg');			
+			ge = new dom.f_geraete(41,'Langhantel','-',2,'langhantel.jpg');
 			lst.push(ge);
 		}
 		let getList=()=>{
 			if(lst===null || lst.length ==0) fillLst();
 			return lst;
 		}
-		let getLstByArt=(nr)=>{			
+		let getLstByArt=(nr)=>{
 			let nLst=[];
 			for (let key of getList()) {if(key.Art === parseInt(nr))nLst.push(key)};
 			//console.log(nLst);
 			return nLst;
 		}
 		let getById=(nr)=>{for (let key of dao.gerDao.getList()) if(key.Id === parseInt(nr)){return key;break;}}
-		return {getList: getList,getById: getById,getLstByArt: getLstByArt,fillLst:fillLst};
+		return {getList,getById,getLstByArt,fillLst};
 	})();
-	
-	return {artDao: artDao,gerDao: gerDao,egDao: egDao}; 
+
+	return {artDao,gerDao,egDao};
 })();

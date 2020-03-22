@@ -1,14 +1,13 @@
 /*
 Fitness Stammdaten Controler
 */
-"use strict";
 let cont =(function(){
+	"use strict";
 	//###### CONST ##################
 	const E_TITLE=[{neu:"neue Eigenschaft anlegen",edit:"Eigenschaft speichern",del:"Eigenschaft löschen"},{neu:"neues Gerät anlegen",edit:"Gerät speichern",del:"Gerät löschen"},{neu:"neue Art anlegen",edit:"Art speichern",del:"Art löschen"}];
 	const F_EG=new dom.f_eigenschaft(0,'','','255,255,255',0);
 	const F_Art=new dom.f_arten(0,'','');
 	const F_Ger=new dom.f_geraete(0,'','',0,'');
-
 	//###### SET ##################
 	let aktEntry;
 	let setError=(e)=>{
@@ -182,25 +181,25 @@ let cont =(function(){
 
 	//###### Public ##################
 	return {
-		getRules: getRules,
-    getLstForTree: getLstForTree,
-		getAktMenu: getAktMenu,
-		setAktMenu: setAktMenu,
-		getListMenu: getListMenu,
-		getMEdit: getMEdit,
-		getMBild: getMBild,
-		getMId: getMId,
-		getLstByArt: getLstByArt,
-		getList: getList,
-		getModel: getModel,
-		set_view: set_view,
-		createNForm: createNForm,
-		setForm: setForm,
-		fillNForm:fillNForm,
-		setError:setError,
-		aktEntry:aktEntry,
-		insert:insert,
-		update:update,
-		del:del
+		getRules,
+		getLstForTree,
+		getAktMenu,
+		setAktMenu,
+		getListMenu,
+	  getMEdit,
+		getMBild,
+		getMId,
+		getLstByArt,
+		getList,
+		getModel,
+		set_view,
+		createNForm,
+		setForm,
+		fillNForm,
+		setError,
+		aktEntry,
+		insert,
+		update,
+		del
     };
 })();

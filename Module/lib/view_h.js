@@ -1,16 +1,18 @@
-"use strict";
 let view_h =(function(){
+	"use strict";
 	let toogleMenu=()=>{
 		let childDivs = document.getElementById('menu');
 		if(childDivs===null) return;
 		if(childDivs.style.visibility==='hidden'||childDivs.style.visibility==='') childDivs.style.visibility='visible';
 		else childDivs.style.visibility='hidden';
 	}
+
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
 		if(cDiv===null) return;
 		while(cDiv.firstChild)cDiv.removeChild(cDiv.firstChild);
 	}
+
 	let clear_l=()=>{
 		let leftDiv = document.getElementById("left");
 		if(leftDiv===null) return;
@@ -20,6 +22,7 @@ let view_h =(function(){
 		}
 		cont.setAktMenu(null);
 	}
+
 	let setEditTitle=(txN='',txS='',txD='')=>{
 		let eleN = document.getElementById("btnNew");
 		let eleS = document.getElementById("btnSave");
@@ -28,21 +31,26 @@ let view_h =(function(){
 		if(eleS!=null) eleS.title = txS;
 		if(eleD!=null) eleD.title = txD;
 	}
+
 	let setLblStatus=(txt)=>{
 		//let lblSt = document.getElementById("lbl_foot");
 		//if(lblSt!=null) lblSt.innerText=ini.CONFOBJ.titel+" ["+txt+"]"
 	}
+
 	let setWait=(a)=>{
 		document.getElementById("wait").style.display=(a==true?'block':'none');
 	}
+
 	let setLeftHead=(txt)=>{
 		let lblSt = document.getElementById("stl");
 		if(lblSt!=null) lblSt.innerText=txt;
 	}
+
 	let setRightHead=(txt)=>{
 		let lblSt = document.getElementById("str");
 		if(lblSt!=null) lblSt.innerText=txt;
 	}
+
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
 		child.className='list';
@@ -52,6 +60,7 @@ let view_h =(function(){
 		child.setAttribute("l", l);
 		return child;
 	}
+
 	let createEle=(type,id='',clN='',val='',lstAtr=[],title='')=>{
 		let child = document.createElement(type);
 		if(clN != '') child.className=clN;
@@ -64,6 +73,7 @@ let view_h =(function(){
 		}
 		return child;
 	}
+
 	let createImg=(id,src,clN,t)=>{
 		let img=document.createElement("img");
 		img.id=id;
@@ -73,17 +83,18 @@ let view_h =(function(){
 		img.alt=t;
 		return img;
 	}
+
 	return{
-		createImg:createImg,
-		createEle:createEle,
-		createLi:createLi,
-		setRightHead:setRightHead,
-		setLeftHead:setLeftHead,
-		setLblStatus:setLblStatus,
-		setEditTitle:setEditTitle,
-		clear_l:clear_l,
-		clear_r:clear_r,
-		toogleMenu:toogleMenu,
-		setWait:setWait
+		createImg,
+		createEle,
+		createLi,
+		setRightHead,
+		setLeftHead,
+		setLblStatus,
+		setEditTitle,
+		clear_l,
+		clear_r,
+		toogleMenu,
+		setWait
 	}
 })();

@@ -1,9 +1,10 @@
 //node -version
 //v12.16.1
 //http://localhost:8888/?p=0&s=4&a=0&ac=0
-"use strict";
-const hlp = require('./hlp/hlp'), http = require('http'),url = require('url')
+const http = require('http');
 http.createServer(function (req, res) {
+	"use strict";
+	const hlp = require('./hlp/hlp'), http = require('http'),url = require('url')
 	try{
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.setHeader("Access-Control-Allow-Headers", "Content-Type");

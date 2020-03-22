@@ -1,6 +1,8 @@
-"use strict";
+/*
+Fitness Stammdaten Viewer
+*/
 let viewer =(function(){
-
+	"use strict";
 	let click=(event)=>{
 		/*bubbling ul click from li*/
 		let ele = event.target;
@@ -13,7 +15,7 @@ let viewer =(function(){
 		let lstTree=cont.getLstForTree(ak.type);
 		if(lstTree.length>0 && level==0){
 			if(ele.lastChild.nodeName==='UL'){
-				//cont.fillNForm();
+				cont.fillNForm();
 				return;
 			}
 			view_h.setWait(true);
@@ -31,7 +33,6 @@ let viewer =(function(){
 			});
 		}
 		else{
-
 			cont.set_view(nr);
 		}
 	}
@@ -97,7 +98,7 @@ let viewer =(function(){
 		if(lstTree.length>0){
 			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
-				//console.log('view.js 95: ',resVal);
+				console.log('view.js 95: ',resVal);
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
 				for (let key of resVal) {
@@ -181,26 +182,26 @@ let viewer =(function(){
 		let newSubDiv=null;
 		let ak=cont.getAktMenu();
 		console.log('view createForm aktuelle Menu: ',ak)
-		for (let r of ak.dsRules){
+		for (const r of ak.dsRules){
 			newSubDiv = document.createElement("div");
 			txt = document.createElement(r.art);
 			if(r.art==='select'){
-				console.log('view createForm select model: ',m);
+				//console.log('view createForm select model: ',m);
 				console.log('view createForm select rule: ',r);
 				cont.getList(r.type).then(result=>{
-					//opt = null;
+					opt = null;
 					//console.log('view createForm then(result=>: ',result)
 					let options_str='';
 					for(let a of result) {
-						//console.log('view createForm for r getList a: ',a.Name)
+						console.log('view createForm for r getList a: ',a)
 						options_str += `<option value='${a.Id}'>'${a.Name}'</option>`;
-						//opt = document.createElement('option');
-						//opt.value=a.Id;
-						//opt.text=a.Name;
-						//txt.appendChild(opt);
-						console.log('view createForm for r getList a options_str: ',options_str)
+						opt = document.createElement('option');
+						opt.value=a.Id;
+						opt.text=a.Name;
+						txt.appendChild(opt);
+						//console.log('view createForm for r getList a options_str: ',options_str)
 					}
-					txt.innerHtml=options_str;
+					//txt.innerHtml=options_str;
 					console.log('view createForm for r getList a txt.innerHtml: ',txt.innerHtml)
 				});
 				lbl=document.createElement("label");
@@ -267,7 +268,7 @@ let viewer =(function(){
 		currentDiv.appendChild(newDiv);
 		//main
 		newDiv=view_h.createEle('div','main','main','',[],'');
-		newDiv.addEventListener('error', viewer.err_click, false);
+		newDiv.addEventListener('error', err_click, false);
 		//main links
 		let leftdiv=view_h.createEle('div','left_m','left-pan','',[],'');
 		let msub=view_h.createEle('div','stl','hl','',[],'');
@@ -291,7 +292,7 @@ let viewer =(function(){
 		img=view_h.createImg("btnJST","./img/execute.jpg","img_edit","öffnet den Javascript Tester");
 		editDiv.appendChild(img);
 		editDiv.style.visibility='hidden';
-		editDiv.addEventListener('click', viewer.edit_click, false);
+		editDiv.addEventListener('click', edit_click, false);
 		leftdiv.appendChild(editDiv);
 		//eingabe felder
 		subdiv =view_h.createEle('div','right','','',[],'');
@@ -304,5 +305,14 @@ let viewer =(function(){
 		currentDiv.appendChild(newDiv);
 	}
 
-	return {createMain: createMain,createMenu: createMenu,createForm: createForm,display: display,menu_click: menu_click,edit_click: edit_click,click: click,err_click:err_click};
+	return {
+		createMain,
+		createMenu,
+		createForm,
+		display,
+		menu_click,
+		edit_click,
+		click,
+		err_click
+	};
 })();
