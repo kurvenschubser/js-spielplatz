@@ -1,10 +1,11 @@
 /*
 Fitness Stammdaten DAO LowDb
 */
-"use strict";
 let dao=(function(){
+	"use strict";
 	let artDao=(function(){
 		let lst=[];
+
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
@@ -15,7 +16,7 @@ let dao=(function(){
 										cont.setError(text);
 										return '';
 									}
-									if(text==='') return '';
+									if(text===null || text==='') return '';
 									let doc=JSON.parse(text);
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
@@ -31,6 +32,7 @@ let dao=(function(){
 				else {resolve(lst)}
 			});
 		}
+
 		let getById=async (nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
@@ -45,22 +47,29 @@ let dao=(function(){
 				});
 			});
 		}
+
 		let insert=async (m,p,s,a)=>{
 			let val = await data(m,p,s,a,1)
 			console.log(val)
 		}
+
 		let update=async (m,p,s,a)=>{
 			let val = await data(m,p,s,a,2)
 			console.log(val)
 		}
+
 		let del=async (m,p,s,a)=>{
 			let val = await data(m,p,s,a,3)
 			console.log(val)
 		}
-		return {getList: getList,getById: getById,insert:insert,update:update,del:del};
+
+		return {getList,getById,insert,update,del};
 	})();
-	let egDao=(function(){
+
+	let egDao=(
+		function(){
 		let lst=[];
+
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
@@ -72,7 +81,6 @@ let dao=(function(){
 										return '';
 									}
 									if(text==='') return '';
-
 									let doc=JSON.parse(text);
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
@@ -90,6 +98,7 @@ let dao=(function(){
 				else {resolve(lst)}
 			});
 		}
+
 		let getById=async (nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
@@ -104,22 +113,28 @@ let dao=(function(){
 				});
 			});
 		}
+
 		let insert=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
 			console.log(val)
 		}
+
 		let update=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
 			console.log(val)
 		}
+
 		let del=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
 			console.log(val)
 		}
-		return {getList: getList,getById: getById,insert:insert,update:update,del:del};
+
+		return {getList,getById,insert,update,del};
 	})();
+
 	let gerDao=(function(){
 		let lst=[];
+
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
@@ -145,6 +160,7 @@ let dao=(function(){
 				else {resolve(lst)}
 			});
 		}
+
 		let getById=async (nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
@@ -159,6 +175,7 @@ let dao=(function(){
 				});
 			});
 		}
+
 		let getLstByArt=async(nr)=>{
 			return new Promise((resolve, reject) => {
 				let nLst=[];
@@ -171,19 +188,23 @@ let dao=(function(){
 				});
 			});
 		}
+
 		let insert=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,1)
 			console.log(val)
 		}
+
 		let update=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,2)
 			console.log(val)
 		}
+
 		let del=async(m,p,s,a)=>{
 			let val = data(m,p,s,a,3)
 			console.log(val)
 		}
-		return {getList: getList,getById: getById,getLstByArt: getLstByArt,insert:insert,update:update,del:del};
+
+		return {getList,getById,getLstByArt,insert,update,del};
 	})();
 	let data = (m,p,s,a,ac) => {
 		let result;
@@ -202,5 +223,5 @@ let dao=(function(){
 		xhr.send(data);
 		return result;
 	}
-	return {artDao: artDao,gerDao: gerDao,egDao: egDao};
+	return {artDao,gerDao,egDao};
 })();

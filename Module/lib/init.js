@@ -1,4 +1,4 @@
-"use strict";
+
 const AppType = {
 	Fitness: 0,
 	Programmierhilfe: 1
@@ -10,6 +10,7 @@ const StorageType = {
 	MsSql: 3,
 	LowDb: 4
 };
+"use strict";
 let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 /*##################################################################*/
 	/*hier entscheiden welches Program verwendet werden soll*/
@@ -23,6 +24,7 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 	const LST_CONFOBJ=[
 	{id:0,titel:"Fitness - Stammdaten",v:"0.9.0.0",stor:{}},
 	{id:1,titel:"Programmierhilfe - Stammdaten",v:"0.9.0.1",stor:{}}];
+
 	/*Liste der Speichermöglichkeiten*/
 	const LST_STORE=[
 	{id:0,art:"Lok",desc:"Datenbank: Lokal",v:"1"},
@@ -30,12 +32,18 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 	{id:2,art:"MySql",desc:"Datenbank: MySql",v:"1"},
 	{id:3,art:"MsSql",desc:"Datenbank: MsSql",v:"1"},
 	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"}];
+
 	/*Globales*/
 	const CONFOBJ=LST_CONFOBJ[PRO];
 	CONFOBJ.stor=LST_STORE[STORE];
 	CONFOBJ.url=`http://localhost:8888/?p=${PRO}&s=${STORE}`;
+	let setHeight=()=>{
+		let v=window.innerHeight-180;
+		let str = '80px ' + v +'px 60px';
+		document.querySelector(".wrapper").setAttribute('style','grid-template-rows:' + str + '');
+	}
+
 	let init=()=>{
-		"use strict";
 		// IE11-support
 		String.prototype.startsWith || (String.prototype.startsWith= function(s) { let n= s.length; return n<=this.length && this.substring(0,n)===s });
 		String.prototype.endsWith || (String.prototype.endsWith= function(s) { let n= this.length-s.length; return n>=0 && this.substring(n)===s });
@@ -55,9 +63,11 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 			scrptOb={art:'link',src:"css/index.css",type:"stylesheet",charset:"utf-8"};
 			setScript(scrptOb);
 			document.title=CONFOBJ.titel;
+			window.addEventListener('resize', ini.setHeight);
 		}
 		catch (e) {console.log(e)}
 	}
+
 	let setScript=(scrptOb)=>{
 		try{
 			if(document.readyState==="complete") {
@@ -75,5 +85,6 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 		}
 		catch (e) {throw e}
 	}
-	return {CONFOBJ:CONFOBJ,init:init};
+
+	return {CONFOBJ,init,setHeight};
 })();
