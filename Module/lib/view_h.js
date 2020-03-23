@@ -7,6 +7,18 @@ let view_h =(function(){
 		else childDivs.style.visibility='hidden';
 	}
 
+	let hideMenu=()=>{
+		let childDivs = document.getElementById('menu');
+		if(childDivs===null) return;
+		childDivs.style.visibility='hidden';
+	}
+
+	let showMenu=()=>{
+		let childDivs = document.getElementById('menu');
+		if(childDivs===null) return;
+		childDivs.style.visibility='visible';
+	}
+
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
 		if(cDiv===null) return;
@@ -33,8 +45,7 @@ let view_h =(function(){
 	}
 
 	let setLblStatus=(txt)=>{
-		//let lblSt = document.getElementById("lbl_foot");
-		//if(lblSt!=null) lblSt.innerText=ini.CONFOBJ.titel+" ["+txt+"]"
+		document.getElementById("footer").innerText=ini.CONFOBJ.titel+" ["+txt+"]"
 	}
 
 	let setWait=(a)=>{
@@ -42,20 +53,17 @@ let view_h =(function(){
 	}
 
 	let setLeftHead=(txt)=>{
-		let lblSt = document.getElementById("stl");
-		if(lblSt!=null) lblSt.innerText=txt;
+		document.getElementById("stl").innerText=txt;
 	}
 
 	let setRightHead=(txt)=>{
-		let lblSt = document.getElementById("str");
-		if(lblSt!=null) lblSt.innerText=txt;
+		document.getElementById("str").innerText=txt;
 	}
 
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
 		child.className='list';
 		child.innerText=value.Name;
-		//var b = JSON.stringify(value);
 		child.setAttribute("nr", value.Id);
 		child.setAttribute("l", l);
 		return child;
@@ -95,6 +103,8 @@ let view_h =(function(){
 		clear_l,
 		clear_r,
 		toogleMenu,
-		setWait
+		setWait,
+		hideMenu,
+		showMenu
 	}
 })();

@@ -170,9 +170,9 @@ let cont =(function(){
 	}
 
 	let getRules=(typ)=>{
-		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sort',art:'input',type:'number'},{feld:'Desc',art:'input',type:'text'}];
-		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Desc',art:'input',type:'text'},{feld:'Bild',art:'img',type:'text'}];
-		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Desc',art:'input',type:'text'}];}
+		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sort',art:'input',type:'number'},{feld:'Desc',art:'textarea',type:'text'}];
+		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Desc',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];
+		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Desc',art:'textarea',type:'text'}];}
 		else return [];
 	}
 
