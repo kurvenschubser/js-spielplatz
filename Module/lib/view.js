@@ -88,7 +88,6 @@ let viewer =(function(){
 		view_h.clear_l();
 		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
-		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
 		let value={};
 		let child=null;
@@ -243,27 +242,17 @@ let viewer =(function(){
 
 	let createMain=()=>{
 		let currentDiv = document.body;
-		//<div class="wrapper">
 		let wrapper = view_h.createEle('div','','wrapper','',[],'');
 		let menu = view_h.createEle('div','botomhead','','',[],'');
-		//<div class="menu" onmouseover="showMenu()" onmouseleave="hideMenu()">
 		let header=view_h.createEle('div','head','box header',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
-		//<div class="box header">Fitness - Stammdaten [0.9.0.0 ] Datenbank: LowDb</div>
 		let sidebar=view_h.createEle('div','left_m','box sidebar','',[],'');
-		//<div class="box sidebar">
 		let sHeader=view_h.createEle('div','stl','hl','',[],'');
-		//<div class="hl" id="stl">f_geraete</div>
 		let left=view_h.createEle('div','left','','',[],'');
-		//<div id="left">
 		sidebar.appendChild(sHeader);
 		sidebar.appendChild(left);
-
 		let content=view_h.createEle('div','right_m','box content','',[],'');
-		//<div class="box content">
 		let cHeader=view_h.createEle('div','str','hl','',[],'');
-		//<div class="hl" id="str">f_geraete [0] </div>
 		let edit=view_h.createEle('div','div_edit','edit','',[],'');
-		//<div class="edit" id="div_edit" style="visibility: visible;"><img id="btnNew" src="./img/btn_new.png" class="img_edit" title="neues Gerät anlegen" alt="neu">
 		let img=view_h.createImg("btnNew","./img/btn_new.png","img_edit","neu");
 		edit.appendChild(img);
 		img=view_h.createImg("btnSave","./img/btn_save.png","img_edit","speichern");
@@ -274,19 +263,13 @@ let viewer =(function(){
 		edit.appendChild(img);
 		edit.style.visibility='hidden';
 		edit.addEventListener('click', edit_click, false);
-
 		let right=view_h.createEle('div','right','','',[],'');
-		//<div id="right">
 		content.appendChild(cHeader);
 		content.appendChild(edit);
 		content.appendChild(right);
-
 		let footer=view_h.createEle('div','footer','','',[],'');
-		//<div id="footer">Footer</div>
-		//Wait DIV
 		let wait=view_h.createEle('div','wait','','',[],'');
 		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
-
 		wrapper.appendChild(menu);
 		wrapper.appendChild(header);
 		wrapper.appendChild(sidebar);
@@ -294,59 +277,6 @@ let viewer =(function(){
 		wrapper.appendChild(footer);
 		wrapper.appendChild(wait);
 		currentDiv.appendChild(wrapper);
-		/*
-		//header
-		let newDiv=view_h.createEle('div','head','header','',[],'');
-		let subdiv=view_h.createEle('div','','top-head',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
-		newDiv.appendChild(subdiv);
-		subdiv=view_h.createEle('div','botomhead','botom-head','',[],'');
-		newDiv.appendChild(subdiv);
-		currentDiv.appendChild(newDiv);
-
-		//main
-		newDiv=view_h.createEle('div','main','main','',[],'');
-		newDiv.addEventListener('error', err_click, false);
-
-		//main links
-		let leftdiv=view_h.createEle('div','left_m','left-pan','',[],'');
-		let msub=view_h.createEle('div','stl','hl','',[],'');
-		leftdiv.appendChild(msub);
-		subdiv=view_h.createEle('div','left','','',[],'');
-		leftdiv.appendChild(subdiv);
-		newDiv.appendChild(leftdiv);
-
-		//main rechts
-		leftdiv=view_h.createEle('div','right_m','right-pan','',[],'');
-		//kopfleiste
-		msub=view_h.createEle('div','str','hl','',[],'');
-		leftdiv.appendChild(msub);
-		//edit leiste
-		let editDiv=view_h.createEle('div','div_edit','edit','',[],'');
-		let img=view_h.createImg("btnNew","./img/btn_new.png","img_edit","neu");
-		editDiv.appendChild(img);
-		img=view_h.createImg("btnSave","./img/btn_save.png","img_edit","speichern");
-		editDiv.appendChild(img);
-		img=view_h.createImg("btnDel","./img/btn_del.png","img_edit","löschen");
-		editDiv.appendChild(img);
-		img=view_h.createImg("btnJST","./img/execute.jpg","img_edit","öffnet den Javascript Tester");
-		editDiv.appendChild(img);
-		editDiv.style.visibility='hidden';
-		editDiv.addEventListener('click', edit_click, false);
-		leftdiv.appendChild(editDiv);
-		//eingabe felder
-		subdiv =view_h.createEle('div','right','','',[],'');
-		leftdiv.appendChild(subdiv);
-		newDiv.appendChild(leftdiv);
-		currentDiv.appendChild(newDiv);
-
-		//footer
-
-
-		//Wait DIV
-		newDiv=view_h.createEle('div','wait','','',[],'');
-		newDiv.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
-		currentDiv.appendChild(newDiv);
-		*/
 	}
 
 	return {
