@@ -1,15 +1,13 @@
 /*
 Fitness Stammdaten Controler
-change:21.03-2020
 */
-"use strict";
 let cont =(function(){
+	"use strict";
 	//###### CONST ##################
 	const E_TITLE=[{neu:"neue Eigenschaft anlegen",edit:"Eigenschaft speichern",del:"Eigenschaft löschen"},{neu:"neues Gerät anlegen",edit:"Gerät speichern",del:"Gerät löschen"},{neu:"neue Art anlegen",edit:"Art speichern",del:"Art löschen"}];
 	const F_EG=new dom.f_eigenschaft(0,'','','255,255,255',0);
 	const F_Art=new dom.f_arten(0,'','');
 	const F_Ger=new dom.f_geraete(0,'','',0,'');
-
 	//###### SET ##################
 	let aktEntry;
 	let setError=(e)=>{
@@ -34,9 +32,7 @@ let cont =(function(){
 		try {
 			let t=getAktMenu().type;
 			let ti=t==="f_geraete"?1:t==="f_arten"?2:0;
-			console.log('ctrl createNForm ',t);
 			let m = getNewModel(t);
-			console.log('ctrl new model ',m);
 			viewer.createForm(m);
 			view_h.setEditTitle(E_TITLE[ti].neu,E_TITLE[ti].edit,E_TITLE[ti].del);
 		}
@@ -87,7 +83,8 @@ let cont =(function(){
 				return new Promise((resolve, reject) => {
 					if(aktMenu==null) return [];
 					if(aktMenu.type==="f_geraete"){
-						dao.gerDao.getLstByArt(nr).then(result=>{resolve(result)})
+						dao.gerDao.getLstByArt(nr).then(result=>{
+							resolve(result)});
 					}
 					else{resolve([])}
 				});
@@ -173,33 +170,33 @@ let cont =(function(){
 	}
 
 	let getRules=(typ)=>{
-		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sort',art:'input',type:'number'},{feld:'Desc',art:'input',type:'text'}];
-		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Desc',art:'input',type:'text'},{feld:'Bild',art:'img',type:'text'}];
-		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Desc',art:'input',type:'text'}];}
+		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sort',art:'input',type:'number'},{feld:'Desc',art:'textarea',type:'text'}];
+		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Desc',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];
+		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Desc',art:'textarea',type:'text'}];}
 		else return [];
 	}
 
 	//###### Public ##################
 	return {
-		getRules: getRules,
-    getLstForTree: getLstForTree,
-		getAktMenu: getAktMenu,
-		setAktMenu: setAktMenu,
-		getListMenu: getListMenu,
-		getMEdit: getMEdit,
-		getMBild: getMBild,
-		getMId: getMId,
-		getLstByArt: getLstByArt,
-		getList: getList,
-		getModel: getModel,
-		set_view: set_view,
-		createNForm: createNForm,
-		setForm: setForm,
-		fillNForm:fillNForm,
-		setError:setError,
-		aktEntry:aktEntry,
-		insert:insert,
-		update:update,
-		del:del
+		getRules,
+		getLstForTree,
+		getAktMenu,
+		setAktMenu,
+		getListMenu,
+	  getMEdit,
+		getMBild,
+		getMId,
+		getLstByArt,
+		getList,
+		getModel,
+		set_view,
+		createNForm,
+		setForm,
+		fillNForm,
+		setError,
+		aktEntry,
+		insert,
+		update,
+		del
     };
 })();

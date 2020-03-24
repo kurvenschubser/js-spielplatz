@@ -1,10 +1,8 @@
 /*
 Fitness Stammdaten Viewer
-change:21.03-2020
 */
-"use strict";
 let viewer =(function(){
-
+	"use strict";
 	let click=(event)=>{
 		/*bubbling ul click from li*/
 		let ele = event.target;
@@ -16,7 +14,11 @@ let viewer =(function(){
 		let ak = cont.getAktMenu()
 		let lstTree=cont.getLstForTree(ak.type);
 		if(lstTree.length>0 && level==0){
-			if(ele.lastChild.nodeName==='UL'){return}
+			if(ele.lastChild.nodeName==='UL'){
+				cont.fillNForm();
+				return;
+			}
+			view_h.setWait(true);
 			cont.getLstByArt(nr).then(resVal=>{
 				let ul = document.createElement("ul");
 				let value=null;
@@ -26,9 +28,12 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				ele.appendChild(ul);
+				setTimeout(() => view_h.setWait(false), 500);
 			});
 		}
-		else{cont.set_view(nr)}
+		else{
+			cont.set_view(nr);
+		}
 	}
 
 	let edit_click=(event)=>{
@@ -45,6 +50,7 @@ let viewer =(function(){
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
+				view_h.setWait(true);
 				let vn=document.getElementById('txt_Name').value;
 				let vd=document.getElementById('txt_Desc').value;
 				cont.aktEntry.Name=vn;
@@ -57,12 +63,15 @@ let viewer =(function(){
 					//update
 					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
 				}
+				setTimeout(() => view_h.setWait(false), 1000);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
+				view_h.setWait(true);
 				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
+				setTimeout(() => view_h.setWait(false), 1000);
 			}
 		}
 	}
@@ -79,12 +88,14 @@ let viewer =(function(){
 		view_h.clear_l();
 		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
+		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
 		let value={};
 		let child=null;
 		//if tree get first level
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
+			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
@@ -93,9 +104,13 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-			}).then(result=>{cont.createNForm()});
+				setTimeout(() => view_h.setWait(false), 500);
+			}).then(result=>{
+				cont.createNForm();
+			});
 		}
 		else{
+			view_h.setWait(true);
 			cont.getList(art).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
@@ -104,8 +119,12 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-			}).then(result=>{cont.createNForm()});
+				setTimeout(() => view_h.setWait(false), 500);
+			}).then(result=>{
+				cont.createNForm();
+			});
 		}
+
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
 	}
@@ -154,49 +173,42 @@ let viewer =(function(){
 		view_h.clear_r();
 		let currentDiv = document.getElementById("right");
 		let lbl=null;
-		let txt=null;
-		let opt=null;
 		let newSubDiv=null;
 		let ak=cont.getAktMenu();
-		console.log('view createForm aktuelle Menu: ',ak)
-		for (let r of ak.dsRules){
+		for (const r of ak.dsRules){
 			newSubDiv = document.createElement("div");
-			txt = document.createElement(r.art);
+			let txt = document.createElement(r.art);
 			if(r.art==='select'){
-				console.log('view createForm select model: ',m);
-				console.log('view createForm select rule: ',r);
 				cont.getList(r.type).then(result=>{
-					//opt = null;
-					//console.log('view createForm then(result=>: ',result)
-					let options_str='';
 					for(let a of result) {
-						//console.log('view createForm for r getList a: ',a.Name)
-						options_str += `<option value='${a.Id}'>'${a.Name}'</option>`;
-						//opt = document.createElement('option');
-						//opt.value=a.Id;
-						//opt.text=a.Name;
-						//txt.appendChild(opt);
-						console.log('view createForm for r getList a options_str: ',options_str)
+						let opt = document.createElement('option');
+						opt.value=a.Id;
+						opt.text=a.Name;
+						txt.appendChild(opt);
 					}
-					txt.innerHtml=options_str;
-					console.log('view createForm for r getList a txt.innerHtml: ',txt.innerHtml)
 				});
 				lbl=document.createElement("label");
 			}
 			else if(r.art==='img'){
 				if(hlp.isFileApi()){
-					lbl=document.createElement("input");
-					lbl.type="file";
-					lbl.style.cssText = 'width:120px;;vertical-align:top';
-					lbl.onclick=(evt)=>{let files = evt.target.files}
+					lbl=document.createElement("input")
+					lbl.type="file"
+					lbl.style.cssText = 'width:120px;;vertical-align:top'
+					lbl.onclick=function(evt){
+						let files = evt.target.files
+					}
 				}
-				else {lbl=document.createElement("label")}
+				else{
+					lbl=document.createElement("label")
+				}
 			}
 			else if(r.art==='textarea'){
-				lbl=document.createElement("label");
+				lbl=document.createElement("label")
 				txt.rows="12"
 			}
-			else { lbl=document.createElement("label") }
+			else{
+				lbl=document.createElement("label")
+			}
 			txt.setAttribute('type',r.type)
 			txt.id=`txt_${r.feld}`;
 			lbl.id=`lbl_${r.feld}`;
@@ -212,15 +224,16 @@ let viewer =(function(){
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
 		let menuDiv =view_h.createEle('div','','menu','Menu',[],'');
-		menuDiv.onclick = ()=>{view_h.toogleMenu();};
-		menuDiv.onmouseleave = ()=>{view_h.toogleMenu();};
+		menuDiv.onmouseover = function(){view_h.showMenu();};
+		menuDiv.onmouseleave = function(){view_h.hideMenu();};
 		currentDiv.appendChild(menuDiv);
 		let navDiv= view_h.createEle('div','menu','','',[],'');
 		navDiv.style.visibility='hidden';
+		navDiv.onclick=function(){view_h.hideMenu();};
 		let lst=cont.getListMenu();
 		let menuSubDiv=null;
 		for(let r of lst) {
-			menuSubDiv=view_h.createEle("div",'','submenu',r.Name,[{name:'art',val:r.type}],r.desc);
+			menuSubDiv=view_h.createEle("div",'','',r.Name,[{name:'art',val:r.type}],r.desc);
 			navDiv.appendChild(menuSubDiv);
 		}
 		//bubeling eventhandler on menu click
@@ -230,6 +243,58 @@ let viewer =(function(){
 
 	let createMain=()=>{
 		let currentDiv = document.body;
+		//<div class="wrapper">
+		let wrapper = view_h.createEle('div','','wrapper','',[],'');
+		let menu = view_h.createEle('div','botomhead','','',[],'');
+		//<div class="menu" onmouseover="showMenu()" onmouseleave="hideMenu()">
+		let header=view_h.createEle('div','head','box header',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
+		//<div class="box header">Fitness - Stammdaten [0.9.0.0 ] Datenbank: LowDb</div>
+		let sidebar=view_h.createEle('div','left_m','box sidebar','',[],'');
+		//<div class="box sidebar">
+		let sHeader=view_h.createEle('div','stl','hl','',[],'');
+		//<div class="hl" id="stl">f_geraete</div>
+		let left=view_h.createEle('div','left','','',[],'');
+		//<div id="left">
+		sidebar.appendChild(sHeader);
+		sidebar.appendChild(left);
+
+		let content=view_h.createEle('div','right_m','box content','',[],'');
+		//<div class="box content">
+		let cHeader=view_h.createEle('div','str','hl','',[],'');
+		//<div class="hl" id="str">f_geraete [0] </div>
+		let edit=view_h.createEle('div','div_edit','edit','',[],'');
+		//<div class="edit" id="div_edit" style="visibility: visible;"><img id="btnNew" src="./img/btn_new.png" class="img_edit" title="neues Gerät anlegen" alt="neu">
+		let img=view_h.createImg("btnNew","./img/btn_new.png","img_edit","neu");
+		edit.appendChild(img);
+		img=view_h.createImg("btnSave","./img/btn_save.png","img_edit","speichern");
+		edit.appendChild(img);
+		img=view_h.createImg("btnDel","./img/btn_del.png","img_edit","löschen");
+		edit.appendChild(img);
+		img=view_h.createImg("btnJST","./img/execute.jpg","img_edit","öffnet den Javascript Tester");
+		edit.appendChild(img);
+		edit.style.visibility='hidden';
+		edit.addEventListener('click', edit_click, false);
+
+		let right=view_h.createEle('div','right','','',[],'');
+		//<div id="right">
+		content.appendChild(cHeader);
+		content.appendChild(edit);
+		content.appendChild(right);
+
+		let footer=view_h.createEle('div','footer','','',[],'');
+		//<div id="footer">Footer</div>
+		//Wait DIV
+		let wait=view_h.createEle('div','wait','','',[],'');
+		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
+
+		wrapper.appendChild(menu);
+		wrapper.appendChild(header);
+		wrapper.appendChild(sidebar);
+		wrapper.appendChild(content);
+		wrapper.appendChild(footer);
+		wrapper.appendChild(wait);
+		currentDiv.appendChild(wrapper);
+		/*
 		//header
 		let newDiv=view_h.createEle('div','head','header','',[],'');
 		let subdiv=view_h.createEle('div','','top-head',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
@@ -237,9 +302,11 @@ let viewer =(function(){
 		subdiv=view_h.createEle('div','botomhead','botom-head','',[],'');
 		newDiv.appendChild(subdiv);
 		currentDiv.appendChild(newDiv);
+
 		//main
 		newDiv=view_h.createEle('div','main','main','',[],'');
-		newDiv.addEventListener('error', viewer.err_click, false);
+		newDiv.addEventListener('error', err_click, false);
+
 		//main links
 		let leftdiv=view_h.createEle('div','left_m','left-pan','',[],'');
 		let msub=view_h.createEle('div','stl','hl','',[],'');
@@ -247,6 +314,7 @@ let viewer =(function(){
 		subdiv=view_h.createEle('div','left','','',[],'');
 		leftdiv.appendChild(subdiv);
 		newDiv.appendChild(leftdiv);
+
 		//main rechts
 		leftdiv=view_h.createEle('div','right_m','right-pan','',[],'');
 		//kopfleiste
@@ -263,18 +331,32 @@ let viewer =(function(){
 		img=view_h.createImg("btnJST","./img/execute.jpg","img_edit","öffnet den Javascript Tester");
 		editDiv.appendChild(img);
 		editDiv.style.visibility='hidden';
-		editDiv.addEventListener('click', viewer.edit_click, false);
+		editDiv.addEventListener('click', edit_click, false);
 		leftdiv.appendChild(editDiv);
 		//eingabe felder
 		subdiv =view_h.createEle('div','right','','',[],'');
 		leftdiv.appendChild(subdiv);
 		newDiv.appendChild(leftdiv);
 		currentDiv.appendChild(newDiv);
+
+		//footer
+
+
 		//Wait DIV
 		newDiv=view_h.createEle('div','wait','','',[],'');
 		newDiv.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
 		currentDiv.appendChild(newDiv);
+		*/
 	}
 
-	return {createMain: createMain,createMenu: createMenu,createForm: createForm,display: display,menu_click: menu_click,edit_click: edit_click,click: click,err_click:err_click};
+	return {
+		createMain,
+		createMenu,
+		createForm,
+		display,
+		menu_click,
+		edit_click,
+		click,
+		err_click
+	};
 })();
