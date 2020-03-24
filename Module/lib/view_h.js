@@ -62,7 +62,6 @@ let view_h =(function(){
 
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
-		child.className='list';
 		child.innerText=value.Name;
 		child.setAttribute("nr", value.Id);
 		child.setAttribute("l", l);
@@ -86,7 +85,7 @@ let view_h =(function(){
 		let img=document.createElement("img");
 		img.id=id;
 		img.src=src;
-		img.className=clN;
+		if(clN !='') img.className=clN;
 		img.title=t;
 		img.alt=t;
 		return img;
