@@ -12,10 +12,11 @@ let cont =(function(){
 	let aktEntry;
 	let setError=(e)=>{
 		try {
+
 			//view_h.clear_r();
 			//document.getElementById('div_edit').style.visibility='hidden';
-			//document.getElementById('right').insertAdjacentHTML('beforeend',`<p><b>${e}</b></p>`)
-			console.log(JSON.stringify(e));
+			//document.getElementById('right').insertAdjacentHTML('beforeend',`<p><b>${e.message}</b></p>`)
+			console.log(e);
 		}
 		catch (e){alert(e)}
 	}
@@ -170,9 +171,9 @@ let cont =(function(){
 	}
 
 	let getRules=(typ)=>{
-		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sort',art:'input',type:'number'},{feld:'Desc',art:'textarea',type:'text'}];
-		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Desc',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];
-		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Desc',art:'textarea',type:'text'}];}
+		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sortierung',art:'input',type:'number'},{feld:'Beschreibung',art:'textarea',type:'text'}];
+		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Beschreibung',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];
+		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Beschreibung',art:'textarea',type:'text'}];}
 		else return [];
 	}
 

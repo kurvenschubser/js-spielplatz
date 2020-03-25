@@ -18,7 +18,6 @@ let viewer =(function(){
 				cont.fillNForm();
 				return;
 			}
-			view_h.setWait(true);
 			cont.getLstByArt(nr).then(resVal=>{
 				let ul = document.createElement("ul");
 				let value=null;
@@ -28,7 +27,6 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				ele.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
 			});
 		}
 		else{
@@ -63,7 +61,7 @@ let viewer =(function(){
 					//update
 					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
 				}
-				setTimeout(() => view_h.setWait(false), 1000);
+				setTimeout(() => view_h.setWait(false), 800);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
@@ -71,7 +69,7 @@ let viewer =(function(){
 				//zur Zeit nur Arten
 				view_h.setWait(true);
 				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
-				setTimeout(() => view_h.setWait(false), 1000);
+				setTimeout(() => view_h.setWait(false), 800);
 			}
 		}
 	}
@@ -95,7 +93,6 @@ let viewer =(function(){
 		//if tree get first level
 		let lstTree=cont.getLstForTree(art);
 		if(lstTree.length>0){
-			view_h.setWait(true);
 			cont.getList(lstTree[0].type).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
@@ -104,13 +101,11 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
 			}).then(result=>{
 				cont.createNForm();
 			});
 		}
 		else{
-			view_h.setWait(true);
 			cont.getList(art).then(resVal=>{
 				let ul = document.createElement("ul");
 				ul.addEventListener('click', viewer.click, false);
@@ -119,7 +114,6 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
 			}).then(result=>{
 				cont.createNForm();
 			});
@@ -211,7 +205,6 @@ let viewer =(function(){
 			txt.id=`txt_${r.feld}`;
 			lbl.id=`lbl_${r.feld}`;
 			newSubDiv.appendChild(lbl);
-			//if(r.art==='img'){newSubDiv.appendChild(document.createElement("br"))}
 			newSubDiv.appendChild(txt);
 			currentDiv.appendChild(newSubDiv);
 
@@ -244,16 +237,15 @@ let viewer =(function(){
 
 	let createMain=()=>{
 		let currentDiv = document.body;
-		let wrapper = view_h.createEle('main','','wrapper','',[],'');
-		let menu = view_h.createEle('section','botomhead','','',[],'');
-		let header=view_h.createEle('section','head','box header',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
-		let sidebar=view_h.createEle('section','left_m','box sidebar','',[],'');
+		let wrapper = view_h.createEle('main','','','',[],'');
+		let menu = view_h.createEle('nav','botomhead','','',[],'');
+		let header=view_h.createEle('section','head','',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
 		let sHeader=view_h.createEle('section','stl','','',[],'');
-		let left=view_h.createEle('section','left','','',[],'');
-		sidebar.appendChild(sHeader);
-		sidebar.appendChild(left);
-		let content=view_h.createEle('section','right_m','box content','',[],'');
 		let cHeader=view_h.createEle('section','str','','',[],'');
+		let sidebar=view_h.createEle('section','left_m','','',[],'');
+		let left=view_h.createEle('section','left','','',[],'');
+		sidebar.appendChild(left);
+		let content=view_h.createEle('section','right_m','','',[],'');
 		let edit=view_h.createEle('section','div_edit','','',[],'');
 		let img=view_h.createImg("btnNew","./img/btn_new.png",'',"neu");
 		edit.appendChild(img);
@@ -266,14 +258,15 @@ let viewer =(function(){
 		edit.style.visibility='hidden';
 		edit.addEventListener('click', edit_click, false);
 		let right=view_h.createEle('section','right','','',[],'');
-		content.appendChild(cHeader);
 		content.appendChild(edit);
 		content.appendChild(right);
 		let footer=view_h.createEle('section','footer','','',[],'');
 		let wait=view_h.createEle('section','wait','','',[],'');
-		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
+		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>');
 		wrapper.appendChild(menu);
 		wrapper.appendChild(header);
+		wrapper.appendChild(sHeader);
+		wrapper.appendChild(cHeader);
 		wrapper.appendChild(sidebar);
 		wrapper.appendChild(content);
 		wrapper.appendChild(footer);

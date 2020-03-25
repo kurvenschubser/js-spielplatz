@@ -9,21 +9,23 @@ let dao=(function(){
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
 					fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
 						function(response) {
 							response.text().then(function(text) {
-									if(text.startsWith("<p><b>ACHTUNG")){
-										cont.setError(text);
-										return '';
-									}
-									if(text===null || text==='') return '';
+								if(text===null || text==='') return '';
 									let doc=JSON.parse(text);
+									if(doc.art && doc.art == 'Error'){
+										cont.setError(doc);
+										return;
+									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
 										ge = new dom.f_arten(val.id,val.name,val.beschreibung);
 										lst.push(ge);
 									}
 								}).then(result=>{
+									setTimeout(() => view_h.setWait(false), 800);
 									resolve(lst);
 								})//ende response.then
 						}//ende function (response)
@@ -73,15 +75,15 @@ let dao=(function(){
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
 					fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
 						function(response) {
 							response.text().then(function(text) {
-									if(text.startsWith("<p><b>ACHTUNG")){
-										cont.setError(text);
-										return '';
-									}
-									if(text==='') return '';
 									let doc=JSON.parse(text);
+									if(doc.art && doc.art == 'Error'){
+										cont.setError(doc);
+										return;
+									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
 										let tmp=val.farbe.split(',');
@@ -90,6 +92,7 @@ let dao=(function(){
 											lst.push(ge);
 									}
 								}).then(result=>{
+									setTimeout(() => view_h.setWait(false), 800);
 									resolve(lst);
 								})//ende response.then
 						}//ende function (response)
@@ -138,20 +141,23 @@ let dao=(function(){
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
 					fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
 						function(response) {
 							response.text().then(function(text) {
-									if(text.startsWith("<p><b>ACHTUNG")){
-										cont.setError(text);
-									}
 									if(text==='') return '';
 									let doc=JSON.parse(text);
+									if(doc.art && doc.art == 'Error'){
+										cont.setError(doc);
+										return;
+									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
 										ge = new dom.f_geraete(val.id,val.name,val.beschreibung,val.art,val.bild);
 										lst.push(ge);
 									}
 								}).then(result=>{
+									setTimeout(() => view_h.setWait(false), 800);
 									resolve(lst);
 								})//ende response.then
 						}//ende function (response)

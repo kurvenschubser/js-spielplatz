@@ -9,7 +9,7 @@ let dom=(function(){
 		constructor(id,name,desc){
 			this.Id=id;
 			this.Name=name;
-			this.Desc=desc;
+			this.Beschreibung=desc;
 		}
 		toString(){return `[${this.Id}] ${this.Name}`;}
 	}
@@ -23,7 +23,7 @@ let dom=(function(){
 		constructor(id,name,desc,farbe,sort){
 			super(id,name,desc);
 			this.Farbe=farbe;
-			this.Sort=sort;
+			this.Sortierung=sort;
 		}
 		toString(){return super.toString();}
 	}
