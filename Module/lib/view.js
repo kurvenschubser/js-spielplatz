@@ -91,33 +91,37 @@ let viewer =(function(){
 		let value={};
 		let child=null;
 		//if tree get first level
-		let lstTree=cont.getLstForTree(art);
-		if(lstTree.length>0){
-			cont.getList(lstTree[0].type).then(resVal=>{
-				let ul = document.createElement("ul");
-				ul.addEventListener('click', viewer.click, false);
-				for (let key of resVal) {
-					child=view_h.createLi(key,0);
-					ul.appendChild(child);
-				}
-				leftDiv.appendChild(ul);
-			}).then(result=>{
-				cont.createNForm();
-			});
+		try{
+			let lstTree=cont.getLstForTree(art);
+			if(lstTree.length>0){
+				cont.getList(lstTree[0].type).then(resVal=>{
+					let ul = document.createElement("ul");
+					ul.addEventListener('click', viewer.click, false);
+					for (let key of resVal) {
+						child=view_h.createLi(key,0);
+						ul.appendChild(child);
+					}
+					leftDiv.appendChild(ul);
+				}).then(result=>{
+					cont.createNForm();
+				});
+			}
+			else{
+				cont.getList(art).then(resVal=>{
+					let ul = document.createElement("ul");
+					ul.addEventListener('click', viewer.click, false);
+					for (let key of resVal) {
+						child=view_h.createLi(key,-1);
+						ul.appendChild(child);
+					}
+					leftDiv.appendChild(ul);
+				}).then(result=>{
+					cont.createNForm();
+				});
+			}
 		}
-		else{
-			cont.getList(art).then(resVal=>{
-				let ul = document.createElement("ul");
-				ul.addEventListener('click', viewer.click, false);
-				for (let key of resVal) {
-					child=view_h.createLi(key,-1);
-					ul.appendChild(child);
-				}
-				leftDiv.appendChild(ul);
-			}).then(result=>{
-				cont.createNForm();
-			});
-		}
+		catch(e){console.log(e)}
+
 
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
