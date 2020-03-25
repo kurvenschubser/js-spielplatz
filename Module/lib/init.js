@@ -37,10 +37,11 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 	const CONFOBJ=LST_CONFOBJ[PRO];
 	CONFOBJ.stor=LST_STORE[STORE];
 	CONFOBJ.url=`http://localhost:8888/?p=${PRO}&s=${STORE}`;
+
 	let setHeight=()=>{
-		let v=window.innerHeight-180;
-		let str = '80px ' + v +'px 60px';
-		document.querySelector(".wrapper").setAttribute('style','grid-template-rows:' + str + '');
+		const h=window.innerHeight-230;
+    const str = '80px 40px ' + h +'px 40px';
+    document.querySelector("main").setAttribute('style','grid-template-rows:' + str + '');
 	}
 
 	let init=()=>{

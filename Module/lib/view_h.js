@@ -21,8 +21,15 @@ let view_h =(function(){
 
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
-		if(cDiv===null) return;
-		while(cDiv.firstChild)cDiv.removeChild(cDiv.firstChild);
+		if(cDiv===null) {
+			//console.log('clear_r right=null');
+			return;
+		}
+		//console.log('cDiv ',cDiv.children.length);
+		while(cDiv.firstChild) {
+			//console.log('clear_r removeChild ',cDiv.firstElementChild);
+			cDiv.removeChild(cDiv.firstChild);
+		}
 	}
 
 	let clear_l=()=>{
@@ -49,7 +56,18 @@ let view_h =(function(){
 	}
 
 	let setWait=(a)=>{
-		document.getElementById("wait").style.display=(a==true?'block':'none');
+		if (a==true) {
+			document.getElementById("wait").style.display='block';
+			const h=window.innerHeight;
+			const w=window.innerWidth;
+			//console.log('height width: ',h,w);
+			document.getElementById("wait").setAttribute('style','height:' + h + 'px;');
+			document.getElementById("wait").setAttribute('style','width:' + w + 'px;');
+		}
+		else{
+			document.getElementById("wait").setAttribute('style','height:0px;');
+			document.getElementById("wait").style.display='none';
+		}
 	}
 
 	let setLeftHead=(txt)=>{
@@ -62,7 +80,6 @@ let view_h =(function(){
 
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
-		child.className='list';
 		child.innerText=value.Name;
 		child.setAttribute("nr", value.Id);
 		child.setAttribute("l", l);
@@ -86,7 +103,7 @@ let view_h =(function(){
 		let img=document.createElement("img");
 		img.id=id;
 		img.src=src;
-		img.className=clN;
+		if(clN !='') img.className=clN;
 		img.title=t;
 		img.alt=t;
 		return img;
