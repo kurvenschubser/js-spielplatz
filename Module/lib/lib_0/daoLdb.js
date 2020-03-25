@@ -14,20 +14,20 @@ let dao=(function(){
 						function(response) {
 							response.text().then(function(text) {
 								if(text===null || text==='') return '';
-									let doc=JSON.parse(text);
-									if(doc.art && doc.art == 'Error'){
-										cont.setError(doc);
-										return;
-									}
-									let ge =null;
-									for (let val of JSON.parse(doc)) {
-										ge = new dom.f_arten(val.id,val.name,val.beschreibung);
-										lst.push(ge);
-									}
-								}).then(result=>{
+								let doc=JSON.parse(text);
+								if(doc.art && doc.art == 'Error'){
 									setTimeout(() => view_h.setWait(false), 800);
-									resolve(lst);
-								})//ende response.then
+									throw doc;
+								}
+								let ge =null;
+								for (let val of JSON.parse(doc)) {
+									ge = new dom.f_arten(val.id,val.name,val.beschreibung);
+									lst.push(ge);
+								}
+							}).then(result=>{
+								setTimeout(() => view_h.setWait(false), 800);
+								resolve(lst);
+							})//ende response.then
 						}//ende function (response)
 					)//ende fetch.then
 				}
@@ -81,8 +81,8 @@ let dao=(function(){
 							response.text().then(function(text) {
 									let doc=JSON.parse(text);
 									if(doc.art && doc.art == 'Error'){
-										cont.setError(doc);
-										return;
+										setTimeout(() => view_h.setWait(false), 800);
+										throw doc;
 									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
@@ -148,8 +148,8 @@ let dao=(function(){
 									if(text==='') return '';
 									let doc=JSON.parse(text);
 									if(doc.art && doc.art == 'Error'){
-										cont.setError(doc);
-										return;
+										setTimeout(() => view_h.setWait(false), 800);
+										throw doc;
 									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {

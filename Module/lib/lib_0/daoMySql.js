@@ -7,18 +7,18 @@ let dao=(function(){
 		let lst=[];
 
 		let getList=async ()=>{
-			return new Promise((resolve, reject) => {
-				if(lst===null || lst.length ==0){
-					view_h.setWait(true);
-					fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
-						function(response) {
-							response.text().then(function(text) {
+			try{
+				return new Promise((resolve, reject) => {
+					if(lst===null || lst.length ==0){
+						view_h.setWait(true);
+						fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
 									if(text===null || text==='') return '';
 									let doc=JSON.parse(text);
 									if(doc.art && doc.art == 'Error'){
-										cont.setError(doc);
-										console.log('dao getList ',doc);
-										return;
+										setTimeout(() => view_h.setWait(false), 800);
+										throw doc;
 									}
 									let ge =null;
 									for (let val of JSON.parse(doc)) {
@@ -29,11 +29,13 @@ let dao=(function(){
 									setTimeout(() => view_h.setWait(false), 800);
 									resolve(lst);
 								})//ende response.then
-						}//ende function (response)
-					)//ende fetch.then
-				}
-				else {resolve(lst)}
-			});
+							}//ende function (response)
+						)//ende fetch.then
+					}
+					else {resolve(lst)}
+				});
+			}
+			catch(e){cont.setError(e)}
 		}
 
 		let getById=async (nr)=>{
@@ -76,29 +78,32 @@ let dao=(function(){
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					view_h.setWait(true);
-					fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
-						function(response) {
-							response.text().then(function(text) {
-									if(text.startsWith("<p><b>ACHTUNG")){
-										cont.setError(text);
-										return '';
-									}
-									if(text==='') return '';
-									let doc=JSON.parse(text);
-									let ge =null;
-									for (let val of JSON.parse(doc)) {
-										let tmp=val.farbe.split(',');
-										let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
-											ge = new dom.f_eigenschaft(val.id,val.name,val.beschreibung,cl,val.sortfield);
-											lst.push(ge);
-									}
-								}).then(result=>{
-									setTimeout(() => view_h.setWait(false), 800);
-									resolve(lst);
-								})//ende response.then
-						}//ende function (response)
-					)//ende fetch.then
+					try {
+						view_h.setWait(true);
+						fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+										if(text==='') return '';
+										let doc=JSON.parse(text);
+										if(doc.art && doc.art == 'Error'){
+											setTimeout(() => view_h.setWait(false), 800);
+											throw doc;
+										}
+										let ge =null;
+										for (let val of JSON.parse(doc)) {
+											let tmp=val.farbe.split(',');
+											let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
+												ge = new dom.f_eigenschaft(val.id,val.name,val.beschreibung,cl,val.sortfield);
+												lst.push(ge);
+										}
+									}).then(result=>{
+										setTimeout(() => view_h.setWait(false), 800);
+										resolve(lst);
+									})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+					}
+					catch(e){throw e}
 				}
 				else {resolve(lst)}
 			});
@@ -143,26 +148,30 @@ let dao=(function(){
 		let getList=async ()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					view_h.setWait(true);
-					fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
-						function(response) {
-							response.text().then(function(text) {
-									if(text.startsWith("<p><b>ACHTUNG")){
-										cont.setError(text);
-									}
-									if(text==='') return '';
-									let doc=JSON.parse(text);
-									let ge =null;
-									for (let val of JSON.parse(doc)) {
-										ge = new dom.f_geraete(val.id,val.name,val.beschreibung,val.art,val.bild);
-										lst.push(ge);
-									}
-								}).then(result=>{
-									setTimeout(() => view_h.setWait(false), 800);
-									resolve(lst);
-								})//ende response.then
-						}//ende function (response)
-					)//ende fetch.then
+					try{
+						view_h.setWait(true);
+						fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+										if(text==='') return '';
+										let doc=JSON.parse(text);
+										if(doc.art && doc.art == 'Error'){
+											setTimeout(() => view_h.setWait(false), 800);
+											throw doc;
+										}
+										let ge =null;
+										for (let val of JSON.parse(doc)) {
+											ge = new dom.f_geraete(val.id,val.name,val.beschreibung,val.art,val.bild);
+											lst.push(ge);
+										}
+									}).then(result=>{
+										setTimeout(() => view_h.setWait(false), 800);
+										resolve(lst);
+									})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+					}
+					catch(e){throw e}
 				}
 				else {resolve(lst)}
 			});

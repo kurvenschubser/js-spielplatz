@@ -22,12 +22,9 @@ let view_h =(function(){
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
 		if(cDiv===null) {
-			//console.log('clear_r right=null');
 			return;
 		}
-		//console.log('cDiv ',cDiv.children.length);
 		while(cDiv.firstChild) {
-			//console.log('clear_r removeChild ',cDiv.firstElementChild);
 			cDiv.removeChild(cDiv.firstChild);
 		}
 	}
@@ -57,12 +54,11 @@ let view_h =(function(){
 
 	let setWait=(a)=>{
 		if (a==true) {
-			document.getElementById("wait").style.display='block';
 			const h=window.innerHeight;
 			const w=window.innerWidth;
-			//console.log('height width: ',h,w);
 			document.getElementById("wait").setAttribute('style','height:' + h + 'px;');
 			document.getElementById("wait").setAttribute('style','width:' + w + 'px;');
+			document.getElementById("wait").style.display='block';
 		}
 		else{
 			document.getElementById("wait").setAttribute('style','height:0px;');
