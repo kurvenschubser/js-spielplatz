@@ -36,7 +36,7 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 	/*Globales*/
 	const CONFOBJ=LST_CONFOBJ[PRO];
 	CONFOBJ.stor=LST_STORE[STORE];
-	CONFOBJ.url=`http://localhost:8888/?p=${PRO}&s=${STORE}`;
+	CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
 
 	let setHeight=()=>{
 		const h=window.innerHeight-230;
