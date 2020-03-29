@@ -189,10 +189,8 @@ let viewer =(function(){
 				if(hlp.isFileApi()){
 					lbl=document.createElement("input");
 					lbl.type="file";
-					lbl.style="width: 120px; vertical-align: top; size:10;"
-					lbl.onclick=function(evt){
-						let files = evt.target.files;
-					}
+					lbl.style="width: 120px; vertical-align: top; size:10;";
+					lbl.onclick=(evt)=>{let files = evt.target.files}
 				}
 				else{
 					lbl=document.createElement("label");
@@ -211,8 +209,6 @@ let viewer =(function(){
 			newSubDiv.appendChild(lbl);
 			newSubDiv.appendChild(txt);
 			currentDiv.appendChild(newSubDiv);
-
-
 		}
 		display(m);
 		let edit = document.getElementById("div_edit");
@@ -221,13 +217,34 @@ let viewer =(function(){
 
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
-		let menuDiv =view_h.createEle('section','','','Menu',[],'');
-		menuDiv.onmouseover = function(){view_h.showMenu();};
-		menuDiv.onmouseleave = function(){view_h.hideMenu();};
+
+		let menuDiv =view_h.createEle('section','navsec','','',[],'');
+		let lbl = document.createElement('label');
+		lbl.innerText = "Menu";
+		/*
+		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		var path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+		svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+		svg.setAttribute("id","btnMenu");
+		//svg.setAttribute("aria-hidden","false");
+		//svg.setAttribute('viewbox', '0 0 448 512');
+		//svg.setAttribute('overflow', 'true');
+		//svg.setAttribute('viewbox', '0 0 40 40');
+		//svg.setAttribute('width', '40px');
+		//svg.setAttribute('height', '40px');
+		path.setAttribute('d', 'M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z');
+		//path.setAttribute('fill', '#2962ff');
+		//path.setAttribute('font-size', '60%');
+		svg.appendChild(path);
+	*/
+		menuDiv.appendChild(lbl);
+		menuDiv.onmouseover = ()=>{view_h.showMenu();};
+		menuDiv.onmouseleave = ()=>{view_h.hideMenu();};
 		currentDiv.appendChild(menuDiv);
 		let navDiv= view_h.createEle('section','menu','','',[],'');
 		navDiv.style.visibility='hidden';
-		navDiv.onclick=function(){view_h.hideMenu();};
+		navDiv.onmouseover=()=>{view_h.showMenu()}
+		navDiv.onmousout=()=>{view_h.hideMenu()}
 		let lst=cont.getListMenu();
 		let menuSubDiv=null;
 		for(let r of lst) {
@@ -245,6 +262,7 @@ let viewer =(function(){
 		let menu = view_h.createEle('nav','botomhead','','',[],'');
 		let header=view_h.createEle('section','head','',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
 		let sHeader=view_h.createEle('section','stl','','',[],'');
+		sHeader.onclick=()=>{view_h.toggleColoumWidth()}
 		let cHeader=view_h.createEle('section','str','','',[],'');
 		let sidebar=view_h.createEle('section','left_m','','',[],'');
 		let left=view_h.createEle('section','left','','',[],'');

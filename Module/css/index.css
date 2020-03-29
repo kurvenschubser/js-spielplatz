@@ -1,31 +1,71 @@
-body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial';font-size:100%}
-body>main {display:grid;grid-gap:15px;grid-template-columns:2fr 4fr;grid-template-rows:80px 40px 400px 40px;grid-template-areas:"header  header " "tl tr" "sidebar content" "footer  footer"}
+body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial';font-size:100%;color:#fff}
 #botomhead,#menu,#stl,#str,#footer,#head,#wait {color:#fff;background-color:#999;border-radius:5px}
-#right,#left {color:#fff}
-#right>section>img,#right>section>input,#right>section>textarea,#div_edit>img ,#right>section>select{border-radius:4px}
-#botomhead>section:first-child {font-size:120%;padding-top:7px;width:150px;height:25px;position:absolute;left:5px;top:40px;vertical-align:middle;text-align:center;cursor:pointer}
-#menu>section {padding-top:10px}
+#botomhead>section:first-child {padding-left:0px}
+#menu>section {padding-top:10px;padding-left:10px;text-align: left;}
 #menu>section:last-child {padding-bottom:15px}
-#head {grid-area: header;font-size:150%;text-align:center;padding-top:30px}
-#stl {grid-area:tl}
-#str { grid-area:tr}
-#stl,#str {vertical-align:middle;padding:7px;padding-left:30px;font-size:120%}
-#left>ul>li {list-style-type:none;margin-bottom:20px;cursor:pointer}
-#left>ul>li>ul>li {list-style-type:none;margin:6px;margin-left:-25px;margin-top:15px}
-#left>ul>li>ul>li:first-child {margin-top:15px}
-#left_m {grid-area:sidebar;overflow-y:scroll;scroll-behavior:smooth}
-#right>section {margin-top:8px;margin-left:3px}
-#right>section>label {text-align:right;padding-right:5px;width:120px;vertical-align:top;display:inline-block}
-#right>section>input,#right>section>textarea {min-height:25px;width:400px;font-family:'Arial';font-size:100%}
-#right>section>select {width:406px;font-size:100%}
+#stl {cursor:pointer}
+#right>section>img,#right>section>input,#right>section>textarea,#div_edit>img ,#right>section>select{border-radius:4px;font-size:100%}
+#right>section>textarea {min-height:25px;width:400px;font-family:'Arial';font-size:100%}
 #right>section>img {height:250px;margin-left:6px}
 #right {margin-top:20px}
-#right_m {grid-area:content;position:relative;overflow-y:scroll;scroll-behavior:smooth}
-#div_edit {margin:8px;margin-left:20px}
-#div_edit>img {height:30px;margin-left:15px;margin-top:5px;cursor:pointer}
-#footer {grid-area:footer;padding-left:30px;padding-top:10px;font-size:100%}
+#right>section {margin-top:8px;margin-left:3px}
 #wait {height:0px;background-color:#444;display:none;position:absolute;top:0px;left:0px;bottom:0px;right:0px;width:100%;height:100%;line-height:500px;vertical-align:middle;text-align:center;font-size:150%}
-.topleft {position:absolute;top:0;left:0}
+#botomhead>section>li {padding-left:10px;}
+@media only screen and (max-width: 599px),(min-width: 600px ) {
+  body>main {
+    display:grid;
+    grid-gap:0px;
+    grid-template-columns:100%;
+    grid-template-rows:minmax(30px, auto) 30px 30px 200px 30px auto minmax(30px, auto);
+    grid-template-areas:"header" "menu" "tl"  "sidebar" "tr" "content" "footer"}
+  #botomhead{grid-area:menu}
+  #botomhead>section:first-child {font-size:100%;width:150px;height:25px;position:absolute;left:5px;top:45px;vertical-align:middle;cursor:pointer}
+  #botomhead,#menu,#stl,#str,#footer,#head,#wait {border-radius:0px}
+  #head {grid-area: header;font-size:100%;text-align:center;padding-top:5px}
+  #stl {grid-area:tl}
+  #left_m {grid-area:sidebar;overflow-y:scroll;scroll-behavior:smooth}
+  #left>ul>li {list-style-type:none;margin-bottom:10px;cursor:pointer}
+  #left>ul>li>ul>li {list-style-type:none;margin:3px;margin-left:-25px;margin-top:5px}
+  #left>ul>li>ul>li:first-child {margin-top:5px}
+  #str { grid-area:tr}
+  #stl,#str {vertical-align:middle;padding:5px;padding-left:10px;font-size:100%}
+  #right_m {grid-area:content;position:relative;overflow-y:scroll;scroll-behavior:smooth}
+  #right>section>label {padding-left:0px;padding-right:5px;vertical-align:top}
+  #right>section>input,#right>section>textarea,#right>section>select {display:block;width:90%}
+  #right>section>img {display:block}
+  #div_edit {margin:8px;margin-left:5px}
+  #div_edit>img {height:30px;margin-left:5px;margin-top:5px;cursor:pointer}
+  #footer {grid-area:footer;padding-left:10px;padding-top:5px;font-size:100%}
+}
+
+@media only screen and (min-width: 980px ),(min-width: 1260px ) {
+  body>main {
+    display:grid;
+    grid-gap:15px;
+    grid-template-columns:20% 79%;
+    grid-template-rows:80px 40px 780px 40px;
+    grid-template-areas:"header header" "tl tr" "sidebar content" "footer footer"}
+  #botomhead>section>label:first-child {padding-left:10px}
+  #botomhead>section:first-child {font-size:120%;padding-top:7px;width:150px;height:25px;position:absolute;left:5px;top:40px;vertical-align:middle;cursor:pointer}
+  #botomhead,#menu,#stl,#str,#footer,#head,#wait {border-radius:5px}
+  #head {grid-area: header;font-size:150%;text-align:center;padding-top:30px}
+  #stl {grid-area:tl}
+  #left_m {grid-area:sidebar;overflow-y:scroll;scroll-behavior:smooth}
+  #left>ul>li {list-style-type:none;margin-bottom:20px;cursor:pointer}
+  #left>ul>li>ul>li {list-style-type:none;margin:6px;margin-left:-25px;margin-top:15px}
+  #left>ul>li>ul>li:first-child {margin-top:15px}
+  #str { grid-area:tr}
+  #stl,#str {vertical-align:middle;padding:7px;padding-left:30px;font-size:120%}
+  #right_m {grid-area:content;position:relative;overflow-y:scroll;scroll-behavior:smooth}
+  #right>section>input,#right>section>textarea,#right>section>select {display:inline-block;width:400px;}
+  #right>section>img {display:inline-block}
+  #right>section>label {text-align:right;padding-right:5px;width:120px;vertical-align:top;display:inline-block}
+  #div_edit {margin:8px;margin-left:20px}
+  #div_edit>img {height:30px;margin-left:15px;margin-top:5px;cursor:pointer}
+  #footer {grid-area:footer;padding-left:30px;padding-top:10px;font-size:100%}
+}
+
+/*.topleft {position:absolute;top:0;left:0}
 .topright {position:absolute;top:0;right:0}
 .bottomleft {position:absolute;bottom:0;left:0}
-.bottomright {position:absolute;bottom:0;right:0}
+.bottomright {position:absolute;bottom:0;right:0}*/
