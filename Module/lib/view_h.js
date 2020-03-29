@@ -1,5 +1,6 @@
 let view_h =(function(){
 	"use strict";
+
 	let toogleMenu=()=>{
 		let childDivs = document.getElementById('menu');
 		if(childDivs===null) return;
@@ -86,7 +87,7 @@ let view_h =(function(){
 		let child = document.createElement(type);
 		if(clN != '') child.className=clN;
 		if(id != '') child.id=id;
-		if(val != '') child.innerText=val;
+		if(val != ''){child.innerText=val};
 		if(title != '') child.title=title;
 		for (var a in lstAtr){
 			let at = lstAtr[a];
@@ -105,6 +106,39 @@ let view_h =(function(){
 		return img;
 	}
 
+	let toggleColoumWidth=()=>{
+		//body>main
+		let el=document.getElementsByTagName('main')[0];
+		let style = getComputedStyle(el);
+		const w=parseInt(window.innerWidth);
+		if (w < 980) {
+			//rows
+			let rows = style.gridTemplateRows;
+			let resRow=rows.split(' ');
+			const row1 = parseInt(resRow[3]);
+			if (row1 < 200) {
+				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 200px 30px auto minmax(30px, auto)";
+			}
+			else {
+				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 0px 30px auto minmax(30px, auto)";
+			}
+			el.style.gridTemplateCols ="100%";
+		}
+		else{
+			//cols
+			let col = style.gridTemplateColumns;
+			let resCol=col.split(' ');
+			const col1 = parseInt(resCol[0]);
+			if (col1 < 200) {
+				el.style.gridTemplateColumns = "20% 79%";
+			}
+			else{
+				el.style.gridTemplateColumns = "5% 94%";
+			}
+			el.style.gridTemplateRows = "80px 40px 780px 40px;";
+		}
+	}
+
 	return{
 		createImg,
 		createEle,
@@ -118,6 +152,7 @@ let view_h =(function(){
 		toogleMenu,
 		setWait,
 		hideMenu,
-		showMenu
+		showMenu,
+		toggleColoumWidth
 	}
 })();
