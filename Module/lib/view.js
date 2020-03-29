@@ -18,7 +18,6 @@ let viewer =(function(){
 				cont.fillNForm();
 				return;
 			}
-			view_h.setWait(true);
 			cont.getLstByArt(nr).then(resVal=>{
 				let ul = document.createElement("ul");
 				let value=null;
@@ -28,7 +27,6 @@ let viewer =(function(){
 					ul.appendChild(child);
 				}
 				ele.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
 			});
 		}
 		else{
@@ -63,7 +61,7 @@ let viewer =(function(){
 					//update
 					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
 				}
-				setTimeout(() => view_h.setWait(false), 1000);
+				setTimeout(() => view_h.setWait(false), 800);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
@@ -71,7 +69,7 @@ let viewer =(function(){
 				//zur Zeit nur Arten
 				view_h.setWait(true);
 				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
-				setTimeout(() => view_h.setWait(false), 1000);
+				setTimeout(() => view_h.setWait(false), 800);
 			}
 		}
 	}
@@ -88,41 +86,42 @@ let viewer =(function(){
 		view_h.clear_l();
 		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
+		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
 		let value={};
 		let child=null;
 		//if tree get first level
-		let lstTree=cont.getLstForTree(art);
-		if(lstTree.length>0){
-			view_h.setWait(true);
-			cont.getList(lstTree[0].type).then(resVal=>{
-				let ul = document.createElement("ul");
-				ul.addEventListener('click', viewer.click, false);
-				for (let key of resVal) {
-					child=view_h.createLi(key,0);
-					ul.appendChild(child);
-				}
-				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
-			}).then(result=>{
-				cont.createNForm();
-			});
+		try{
+			let lstTree=cont.getLstForTree(art);
+			if(lstTree.length>0){
+				cont.getList(lstTree[0].type).then(resVal=>{
+					let ul = document.createElement("ul");
+					ul.addEventListener('click', viewer.click, false);
+					for (let key of resVal) {
+						child=view_h.createLi(key,0);
+						ul.appendChild(child);
+					}
+					leftDiv.appendChild(ul);
+				}).then(result=>{
+					cont.createNForm();
+				});
+			}
+			else{
+				cont.getList(art).then(resVal=>{
+					let ul = document.createElement("ul");
+					ul.addEventListener('click', viewer.click, false);
+					for (let key of resVal) {
+						child=view_h.createLi(key,-1);
+						ul.appendChild(child);
+					}
+					leftDiv.appendChild(ul);
+				}).then(result=>{
+					cont.createNForm();
+				});
+			}
 		}
-		else{
-			view_h.setWait(true);
-			cont.getList(art).then(resVal=>{
-				let ul = document.createElement("ul");
-				ul.addEventListener('click', viewer.click, false);
-				for (let key of resVal) {
-					child=view_h.createLi(key,-1);
-					ul.appendChild(child);
-				}
-				leftDiv.appendChild(ul);
-				setTimeout(() => view_h.setWait(false), 500);
-			}).then(result=>{
-				cont.createNForm();
-			});
-		}
+		catch(e){console.log(e)}
+
 
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
@@ -136,18 +135,16 @@ let viewer =(function(){
 	let display=(m)=>{
 		let value=null;
 		let lbl=null;
-		let txt=null;
-		let opt=null;
-		let ak=	cont.getAktMenu();
+		let ak=cont.getAktMenu();
 		cont.aktEntry=m;
 		for (let r of ak.dsRules){
 			value = m[r.feld];
 			lbl = document.getElementById(`lbl_${r.feld}`);
 			lbl.innerText=`${r.feld}:`;
-			txt = document.getElementById(`txt_${r.feld}`);
+			let txt = document.getElementById(`txt_${r.feld}`);
 			if(r.art==='select'){
 				for (let i = 0; i < txt.length; i++){
-					opt = txt.options[i];
+					let opt = txt.options[i];
 					let mId=cont.getMId(m,r.feld);
 					if(parseInt(opt.value)===mId){opt.selected =true;break;}
 				}
@@ -175,7 +172,7 @@ let viewer =(function(){
 		let newSubDiv=null;
 		let ak=cont.getAktMenu();
 		for (const r of ak.dsRules){
-			newSubDiv = document.createElement("div");
+			newSubDiv = document.createElement("section");
 			let txt = document.createElement(r.art);
 			if(r.art==='select'){
 				cont.getList(r.type).then(result=>{
@@ -190,20 +187,18 @@ let viewer =(function(){
 			}
 			else if(r.art==='img'){
 				if(hlp.isFileApi()){
-					lbl=document.createElement("input")
-					lbl.type="file"
-					lbl.style.cssText = 'width:120px;;vertical-align:top'
-					lbl.onclick=function(evt){
-						let files = evt.target.files
-					}
+					lbl=document.createElement("input");
+					lbl.type="file";
+					lbl.style="width: 120px; vertical-align: top; size:10;";
+					lbl.onclick=(evt)=>{let files = evt.target.files}
 				}
 				else{
-					lbl=document.createElement("label")
+					lbl=document.createElement("label");
 				}
 			}
 			else if(r.art==='textarea'){
-				lbl=document.createElement("label")
-				txt.rows="12"
+				lbl=document.createElement("label");
+				txt.rows="12";
 			}
 			else{
 				lbl=document.createElement("label")
@@ -212,7 +207,7 @@ let viewer =(function(){
 			txt.id=`txt_${r.feld}`;
 			lbl.id=`lbl_${r.feld}`;
 			newSubDiv.appendChild(lbl);
-			newSubDiv.appendChild(txt)
+			newSubDiv.appendChild(txt);
 			currentDiv.appendChild(newSubDiv);
 		}
 		display(m);
@@ -222,17 +217,38 @@ let viewer =(function(){
 
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
-		let menuDiv =view_h.createEle('div','','menu','Menu',[],'');
-		menuDiv.onmouseover = function(){view_h.showMenu();};
-		menuDiv.onmouseleave = function(){view_h.hideMenu();};
+
+		let menuDiv =view_h.createEle('section','navsec','','',[],'');
+		let lbl = document.createElement('label');
+		lbl.innerText = "Menu";
+		/*
+		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		var path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+		svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+		svg.setAttribute("id","btnMenu");
+		//svg.setAttribute("aria-hidden","false");
+		//svg.setAttribute('viewbox', '0 0 448 512');
+		//svg.setAttribute('overflow', 'true');
+		//svg.setAttribute('viewbox', '0 0 40 40');
+		//svg.setAttribute('width', '40px');
+		//svg.setAttribute('height', '40px');
+		path.setAttribute('d', 'M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z');
+		//path.setAttribute('fill', '#2962ff');
+		//path.setAttribute('font-size', '60%');
+		svg.appendChild(path);
+	*/
+		menuDiv.appendChild(lbl);
+		menuDiv.onmouseover = ()=>{view_h.showMenu();};
+		menuDiv.onmouseleave = ()=>{view_h.hideMenu();};
 		currentDiv.appendChild(menuDiv);
-		let navDiv= view_h.createEle('div','menu','','',[],'');
+		let navDiv= view_h.createEle('section','menu','','',[],'');
 		navDiv.style.visibility='hidden';
-		navDiv.onclick=function(){view_h.hideMenu();};
+		navDiv.onmouseover=()=>{view_h.showMenu()}
+		navDiv.onmousout=()=>{view_h.hideMenu()}
 		let lst=cont.getListMenu();
 		let menuSubDiv=null;
 		for(let r of lst) {
-			menuSubDiv=view_h.createEle("div",'','',r.Name,[{name:'art',val:r.type}],r.desc);
+			menuSubDiv=view_h.createEle("section",'','',r.Name,[{name:'art',val:r.type}],r.desc);
 			navDiv.appendChild(menuSubDiv);
 		}
 		//bubeling eventhandler on menu click
@@ -242,36 +258,37 @@ let viewer =(function(){
 
 	let createMain=()=>{
 		let currentDiv = document.body;
-		let wrapper = view_h.createEle('div','','wrapper','',[],'');
-		let menu = view_h.createEle('div','botomhead','','',[],'');
-		let header=view_h.createEle('div','head','box header',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
-		let sidebar=view_h.createEle('div','left_m','box sidebar','',[],'');
-		let sHeader=view_h.createEle('div','stl','hl','',[],'');
-		let left=view_h.createEle('div','left','','',[],'');
-		sidebar.appendChild(sHeader);
+		let wrapper = view_h.createEle('main','','','',[],'');
+		let menu = view_h.createEle('nav','botomhead','','',[],'');
+		let header=view_h.createEle('section','head','',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
+		let sHeader=view_h.createEle('section','stl','','',[],'');
+		sHeader.onclick=()=>{view_h.toggleColoumWidth()}
+		let cHeader=view_h.createEle('section','str','','',[],'');
+		let sidebar=view_h.createEle('section','left_m','','',[],'');
+		let left=view_h.createEle('section','left','','',[],'');
 		sidebar.appendChild(left);
-		let content=view_h.createEle('div','right_m','box content','',[],'');
-		let cHeader=view_h.createEle('div','str','hl','',[],'');
-		let edit=view_h.createEle('div','div_edit','edit','',[],'');
-		let img=view_h.createImg("btnNew","./img/btn_new.png","img_edit","neu");
+		let content=view_h.createEle('section','right_m','','',[],'');
+		let edit=view_h.createEle('section','div_edit','','',[],'');
+		let img=view_h.createImg("btnNew","./img/btn_new.png",'',"neu");
 		edit.appendChild(img);
-		img=view_h.createImg("btnSave","./img/btn_save.png","img_edit","speichern");
+		img=view_h.createImg("btnSave","./img/btn_save.png",'',"speichern");
 		edit.appendChild(img);
-		img=view_h.createImg("btnDel","./img/btn_del.png","img_edit","löschen");
+		img=view_h.createImg("btnDel","./img/btn_del.png",'',"löschen");
 		edit.appendChild(img);
-		img=view_h.createImg("btnJST","./img/execute.jpg","img_edit","öffnet den Javascript Tester");
+		img=view_h.createImg("btnJST","./img/execute.jpg",'',"öffnet den Javascript Tester");
 		edit.appendChild(img);
 		edit.style.visibility='hidden';
 		edit.addEventListener('click', edit_click, false);
-		let right=view_h.createEle('div','right','','',[],'');
-		content.appendChild(cHeader);
+		let right=view_h.createEle('section','right','','',[],'');
 		content.appendChild(edit);
 		content.appendChild(right);
-		let footer=view_h.createEle('div','footer','','',[],'');
-		let wait=view_h.createEle('div','wait','','',[],'');
-		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>')
+		let footer=view_h.createEle('section','footer','','',[],'');
+		let wait=view_h.createEle('section','wait','','',[],'');
+		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>');
 		wrapper.appendChild(menu);
 		wrapper.appendChild(header);
+		wrapper.appendChild(sHeader);
+		wrapper.appendChild(cHeader);
 		wrapper.appendChild(sidebar);
 		wrapper.appendChild(content);
 		wrapper.appendChild(footer);

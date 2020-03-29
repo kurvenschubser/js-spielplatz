@@ -1,5 +1,6 @@
 let view_h =(function(){
 	"use strict";
+
 	let toogleMenu=()=>{
 		let childDivs = document.getElementById('menu');
 		if(childDivs===null) return;
@@ -21,8 +22,12 @@ let view_h =(function(){
 
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
-		if(cDiv===null) return;
-		while(cDiv.firstChild)cDiv.removeChild(cDiv.firstChild);
+		if(cDiv===null) {
+			return;
+		}
+		while(cDiv.firstChild) {
+			cDiv.removeChild(cDiv.firstChild);
+		}
 	}
 
 	let clear_l=()=>{
@@ -49,7 +54,17 @@ let view_h =(function(){
 	}
 
 	let setWait=(a)=>{
-		document.getElementById("wait").style.display=(a==true?'block':'none');
+		if (a==true) {
+			const h=window.innerHeight;
+			const w=window.innerWidth;
+			document.getElementById("wait").setAttribute('style','height:' + h + 'px;');
+			document.getElementById("wait").setAttribute('style','width:' + w + 'px;');
+			document.getElementById("wait").style.display='block';
+		}
+		else{
+			document.getElementById("wait").setAttribute('style','height:0px;');
+			document.getElementById("wait").style.display='none';
+		}
 	}
 
 	let setLeftHead=(txt)=>{
@@ -62,7 +77,6 @@ let view_h =(function(){
 
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
-		child.className='list';
 		child.innerText=value.Name;
 		child.setAttribute("nr", value.Id);
 		child.setAttribute("l", l);
@@ -73,7 +87,7 @@ let view_h =(function(){
 		let child = document.createElement(type);
 		if(clN != '') child.className=clN;
 		if(id != '') child.id=id;
-		if(val != '') child.innerText=val;
+		if(val != ''){child.innerText=val};
 		if(title != '') child.title=title;
 		for (var a in lstAtr){
 			let at = lstAtr[a];
@@ -86,10 +100,43 @@ let view_h =(function(){
 		let img=document.createElement("img");
 		img.id=id;
 		img.src=src;
-		img.className=clN;
+		if(clN !='') img.className=clN;
 		img.title=t;
 		img.alt=t;
 		return img;
+	}
+
+	let toggleColoumWidth=()=>{
+		//body>main
+		let el=document.getElementsByTagName('main')[0];
+		let style = getComputedStyle(el);
+		const w=parseInt(window.innerWidth);
+		if (w < 980) {
+			//rows
+			let rows = style.gridTemplateRows;
+			let resRow=rows.split(' ');
+			const row1 = parseInt(resRow[3]);
+			if (row1 < 200) {
+				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 200px 30px auto minmax(30px, auto)";
+			}
+			else {
+				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 0px 30px auto minmax(30px, auto)";
+			}
+			el.style.gridTemplateCols ="100%";
+		}
+		else{
+			//cols
+			let col = style.gridTemplateColumns;
+			let resCol=col.split(' ');
+			const col1 = parseInt(resCol[0]);
+			if (col1 < 200) {
+				el.style.gridTemplateColumns = "20% 79%";
+			}
+			else{
+				el.style.gridTemplateColumns = "5% 94%";
+			}
+			el.style.gridTemplateRows = "80px 40px 780px 40px;";
+		}
 	}
 
 	return{
@@ -105,6 +152,7 @@ let view_h =(function(){
 		toogleMenu,
 		setWait,
 		hideMenu,
-		showMenu
+		showMenu,
+		toggleColoumWidth
 	}
 })();

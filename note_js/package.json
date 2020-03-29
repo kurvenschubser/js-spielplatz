@@ -2,7 +2,8 @@
 	"name": "js-spielplatz",
 	"version": "0.0.1",
 	"scripts": {
-		"start": "cd mh && node mh.js"
+		"start": "cd mh && node mh.js",
+		"cypress:open": "cypress open"
 	},
 	"dependencies": {
 		"xml2json": "^0.12.0",
@@ -10,5 +11,9 @@
 		"mssql": "^6.2.0",
 		"lowdb": "^1.0.0",
 		"http": "*"
+	},
+	"devDependencies": {
+		"cypress": "^4.2.0",
+		"jest": "^25.2.0"
 	}
 }
