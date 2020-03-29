@@ -215,7 +215,7 @@ let dao=(function(){
 	let data = (m,p,s,a,ac) => {
 		let result;
 		let xhr = new XMLHttpRequest();
-		let url = `http://localhost:8888/?p=${p}&s=${s}&a=${a}&ac=${ac}`;
+		let url = `/api/?p=${p}&s=${s}&a=${a}&ac=${ac}`;
 		if(ac===0){xhr.open("GET", url, true)}
 		else{xhr.open("POST", url, true)}
 		xhr.setRequestHeader("Content-Type", "application/json");
