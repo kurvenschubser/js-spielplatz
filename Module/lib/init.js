@@ -11,17 +11,14 @@ const StorageType = {
 	LowDb: 4
 };
 "use strict";
-//let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
-let ini=(function(){
+let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 /*##################################################################*/
 	/*hier entscheiden welches Program verwendet werden soll*/
 	/*Programm: 0 = Fitness 1 = Programmierhilfe*/
-	//const PRO=app;
-	const PRO=0;
+	const PRO=app;
 	/*hier entscheiden welcher Speicher verwendet werden soll*/
 	/*Speicher: store 0 = Dao 1 = Xml 2 = MySql 3 = MsSql 4 = LowDb*/
-	//const STORE=storage;
-	const STORE=4;
+	const STORE=storage;
 /*##################################################################*/
 	/*Liste der Programme*/
 	const LST_CONFOBJ=[
@@ -39,8 +36,10 @@ let ini=(function(){
 	/*Globales*/
 	const CONFOBJ=LST_CONFOBJ[PRO];
 	CONFOBJ.stor=LST_STORE[STORE];
-	CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
-
+	//URL für cypress
+	//CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
+	//URL für Seite
+	CONFOBJ.url=`http://localhost:8888/?p=${PRO}&s=${STORE}`;
 
 	let setHeight=()=>{
 		let el=document.getElementsByTagName("main")[0];
@@ -49,7 +48,7 @@ let ini=(function(){
 			const w=parseInt(window.innerWidth);
 			if (w < 980) {
 				el.style.gridTemplateColumns ="100%";
-				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 200px 30px auto minmax(30px, auto)";
+				el.style.gridTemplateRows = "minmax(40px, auto) 40px 40px 200px 40px auto minmax(40px, auto)";
 
 			}
 			else{

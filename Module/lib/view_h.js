@@ -38,6 +38,10 @@ let view_h =(function(){
 			leftDiv.removeChild(leftDiv.firstChild);
 		}
 		cont.setAktMenu(null);
+		document.getElementById("stl").innerText='';
+		document.getElementById("str").innerText='';
+		document.getElementById("footer").innerText='';
+		document.getElementById("div_edit").style.visibility='hidden';
 	}
 
 	let setEditTitle=(txN='',txS='',txD='')=>{
@@ -117,10 +121,12 @@ let view_h =(function(){
 			let resRow=rows.split(' ');
 			const row1 = parseInt(resRow[3]);
 			if (row1 < 200) {
-				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 200px 30px auto minmax(30px, auto)";
+				document.getElementById("stl").title='Berreich zusammenklappen';
+				el.style.gridTemplateRows = "minmax(40px, auto) 40px 40px 200px 40px auto minmax(40px, auto)";
 			}
 			else {
-				el.style.gridTemplateRows = "minmax(30px, auto) 30px 30px 0px 30px auto minmax(30px, auto)";
+				document.getElementById("stl").title='Berreich erweitern';
+				el.style.gridTemplateRows = "minmax(40px, auto) 40px 40px 0px 40px auto minmax(40px, auto)";
 			}
 			el.style.gridTemplateCols ="100%";
 		}
@@ -130,13 +136,65 @@ let view_h =(function(){
 			let resCol=col.split(' ');
 			const col1 = parseInt(resCol[0]);
 			if (col1 < 200) {
+				document.getElementById("stl").title='Berreich zusammenklappen';
 				el.style.gridTemplateColumns = "20% 79%";
 			}
 			else{
+				document.getElementById("stl").title='Berreich erweitern';
 				el.style.gridTemplateColumns = "5% 94%";
 			}
 			el.style.gridTemplateRows = "80px 40px 780px 40px;";
 		}
+	}
+
+	let getCancelOk=(val)=>{
+  	var retVal = confirm(val);
+    if( retVal == true ){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+	let getLogin=()=>{
+		let username = document.getElementById('user_name');
+		let userpwd = document.getElementById('user_pwd');
+		if (username.value==='' || userpwd.value==='') {
+			alert('Bitte einen Benutzernamen und ein Passwort eingeben!');
+			return;
+		}
+		if (username.value==='michi' || username.value==='malte') {
+				if (userpwd.value==='test') {
+						cont.resetIdleTime();
+						document.getElementById('logdiv').style.visibility='hidden';
+				}
+				else {
+					alert('Das Passwort ist falsch!');
+					return;
+				}
+		}
+		else {
+			alert('Der Benutzername ist falsch!');
+			return;
+		}
+	}
+
+	let getLogOut=()=>{
+		document.getElementById('logdiv').style.visibility='visible';
+		document.getElementById('user_name').focus();
+	}
+
+	let loginKeyup=(e)=>{if (e.keyCode == 13) {getLogin()}}
+
+	let msbKeyup=(e)=>{if (e.keyCode == 13) {msbClick()}}
+
+	let msbClick=()=>{document.getElementById('errorDiv').style.visibility='hidden'}
+
+	let setMsb=(title,val)=>{
+		document.getElementById('lblTitle').innerText=title;
+		document.getElementById('lblMsb').innerText=val;
+		document.getElementById('errorDiv').style.visibility='visible';
+		document.getElementById('msbOk').focus();
 	}
 
 	return{
@@ -153,6 +211,13 @@ let view_h =(function(){
 		setWait,
 		hideMenu,
 		showMenu,
-		toggleColoumWidth
+		toggleColoumWidth,
+		getCancelOk,
+		getLogin,
+		getLogOut,
+		loginKeyup,
+		msbClick,
+		msbKeyup,
+		setMsb
 	}
 })();
