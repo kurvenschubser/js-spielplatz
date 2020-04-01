@@ -48,18 +48,29 @@ let viewer =(function(){
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				view_h.setWait(true);
+				//view_h.setWait(true);
+				//console.log();
 				let vn=document.getElementById('txt_Name').value;
-				let vd=document.getElementById('txt_Desc').value;
+				if (vn==='') {
+					let ak = cont.getAktMenu();
+					let tit=cont.aktEntry.Id==0 ? `${ak.type} anlegen` : `${ak.type} speichern`;
+					view_h.setMsb(tit,'Bitte einen Namen eingeben!');
+					return;
+				}
+				let vd=document.getElementById('txt_Beschreibung').value;
 				cont.aktEntry.Name=vn;
 				cont.aktEntry.Desc=vd;
 				if(cont.aktEntry.Id==0){
 					//insert	m,p,s,a
-					cont.insert(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
+					let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} angelegt werden?`);
+					if(istrue==true){
+						cont.insert(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0);
+					}
 				}
 				else{
 					//update
-					cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
+					let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} geändert werden?`);
+					if(istrue==true){cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)}
 				}
 				setTimeout(() => view_h.setWait(false), 800);
 			}
@@ -67,9 +78,13 @@ let viewer =(function(){
 				//delete
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				view_h.setWait(true);
-				cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
-				setTimeout(() => view_h.setWait(false), 800);
+				if(cont.aktEntry.Id==0){return};
+				let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} gelöscht werden?`);
+				if(istrue==true){
+					view_h.setWait(true);
+					cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
+					setTimeout(() => view_h.setWait(false), 800);
+				}
 			}
 		}
 	}
@@ -82,9 +97,14 @@ let viewer =(function(){
 			let fenster = window.open('./jse/jst.html');
 			return;
 		}
+		let art=ele.getAttribute("art");
+		if (art==='logout') {
+
+			view_h.getLogOut();
+			return;
+		}
 		view_h.clear_r();
 		view_h.clear_l();
-		let art=ele.getAttribute("art");
 		cont.setAktMenu(art);
 		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
@@ -122,7 +142,7 @@ let viewer =(function(){
 		}
 		catch(e){console.log(e)}
 
-
+		view_h.hideMenu();
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
 	}
@@ -217,26 +237,9 @@ let viewer =(function(){
 
 	let createMenu=()=>{
 		let currentDiv = document.getElementById("botomhead");
-
 		let menuDiv =view_h.createEle('section','navsec','','',[],'');
-		let lbl = document.createElement('label');
-		lbl.innerText = "Menu";
-		/*
-		var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		var path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-		svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-		svg.setAttribute("id","btnMenu");
-		//svg.setAttribute("aria-hidden","false");
-		//svg.setAttribute('viewbox', '0 0 448 512');
-		//svg.setAttribute('overflow', 'true');
-		//svg.setAttribute('viewbox', '0 0 40 40');
-		//svg.setAttribute('width', '40px');
-		//svg.setAttribute('height', '40px');
-		path.setAttribute('d', 'M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z');
-		//path.setAttribute('fill', '#2962ff');
-		//path.setAttribute('font-size', '60%');
-		svg.appendChild(path);
-	*/
+		let lbl = document.createElement('span');
+		lbl.setAttribute('class', 'fas fa-align-justify btnMenu');
 		menuDiv.appendChild(lbl);
 		menuDiv.onmouseover = ()=>{view_h.showMenu();};
 		menuDiv.onmouseleave = ()=>{view_h.hideMenu();};
@@ -251,6 +254,10 @@ let viewer =(function(){
 			menuSubDiv=view_h.createEle("section",'','',r.Name,[{name:'art',val:r.type}],r.desc);
 			navDiv.appendChild(menuSubDiv);
 		}
+		//<i class="fas fa-sign-out-alt"></i>
+		menuSubDiv=view_h.createEle('section','','fas fa-sign-out-alt btnLogout','',[{name:'art',val:'logout'}],'Abmelden');
+		//menuSubDiv=view_h.createEle("section",'','','Abmelden',[{name:'art',val:'logout'}],'Abmelden');
+		navDiv.appendChild(menuSubDiv);
 		//bubeling eventhandler on menu click
 		navDiv.addEventListener('click', viewer.menu_click, false);
 		menuDiv.appendChild(navDiv);
@@ -261,23 +268,22 @@ let viewer =(function(){
 		let wrapper = view_h.createEle('main','','','',[],'');
 		let menu = view_h.createEle('nav','botomhead','','',[],'');
 		let header=view_h.createEle('section','head','',`${ini.CONFOBJ.titel} [${ini.CONFOBJ.v} ] ${ini.CONFOBJ.stor.desc}`,[],'');
-		let sHeader=view_h.createEle('section','stl','','',[],'');
+		let sHeader=view_h.createEle('section','stl','','',[],'Bereich zusammenklappen');
 		sHeader.onclick=()=>{view_h.toggleColoumWidth()}
 		let cHeader=view_h.createEle('section','str','','',[],'');
 		let sidebar=view_h.createEle('section','left_m','','',[],'');
 		let left=view_h.createEle('section','left','','',[],'');
 		sidebar.appendChild(left);
 		let content=view_h.createEle('section','right_m','','',[],'');
-		let edit=view_h.createEle('section','div_edit','','',[],'');
-		let img=view_h.createImg("btnNew","./img/btn_new.png",'',"neu");
-		edit.appendChild(img);
-		img=view_h.createImg("btnSave","./img/btn_save.png",'',"speichern");
-		edit.appendChild(img);
-		img=view_h.createImg("btnDel","./img/btn_del.png",'',"löschen");
-		edit.appendChild(img);
-		img=view_h.createImg("btnJST","./img/execute.jpg",'',"öffnet den Javascript Tester");
-		edit.appendChild(img);
-		edit.style.visibility='hidden';
+		let edit=view_h.createEle('section','div_edit','','',[{name:'style',val:'visibility:hidden'}],'');
+		let btnNew=view_h.createEle('span','btnNew','far fa-file btnEdit','',[],'neu');
+		edit.appendChild(btnNew);
+		btnNew=view_h.createEle('span','btnSave','far fa-save btnEdit','',[],'speichern');
+		edit.appendChild(btnNew);
+		btnNew=view_h.createEle('span','btnDel','far fa-trash-alt btnEdit','',[],'löschen');
+		edit.appendChild(btnNew);
+		btnNew=view_h.createEle('span','btnJST','fas fa-running btnEdit','',[],'öffnet den Javascript Tester');
+		edit.appendChild(btnNew);
 		edit.addEventListener('click', edit_click, false);
 		let right=view_h.createEle('section','right','','',[],'');
 		content.appendChild(edit);
@@ -285,15 +291,50 @@ let viewer =(function(){
 		let footer=view_h.createEle('section','footer','','',[],'');
 		let wait=view_h.createEle('section','wait','','',[],'');
 		wait.insertAdjacentHTML('beforeend', '<b>warte auf Server...</b>');
-		wrapper.appendChild(menu);
 		wrapper.appendChild(header);
 		wrapper.appendChild(sHeader);
 		wrapper.appendChild(cHeader);
 		wrapper.appendChild(sidebar);
 		wrapper.appendChild(content);
 		wrapper.appendChild(footer);
-		wrapper.appendChild(wait);
+		wrapper.appendChild(menu);
 		currentDiv.appendChild(wrapper);
+		currentDiv.appendChild(wait);
+
+		//LOGIN
+		let logdiv=view_h.createEle('section','logdiv','','',[],'');
+		logdiv.addEventListener("keyup", view_h.loginKeyup);
+		let login =view_h.createEle('section','login','','',[],'');
+		let head=view_h.createEle('label','lbl_head','',`${ini.CONFOBJ.titel} Login`,[],'');
+		let lb =view_h.createEle('label','lbl_user','','Benutzer:',[],'');
+		let txt =view_h.createEle('input','user_name','','',[{name:'value',val:'michi'}],'');
+		let lb2 =view_h.createEle('label','lbl_pwd','','Passwort:',[],'');
+		let txt2 =view_h.createEle('input','user_pwd','','',[{name:'type',val:'password'},{name:'value',val:'test'}],'');
+		let btnOk=view_h.createEle('span','btnLogOk','fas fa-sign-in-alt','',[],'Anmelden');
+		btnOk.onclick=()=>{view_h.getLogin()}
+		login.appendChild(head);
+		login.appendChild(lb);
+		login.appendChild(txt);
+		login.appendChild(lb2);
+		login.appendChild(txt2);
+		login.appendChild(btnOk);
+		logdiv.appendChild(login);
+		currentDiv.appendChild(logdiv);
+		txt.focus();
+
+		//ERRORBOX
+		let msbDiv=view_h.createEle('section','errorDiv','','',[],'');
+		msbDiv.addEventListener("keyup", view_h.msbKeyup);
+		let msb=view_h.createEle('section','msb','','',[],'');
+		let titel=view_h.createEle('label','lblTitle','','Test Message',[],'');
+		let message=view_h.createEle('label','lblMsb','','Test Message',[],'');
+		let msbOk=view_h.createEle('input','msbOk','','',[{name:'type',val:'button'},{name:'value',val:'OK'}],'');
+		msbOk.addEventListener("click", view_h.msbClick);
+		msb.appendChild(titel);
+		msb.appendChild(message);
+		msb.appendChild(msbOk);
+		msbDiv.appendChild(msb);
+		currentDiv.appendChild(msbDiv);
 	}
 
 	return {
