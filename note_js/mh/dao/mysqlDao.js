@@ -6,8 +6,8 @@ module.exports=( function()  {
 		if (!sqlCon) {
 			sqlCon = sql.createConnection({
 				host:'localhost',
-				user:'root',
-				password:'',
+				user:'xxx',
+				password:'xxx',
 				database:p===0?'fitness':'snip'
 			});
 			console.log('set sqlCon ');

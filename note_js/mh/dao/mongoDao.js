@@ -1,7 +1,7 @@
 module.exports=( function()  {
 	"use strict";
 	const mgo = require("mongodb").MongoClient;
-	let url=`mongodb+srv://js-michi:mG_4711@clmichi-vlj76.mongodb.net/test`;
+	let url=`mongodb+srv://js-xxx:xxx@clmichi-vlj76.mongodb.net/test`;
 	let getData=async (p,a)=>{
 		try{
 			let prom = new Promise((resolve,reject) => {
