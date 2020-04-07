@@ -25,6 +25,6 @@ let hlp=(function () {
 	let isFileApi = () => ((window.File && window.FileReader && window.FileList && window.Blob)?true:false);
 
 	let getDate = (x,art) => new Date(x).toLocaleDateString('de-DE',DATE_FORMAT[art]);
-
+	
 	return {getDate,isFileApi,isInt,hex2rgb,rgb2hex};
 })();

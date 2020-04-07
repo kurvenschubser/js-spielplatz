@@ -197,6 +197,14 @@ let view_h =(function(){
 		document.getElementById('msbOk').focus();
 	}
 
+	let resetActiveLi=()=>{
+		for (let key of document.getElementById("left").getElementsByTagName("li")) {
+			//console.log(key.classList);
+			//key.classList.remove("eleli");
+			key.setAttribute('style','font-weight:normal');
+		}
+	}
+
 	return{
 		createImg,
 		createEle,
@@ -218,6 +226,7 @@ let view_h =(function(){
 		loginKeyup,
 		msbClick,
 		msbKeyup,
-		setMsb
+		setMsb,
+		resetActiveLi
 	}
 })();
