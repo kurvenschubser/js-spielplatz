@@ -24,17 +24,23 @@ let viewer =(function(){
 				let child=null;
 				for (let r of resVal){
 					child=view_h.createLi(r,-1);
+					//child.classList.add("eleli");
 					ul.appendChild(child);
 				}
+
 				ele.appendChild(ul);
 			});
 		}
 		else{
+			//reset stylesheet
+			view_h.resetActiveLi();
+			//ele.classList.add("eleli");
+			ele.setAttribute('style','font-weight:bold');
 			cont.set_view(nr);
 		}
 	}
 
-	let edit_click=(event)=>{
+	let edit_click = (event) => {
 		/*bubbling save del new click from edit div*/
 		let ele = event.target;
 		if(ele===null) return;
@@ -43,7 +49,9 @@ let viewer =(function(){
 			window.open('./jse/jst.html');
 			return;
 		}
-		if(cont.aktEntry){
+
+		if(cont.aktEntry)
+		{
 			if(ele.id==="btnNew") cont.fillNForm();
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
@@ -61,29 +69,136 @@ let viewer =(function(){
 				cont.aktEntry.Name=vn;
 				cont.aktEntry.Desc=vd;
 				if(cont.aktEntry.Id==0){
-					//insert	m,p,s,a
 					let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} angelegt werden?`);
 					if(istrue==true){
-						cont.insert(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0);
+						view_h.setWait(true);
+						try{
+							cont.insert(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
+								val => {
+									let doc;
+									try{
+										doc=JSON.parse(JSON.parse(val));
+									}
+									catch (e) {
+										view_h.setWait(false);
+										cont.setError(text);
+										return;
+									}
+
+									if(doc.art && doc.art == 'Error'){
+										view_h.setWait(false);
+										cont.setError(doc.msg);
+										return;
+									}
+
+									//weiterverarbeiten an liste hängen
+									for (let key of document.getElementById('left').firstChild.childNodes) {
+										let nr = key.getAttribute('nr');
+										let lev = key.getAttribute('l');
+										if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.innerText=cont.aktEntry.Name;	}
+									}
+
+									setTimeout(() => view_h.setWait(false), 800);
+								},
+								rej => {
+									//console.log('then reject insert ',rej);
+									setTimeout(() => view_h.setWait(false), 800);
+									setError(rej);
+								}
+							);
+						}
+						catch (e){ setError(e) }
 					}
 				}
 				else{
 					//update
 					let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} geändert werden?`);
-					if(istrue==true){cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)}
+					if(istrue==true){
+						view_h.setWait(true);
+						try{
+							cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
+								val => {
+									//console.log('then resolve update ', val);
+
+									let doc;
+									try{
+										doc=JSON.parse(JSON.parse(val));
+									}
+									catch (e) {
+										view_h.setWait(false);
+										cont.setError(e);
+										return;
+									}
+
+									//console.log('then resolve update doc', doc);
+									if(doc.art && doc.art == 'Error'){
+										view_h.setWait(false);
+										cont.setError(doc.msg);
+										return;
+									}
+
+									//weiterverarbeiten li finden und ändern
+									//doc == 2 ID
+									for (let key of document.getElementById('left').firstChild.childNodes) {
+										let nr = key.getAttribute('nr');
+										let lev = key.getAttribute('l');
+										if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.innerText=cont.aktEntry.Name;	}
+									}
+
+									setTimeout(() => view_h.setWait(false), 800);
+								},
+								rej => {
+									//console.log('then reject update ',rej);
+									setTimeout(() => view_h.setWait(false), 800);
+									setError(rej);
+								}
+							);
+						}
+						catch (e){setError(e)}
+					}
 				}
-				setTimeout(() => view_h.setWait(false), 800);
 			}
 			else if(ele.id==="btnDel") {
 				//delete
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				if(cont.aktEntry.Id==0){return};
+				if(cont.aktEntry.Id==0 ){ return };
 				let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} gelöscht werden?`);
 				if(istrue==true){
-					view_h.setWait(true);
-					cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0)
-					setTimeout(() => view_h.setWait(false), 800);
+					try{
+						view_h.setWait(true);
+						cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
+							val => {
+								let doc;
+								try{
+									doc=JSON.parse(JSON.parse(val));
+								}
+								catch (e) {
+									view_h.setWait(false);
+									cont.setError(text);
+									return;
+								}
+
+								if(doc.art && doc.art == 'Error'){
+									view_h.setWait(false);
+									cont.setError(doc.msg);
+									return;
+								}
+								//weiterverarbeiten aus liste entfernen
+								for (let key of document.getElementById('left').firstChild.childNodes) {
+									let nr = key.getAttribute('nr');
+									let lev = key.getAttribute('l');
+									if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.style.visibility='hidden';	}
+								}
+								setTimeout(() => view_h.setWait(false), 800);
+							},
+							rej => {
+								setTimeout(() => view_h.setWait(false), 800);
+								setError(rej);
+							}
+						);
+					}
+					catch (e){setError(e)}
 				}
 			}
 		}

@@ -11,10 +11,7 @@ let cont =(function(){
 	//###### SET ##################
 	let aktEntry;
 	let setError=(e)=>{
-		try {
-			view_h.setMsb(`${ini.CONFOBJ.titel}`,e);
-			//console.log(e);
-		}
+		try { view_h.setMsb(`${ini.CONFOBJ.titel}`,e) }
 		catch (e){alert(e)}
 	}
 
@@ -34,21 +31,17 @@ let cont =(function(){
 			viewer.createForm(m);
 			view_h.setEditTitle(E_TITLE[ti].neu,E_TITLE[ti].edit,E_TITLE[ti].del);
 		}
-		catch (e) {setError(e)}
+		catch (e) { setError(e) }
 	}
 
 	let fillNForm=()=>{
-		try {
-			viewer.display(getNewModel(getAktMenu().type))
-		}
-		catch (e) {setError(e)}
+		try { viewer.display(getNewModel(getAktMenu().type)) }
+		catch (e) { setError(e) }
 	}
 
 	let set_view=async (nr)=>{
-		try {
-			getModel(nr).then(result=>{viewer.display(result)})
-		}
-		catch (e) {setError(e)}
+		try { getModel(nr).then(result=>{viewer.display(result)}) }
+		catch (e) { setError(e) }
 	}
 
 	//###### GET ##################
@@ -69,7 +62,7 @@ let cont =(function(){
 					else if(aktMenu.type==="f_geraete") dao.gerDao.getById(nr).then(result=>{resolve(result)});
 					else {resolve({})}
 				}
-				catch (e) {setError(e)}
+				catch (e) { setError(e) }
 			}
 		});
 	}
@@ -83,7 +76,7 @@ let cont =(function(){
 				else resolve([]);
 			});
 		}
-		catch (e) {setError(e)}
+		catch (e) { setError(e) }
 	}
 
 	let getLstByArt=async(nr)=>{
@@ -94,10 +87,10 @@ let cont =(function(){
 						dao.gerDao.getLstByArt(nr).then(result=>{
 							resolve(result)});
 				}
-				else{resolve([])}
+				else{ resolve([]) }
 			});
 		}
-		catch (e) {setError(e)}
+		catch (e) { setError(e) }
 	}
 
 	let getMId=(m,feld)=>{ if(feld=="Art") return m.Art}
@@ -108,36 +101,18 @@ let cont =(function(){
 
 	//###### insert/update/delete ##################
 	let insert=(m,p,s,a)=>{
-		let val;
-		try {
-			if(aktMenu.type==="f_arten")  val = dao.artDao.insert(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.insert(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.insert(m,p,s,a);
-		}
-		catch (e) {setError(e)}
-		return val;
+		try { return dao.insert(m,p,s,a)	}
+		catch (e) { setError(e) }
 	}
 
 	let update=(m,p,s,a)=>{
-		let val;
-		try {
-			if(aktMenu.type==="f_arten")  val = dao.artDao.update(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.update(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.update(m,p,s,a);
-		}
-		catch (e) {setError(e)}
-		return val;
+		try { return dao.update(m,p,s,a) }
+		catch (e) { setError(e) }
 	}
 
 	let del=(m,p,s,a)=>{
-		let val;
-		try {
-			if(aktMenu.type==="f_arten")  val = dao.artDao.del(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.del(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.del(m,p,s,a);
-		}
-		catch (e) {setError(e)}
-		return val;
+		try { return dao.del(m,p,s,a) }
+		catch (e) { setError(e) }
 	}
 
 	//###### MENU ##################
@@ -185,9 +160,7 @@ let cont =(function(){
 
 	//###### AUTO LOGOUT
 	let idleTime = 0;
-	let resetIdleTime=()=>{
-		idleTime = 0;
-	}
+	let resetIdleTime=()=>{ idleTime = 0 }
 
 	let timerIncrement=()=> {
 		try{
@@ -202,7 +175,7 @@ let cont =(function(){
 
 	let startTimer=()=>{
 		document.onreadystatechange = () => {
-		  let idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+		  setInterval(timerIncrement, 60000); // 1 minute
 		  document.onclick = e => {idleTime = 0};
 		  document.onmousemove = e => {idleTime = 0 };
 		  document.onkeypress = e => {idleTime = 0 };

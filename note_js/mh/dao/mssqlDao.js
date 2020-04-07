@@ -1,9 +1,11 @@
-"use strict";
-exports.mssqlDao=(function(){
+module.exports=( function()  {
+	"use strict";
+	const sql = require("mssql");
 	let getConf=(p)=>{
-		const config={user:'michi',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
+		const config={user:'michi',password:'wer',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
 		return config;
 	}
+
 	let getQueryStr=(p,a)=>{
 		let val=''
 		if(p==0){//Fitness App
@@ -26,8 +28,28 @@ exports.mssqlDao=(function(){
 		}
 		return val
 	}
+
+	let getData=async (p,a)=>{
+		try{
+			let prom = new Promise((resolve,reject) => {
+				sql.connect(getConf(p)).then(pool => {
+					return pool.request().query(getQueryStr(p,a));
+				}).then(result => {
+					sql.close();
+					resolve(result.recordset);
+				}, rej=>{
+					reject(rej);
+				}).catch(err => {reject(rej)})
+			});
+			return prom;
+		}
+		catch(err){
+			throw err;
+		}
+	}
+
 	let insert=async (m,p,a)=>{}
 	let update=async (m,p,a)=>{}
 	let del=async (m,p,a)=>{}
-	return {insert:insert,update:update,del:del,getQueryStr:getQueryStr,getConf:getConf};
+	return {insert,update,del,getData};
 })();

@@ -8,10 +8,11 @@ const StorageType = {
 	Xml: 1,
 	MySql: 2,
 	MsSql: 3,
-	LowDb: 4
+	LowDb: 4,
+	MongoDb: 5
 };
 "use strict";
-let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
+let ini=(function(app = AppType.Fitness, storage = StorageType.Dao){
 /*##################################################################*/
 	/*hier entscheiden welches Program verwendet werden soll*/
 	/*Programm: 0 = Fitness 1 = Programmierhilfe*/
@@ -31,7 +32,8 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 	{id:1,art:"Xml",desc:"Datenbank: XML",v:"1"},
 	{id:2,art:"MySql",desc:"Datenbank: MySql",v:"1"},
 	{id:3,art:"MsSql",desc:"Datenbank: MsSql",v:"1"},
-	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"}];
+	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"},
+	{id:5,art:"Mongo",desc:"Datenbank: MongoDb",v:"1"}];
 
 	/*Globales*/
 	const CONFOBJ=LST_CONFOBJ[PRO];
