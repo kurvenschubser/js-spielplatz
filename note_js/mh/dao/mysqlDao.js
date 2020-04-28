@@ -8,7 +8,7 @@ module.exports=( function()  {
 			sqlCon = sql.createConnection({
 				host:'localhost',
 				user:'root',
-				password:'',
+				password:'xxx',
 				database:dbName
 			});
 			sqlCon.connect( function (err) {if (err) {sqlCon=null}});
