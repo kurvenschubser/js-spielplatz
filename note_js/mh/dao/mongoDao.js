@@ -1,45 +1,44 @@
 module.exports=( function()  {
 	"use strict";
 	const mgo = require("mongodb").MongoClient;
-	let url=`mongodb+srv://js-xxx:xxx@clmichi-vlj76.mongodb.net/test`;
-	let getData=async (p,a)=>{
-		try{
-			let prom = new Promise((resolve,reject) => {
-				let dbs=p===0?'fitness':'snip';
-				let coll;
+	let url=`mongodb+srv://js-michi:mG_4711@clmichi-vlj76.mongodb.net/test?retryWrites=true&w=majority`;
 
+	let getData=(p,a)=>{
+		let prom = new Promise((resolve,reject) => {
+			try{
+				let dbs=p===0?'fitness':'snipp';
+				let coll;
+				let sort;
 				if(p==0){
-					if(a==0) coll="f_arten";
-					else if(a==1) coll="f_eigenschaften";
-					else if(a==2) coll="f_geraete";
+					if(a==0) {coll="f_arten";sort={ name: 1 };}
+					else if(a==1) {coll="f_eigenschaften";sort={ name: 1 };}
+					else if(a==2) {coll="f_geraete";sort={ name: 1 };}
 				}
 				else if(p==1){
-					if(a==0) coll="f_sprache";
-					else if(a==1) coll="f_sub_thema";
-					else if(a==2) coll="f_thema";
-					else if(a==3) coll="f_eintrag";
+					if(a==0) {coll="Lang";sort={ bez: 1 };}
+					else if(a==1) {coll="f_thema";sort={ sub_desc: 1 };}
+					else if(a==2) {coll="f_eintrag";sort={ titel: 1 };}
 				}
-
 				mgo.connect(url, function(err, db) {
-				  if (err) throw err;
-				  var dbo = db.db(dbs);
-				  dbo.collection(coll).find({}).toArray(function(err, result) {
-				    if (err) reject (err);
+					if (err) {reject(err);return;}
+					if (!db) {reject(Error('Die Verbindung zu MongoDb ist fehlgeschlagen!'));return;}
+					var dbo = db.db(dbs);
+					if (!dbo) {reject(Error(`Die Verbindung zur MongoDb Datenbank ${dbs} ist fehlgeschlagen!`));return;}
+					dbo.collection(coll).find({}).sort(sort).toArray(function(err, result) {
+						if (err) {reject (err);return;}
 						resolve(result);
-				    db.close();
-				  });
+						db.close();
+					});
 				});
-			});
-			return prom;
-		}
-		catch(err){
-			throw err;
-		}
+			}
+			catch(err){reject(err)}
+		});
+		return prom;
 	}
 
-	let insert=async (m,p,a)=>{
-		try{
-			let prom = new Promise((resolve,reject) => {
+	let insert=(m,p,a)=>{
+		let prom = new Promise((resolve,reject) => {
+			try{
 				let con=getSqlCon(p);
 				let sqlQu;
 				if(p==0){
@@ -48,31 +47,57 @@ module.exports=( function()  {
 					else if(a==2) sqlQu=`INSERT INTO f_geraete (id, name,beschreibung,art,bild) VALUES (${m.id}, '${m.Name}','${m.Desc}',${m.Art},'${m.bild}')`;
 				}
 				else if(p==1){
-					if(a==0) sqlQu=`INSERT INTO lang (id, bez,beschr,datum,edit) VALUES (${m.id}, '${m.bez}', '${m.beschr}', ${m.datum}, ${m.edit})`;
-					else if(a==1) sqlQu=`INSERT INTO sub_lang (id, sub_desc,spr,datum,edit) VALUES (${m.id}, '${m.sub_desc}', ${m.spr}, ${m.datum}, ${m.edit})`;
-					else if(a==2) sqlQu=`INSERT INTO sub_sub_lang (id, sub_lang,datum,titel,dat,edit) VALUES (${m.id}, ${m.desc}, '${m.datum}', '${m.titel}', ${m.dat}, ${m.edit})`;
-					else if(a==3) sqlQu=`INSERT INTO text_content (id, text,sub_sub,sort,datum,edit) VALUES (${m.id}, '${m.text}', ${m.sub_sub}, ${m.sort}, ${m.datum}, ${m.edit})`;
+					if(a==0) sqlQu=`INSERT INTO Lang (id, bez,beschr,datum,edit) VALUES (${m.id}, '${m.bez}', '${m.beschr}', '${m.datum}', '${m.edit}')`;
+					else if(a==1) sqlQu=`INSERT INTO f_thema (id, sub_desc,spr,datum,edit) VALUES (${m.id}, '${m.sub_desc}', ${m.spr}, '${m.datum}', '${m.edit}')`;
+					else if(a==2) sqlQu=`INSERT INTO f_eintrag (id, titel,text,lang,sub,sort,datum,edit) VALUES (${m.id}, '${m.titel}', '${m.text}', ${m.lang}, ${m.sub}, ${m.sort}, '${m.datum}', '${m.edit}')`;
 				}
 				if (sqlQu!=='') {
 					con.query(sqlQu, function (err, result) {
-						if (err) reject(err);
+						if (err) {reject(err);return;}
 						console.log("1 record inserted", m.id);
 						resolve(`${m.id}`);
 					});
 				}
-			});
-			return prom;
-		}
-		catch(err){
-			throw err;
-		}
+			}
+			catch(err){reject(err)}
+		});
+		return prom;
 	}
 
-	let update=async (m,p,a)=>{}
+	let update=(m,p,a)=>{}
 
-	let del=async (m,p,a)=>{}
+	let del=(m,p,a)=>{
+		let prom = new Promise((resolve,reject) => {
+			try{
+				let con=getSqlCon(p);
+				let sqlQu =`delete from `
+				if(p==0){//Fitness App
+					if(a==0)//f_arten
+						sqlQu=`delete from f_arten where Id = ${m.Id}`
+					else if(a==1)//f_eigenschaften
+						sqlQu=`delete from f_eigenschaften where Id = ${m.Id}`
+					else if(a==2)//f_geraete
+						sqlQu=`delete from f_geraete where Id = ${m.Id}`
+				}
+				else if(p==1){//Programierhilfe App
+					if(a==0)//f_sprache
+						sqlQu=`delete from Lang where Id = ${m.Id}`
+					else if(a==1)//f_thema
+						sqlQu=`delete from f_thema where Id = ${m.Id}`
+					else if(a==2)//f_eintrag
+						sqlQu=`delete from f_eintrag where Id = ${m.Id}`
+				}
+				con.query(sqlQu,function (error, results, fields) {
+					if (error) {reject(error);return;}
+					resolve(results);
+				});
+			}
+			catch(err){reject(err)}
+		});
+		return prom;
+	}
 
-	let getMaxId=async (p,a)=>{
+	let getMaxId=(p,a)=>{
 		let sqlQu=''
 		if(p==0){//Fitness App
 			if(a==0)//f_arten
@@ -85,28 +110,22 @@ module.exports=( function()  {
 		else if(p==1){//Programierhilfe App
 			if(a==0)//f_sprache
 				sqlQu='select IFNULL(max(id),0) from Lang'
-			else if(a==1)//f_sub_sprache
-				sqlQu='select IFNULL(max(id),0) from Sub_lang'
-			else if(a==2)//f_thema
-				sqlQu='select IFNULL(max(id),0) from Sub_sub_lang'
-			else if(a==3)//f_eintrag
-				sqlQu='select IFNULL(max(id),0) from Text_content'
+			else if(a==1)//f_thema
+				sqlQu='select IFNULL(max(id),0) from f_thema'
+			else if(a==2)//f_eintrag
+				sqlQu='select IFNULL(max(id),0) from f_eintrag'
 		}
-		console.log(sqlQu);
-		try{
-			let prom = new Promise((resolve,reject) => {
+		let prom = new Promise((resolve,reject) => {
+			try{
 				let con=getSqlCon(p);
 				con.query(sqlQu,function (error, results, fields) {
-					if (error) reject(error);
-					console.log('con.query',results);
+					if (error) {reject(error);return;}
 					resolve(results);
 				});
-			});
-			return prom;
-		}
-		catch(err){
-			throw err;
-		}
+			}
+			catch(err){reject(err)}
+		});
+		return prom;
 	}
 
 	return {insert,update,del,getData};

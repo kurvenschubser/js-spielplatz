@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DB v="1">
 <lst_f_arten>
-	<f_arten id='1'>
-	<name>Kraft#</name>
-	<desc>Kraftsport Muskelaufbau</desc>	
+	<f_arten id='2'>
+	<name>Cardio</name>
+	<desc>Ausdauer Sport</desc>
 	<date>1582641949849</date>
 	<edit>1582641949849</edit>
 	</f_arten>
-	<f_arten id='2'>
-	<name>Cardio</name>
-	<desc>Ausdauer Sport</desc>	
+	<f_arten id='1'>
+	<name>Kraft#</name>
+	<desc>Kraftsport Muskelaufbau</desc>
 	<date>1582641949849</date>
 	<edit>1582641949849</edit>
 	</f_arten>

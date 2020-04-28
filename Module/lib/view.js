@@ -1,8 +1,7 @@
-/*
-Fitness Stammdaten Viewer
-*/
+//Viewer
 let viewer =(function(){
 	"use strict";
+
 	let click=(event)=>{
 		/*bubbling ul click from li*/
 		let ele = event.target;
@@ -11,32 +10,55 @@ let viewer =(function(){
 		let level=ele.getAttribute("l");
 		//attribut ob tree oder listview
 		if(!hlp.isInt(nr)) return;
-		let ak = cont.getAktMenu()
-		let lstTree=cont.getLstForTree(ak.type);
-		if(lstTree.length>0 && level==0){
-			if(ele.lastChild.nodeName==='UL'){
-				cont.fillNForm();
-				return;
-			}
-			cont.getLstByArt(nr).then(resVal=>{
-				let ul = document.createElement("ul");
-				let value=null;
-				let child=null;
-				for (let r of resVal){
-					child=view_h.createLi(r,-1);
-					//child.classList.add("eleli");
-					ul.appendChild(child);
-				}
-
-				ele.appendChild(ul);
-			});
+		//auf und zu klappen wenn li hasChildNodes and li lastChild is ul
+		//sonst befüllen
+		if (ele.hasChildNodes() && ele.lastChild.nodeName=='UL') {
+			ele.lastChild.style.display=(ele.lastChild.style.display== 'block' || ele.lastChild.style.display=='') ? 'none' : 'block';
 		}
 		else{
-			//reset stylesheet
-			view_h.resetActiveLi();
-			//ele.classList.add("eleli");
-			ele.setAttribute('style','font-weight:bold');
-			cont.set_view(nr);
+			let ak = cont.getAktMenu()
+			let lstTree=cont.getLstForTree(ak.type);
+			let countTree=lstTree.length-1;
+			if(countTree >= 0 && level>=0){
+				let x=parseInt(level)+1;
+				if(countTree > level && countTree > x){
+					cont.getLstUsed(lstTree[x].type,parseInt(nr)).then(resVal=>{
+						let ul = document.createElement("ul");
+						for (let key of resVal) {
+							let child=view_h.createLi(key,x);
+							ul.appendChild(child);
+						}
+						ele.appendChild(ul);
+						view_h.setWait(false);
+					},rej=>{
+						view_h.setWait(false);
+						cont.setError(rej);
+					});
+				}
+				else {
+					let nr1=0;
+					if (ele.parentElement.parentElement.hasAttribute("nr")) {nr1=ele.parentElement.parentElement.getAttribute("nr")}
+					else if (ele.parentElement.hasAttribute("nr")){nr1=ele.parentElement.getAttribute("nr")}
+					else if (ele.hasAttribute("nr")){nr1=ele.getAttribute("nr")}
+					cont.getLstUsed(lstTree[countTree].type,parseInt(nr1),parseInt(nr)).then(resVal=>{
+						let ul = document.createElement("ul");
+						for (let r of resVal){
+							let child=view_h.createLi(r,-1);
+							ul.appendChild(child);
+						}
+						ele.appendChild(ul);
+					},rej=>{
+						view_h.setWait(false);
+						cont.setError(rej);
+					});
+				}
+			}
+			else{
+				//reset stylesheet
+				view_h.resetActiveLi();
+				ele.setAttribute('style','font-weight:bold');
+				cont.set_view(nr);
+			}
 		}
 	}
 
@@ -49,15 +71,12 @@ let viewer =(function(){
 			window.open('./jse/jst.html');
 			return;
 		}
-
 		if(cont.aktEntry)
 		{
 			if(ele.id==="btnNew") cont.fillNForm();
 			else if(ele.id==="btnSave") {
 				//muss noch für die anderen Menüs angelegt werden
 				//zur Zeit nur Arten
-				//view_h.setWait(true);
-				//console.log();
 				let vn=document.getElementById('txt_Name').value;
 				if (vn==='') {
 					let ak = cont.getAktMenu();
@@ -76,38 +95,35 @@ let viewer =(function(){
 							cont.insert(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
 								val => {
 									let doc;
-									try{
-										doc=JSON.parse(JSON.parse(val));
-									}
+									try{doc=JSON.parse(JSON.parse(val))	}
 									catch (e) {
 										view_h.setWait(false);
 										cont.setError(text);
 										return;
 									}
-
 									if(doc.art && doc.art == 'Error'){
 										view_h.setWait(false);
 										cont.setError(doc.msg);
 										return;
 									}
-
 									//weiterverarbeiten an liste hängen
 									for (let key of document.getElementById('left').firstChild.childNodes) {
 										let nr = key.getAttribute('nr');
 										let lev = key.getAttribute('l');
 										if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.innerText=cont.aktEntry.Name;	}
 									}
-
-									setTimeout(() => view_h.setWait(false), 800);
+									view_h.setWait(false);
 								},
 								rej => {
-									//console.log('then reject insert ',rej);
-									setTimeout(() => view_h.setWait(false), 800);
-									setError(rej);
+									view_h.setWait(false);
+									cont.setError(rej);
 								}
 							);
 						}
-						catch (e){ setError(e) }
+						catch (e){
+							view_h.setWait(false);
+							cont.setError(e);
+						}
 					}
 				}
 				else{
@@ -118,25 +134,18 @@ let viewer =(function(){
 						try{
 							cont.update(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
 								val => {
-									//console.log('then resolve update ', val);
-
 									let doc;
-									try{
-										doc=JSON.parse(JSON.parse(val));
-									}
+									try{doc=JSON.parse(JSON.parse(val))}
 									catch (e) {
 										view_h.setWait(false);
 										cont.setError(e);
 										return;
 									}
-
-									//console.log('then resolve update doc', doc);
 									if(doc.art && doc.art == 'Error'){
 										view_h.setWait(false);
 										cont.setError(doc.msg);
 										return;
 									}
-
 									//weiterverarbeiten li finden und ändern
 									//doc == 2 ID
 									for (let key of document.getElementById('left').firstChild.childNodes) {
@@ -144,24 +153,24 @@ let viewer =(function(){
 										let lev = key.getAttribute('l');
 										if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.innerText=cont.aktEntry.Name;	}
 									}
-
-									setTimeout(() => view_h.setWait(false), 800);
+									view_h.setWait(false);
+									cont.setError(`Das Objekt ${cont.aktEntry.Name} mit der ID ${doc} wurde geändert!`);
 								},
 								rej => {
-									//console.log('then reject update ',rej);
-									setTimeout(() => view_h.setWait(false), 800);
-									setError(rej);
+									view_h.setWait(false);
+									cont.setError(rej);
 								}
 							);
 						}
-						catch (e){setError(e)}
+						catch (e){
+							view_h.setWait(false);
+							cont.setError(e);
+						}
 					}
 				}
 			}
 			else if(ele.id==="btnDel") {
 				//delete
-				//muss noch für die anderen Menüs angelegt werden
-				//zur Zeit nur Arten
 				if(cont.aktEntry.Id==0 ){ return };
 				let istrue=view_h.getCancelOk(`Soll ${cont.aktEntry.Name} gelöscht werden?`);
 				if(istrue==true){
@@ -170,9 +179,7 @@ let viewer =(function(){
 						cont.del(cont.aktEntry,ini.CONFOBJ.id,ini.CONFOBJ.stor.id,0).then(
 							val => {
 								let doc;
-								try{
-									doc=JSON.parse(JSON.parse(val));
-								}
+								try{doc=JSON.parse(JSON.parse(val))}
 								catch (e) {
 									view_h.setWait(false);
 									cont.setError(text);
@@ -190,15 +197,18 @@ let viewer =(function(){
 									let lev = key.getAttribute('l');
 									if (parseInt(lev)===-1 && parseInt(nr)===doc) { key.style.visibility='hidden';	}
 								}
-								setTimeout(() => view_h.setWait(false), 800);
+								view_h.setWait(false);
 							},
 							rej => {
-								setTimeout(() => view_h.setWait(false), 800);
-								setError(rej);
+								view_h.setWait(false);
+								cont.setError(rej);
 							}
 						);
 					}
-					catch (e){setError(e)}
+					catch (e){
+						view_h.setWait(false);
+						cont.setError(e);
+					}
 				}
 			}
 		}
@@ -212,24 +222,23 @@ let viewer =(function(){
 			let fenster = window.open('./jse/jst.html');
 			return;
 		}
+
 		let art=ele.getAttribute("art");
 		if (art==='logout') {
-
 			view_h.getLogOut();
 			return;
 		}
 		view_h.clear_r();
 		view_h.clear_l();
 		cont.setAktMenu(art);
-		//cont.createNForm();
 		let leftDiv = document.getElementById("left");
 		let value={};
 		let child=null;
 		//if tree get first level
 		try{
 			let lstTree=cont.getLstForTree(art);
-			if(lstTree.length>0){
-				cont.getList(lstTree[0].type).then(resVal=>{
+			if(lstTree.length > 0){
+				cont.getLstUsed(lstTree[0].type).then(resVal=>{
 					let ul = document.createElement("ul");
 					ul.addEventListener('click', viewer.click, false);
 					for (let key of resVal) {
@@ -237,8 +246,11 @@ let viewer =(function(){
 						ul.appendChild(child);
 					}
 					leftDiv.appendChild(ul);
-				}).then(result=>{
 					cont.createNForm();
+					view_h.setWait(false);
+				},rej=>{
+					view_h.setWait(false);
+					cont.setError(rej);
 				});
 			}
 			else{
@@ -250,13 +262,18 @@ let viewer =(function(){
 						ul.appendChild(child);
 					}
 					leftDiv.appendChild(ul);
-				}).then(result=>{
 					cont.createNForm();
+					view_h.setWait(false);
+				},rej=>{
+					view_h.setWait(false);
+					cont.setError(rej);
 				});
 			}
 		}
-		catch(e){console.log(e)}
-
+		catch(e){
+			view_h.setWait(false);
+			cont.setError(e);
+		}
 		view_h.hideMenu();
 		view_h.setLblStatus(art);
 		view_h.setLeftHead(art);
@@ -281,18 +298,22 @@ let viewer =(function(){
 				for (let i = 0; i < txt.length; i++){
 					let opt = txt.options[i];
 					let mId=cont.getMId(m,r.feld);
-					if(parseInt(opt.value)===mId){opt.selected =true;break;}
+					if(parseInt(opt.value)===mId){
+						opt.selected =true;
+						break;
+					}
 				}
 			}
 			else if(r.art==='img'){
 				let b=cont.getMBild(m,r.feld);
 				txt.src=`./img/bilder/${b}`;
 			}
-			else if(r.art==='data'){
-				/*helper.js getDate(timestamp,format) format: 0=long date short weekname | 1=long date long weekname | 2=short datetime | 3=short date*/
-				txt.innerText=hlp.getDate(Number(m.Edit),2);
+			else if(r.art==='data'){txt.innerText=m.Edit;}
+			else if(r.art==='textarea'){
+				txt.value=value;
+				txt.rows=r.rows;
 			}
-			else txt.value=value;
+			else {txt.value=value;}
 		}
 		view_h.setLblStatus(`${m.constructor.name} ${m.toString()}`);
 		view_h.setRightHead(`${m.constructor.name} ${m.toString()}`);
@@ -327,17 +348,13 @@ let viewer =(function(){
 					lbl.style="width: 120px; vertical-align: top; size:10;";
 					lbl.onclick=(evt)=>{let files = evt.target.files}
 				}
-				else{
-					lbl=document.createElement("label");
-				}
+				else{lbl=document.createElement("label");}
 			}
 			else if(r.art==='textarea'){
 				lbl=document.createElement("label");
-				txt.rows="12";
+				/*txt.rows="12";*/
 			}
-			else{
-				lbl=document.createElement("label")
-			}
+			else{lbl=document.createElement("label");}
 			txt.setAttribute('type',r.type)
 			txt.id=`txt_${r.feld}`;
 			lbl.id=`lbl_${r.feld}`;
@@ -369,9 +386,7 @@ let viewer =(function(){
 			menuSubDiv=view_h.createEle("section",'','',r.Name,[{name:'art',val:r.type}],r.desc);
 			navDiv.appendChild(menuSubDiv);
 		}
-		//<i class="fas fa-sign-out-alt"></i>
 		menuSubDiv=view_h.createEle('section','','fas fa-sign-out-alt btnLogout','',[{name:'art',val:'logout'}],'Abmelden');
-		//menuSubDiv=view_h.createEle("section",'','','Abmelden',[{name:'art',val:'logout'}],'Abmelden');
 		navDiv.appendChild(menuSubDiv);
 		//bubeling eventhandler on menu click
 		navDiv.addEventListener('click', viewer.menu_click, false);

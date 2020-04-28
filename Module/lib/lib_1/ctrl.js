@@ -1,182 +1,249 @@
-/*
-Programmierhilfe Stammdaten Controler
-*/
-"use strict";
-let cont =(function(){	
-	//VIEWER
+//Programmierhilfe Stammdaten Controler
+
+let cont =(function(){
+	"use strict";
+	//###### CONST ##################
 	const E_TITLE=[
 	{neu:"neuen Eintrag anlegen",edit:"Eintrag speichern",del:"Eintrag löschen"},
 	{neu:"neues Thema anlegen",edit:"Thema speichern",del:"Thema löschen"},
-	{neu:"neues Subsprache anlegen",edit:"Subsprache speichern",del:"Subsprache löschen"},
-	{neu:"neue Sprache anlegen",edit:"Sprache speichern",del:"Sprache löschen"}];	
-	//constructor(id,name,desc,val,thema,sub_spr,spr,date,edit)
-	const F_EINTRAG=new dom.f_eintrag(0,'','','',0,0,0,Date.now(),Date.now());
-	//constructor(id,name,desc,sub_spr,spr,date,edit)
-	const F_THEMA=new dom.f_thema(0,'','',0,0,Date.now(),Date.now());
-	//constructor(id,name,desc,spr,date,edit)
-	const f_sub_thema=new dom.f_sub_thema(0,'','',0,Date.now(),Date.now());
+	{neu:"neue Sprache anlegen",edit:"Sprache speichern",del:"Sprache löschen"}];
+
+	//constructor(id,name,desc,text,thema,spr,sort,date,edit)
+	const F_EINTRAG=new dom.f_eintrag(0,'','','',0,0,0,hlp.getDate(Date.now(),1), hlp.getDate(Date.now(),1));
+	//constructor(id,name,sprache,date,edit)
+	const F_THEMA=new dom.f_thema(0,'',0,hlp.getDate(Date.now(),1), hlp.getDate(Date.now(),1));
 	//constructor(id,name,desc,date,edit)
-	const F_SPRACHE=new dom.f_sprache(0,'','',Date.now(),Date.now());	
+	const F_SPRACHE=new dom.f_sprache(0,'','',hlp.getDate(Date.now(),1), hlp.getDate(Date.now(),1));
+
+	//###### SET ##################
+	let aktEntry;
 	let setError=(e)=>{
-		try {
-			view_h.clear_r();
-			document.getElementById('div_edit').style.visibility='hidden';
-			document.getElementById('right').insertAdjacentHTML('beforeend', `<p><b>${e}</b></p>`)
-			console.log(JSON.stringify(e))
-		}
-		catch (e) {}
-	}	
+		try { view_h.setMsb(`${ini.CONFOBJ.titel}`,e) }
+		catch (e){alert(e)}
+	}
+
 	let setForm=()=>{
 		try {
 			viewer.createMain();
-			view_h.setWait(true);
-			(async () => {					
-				let promise = new Promise((resolve, reject) => {
-					dao.sprDao.fillLst();
-					dao.subsprDao.fillLst();	
-					dao.temDao.fillLst();
-					dao.einDao.fillLst();													
-					setTimeout(() => resolve("done!"), 500);
-				});				
-				let result = await promise; // wait until the promise resolves (*)
-				view_h.setWait(false);
-				viewer.createMenu();
-			})();				
+			viewer.createMenu();
 		}
 		catch (e) {setError(e)}
-		finally{}
-	}	
+	}
+
 	let createNForm=()=>{
 		try {
 			let t=getAktMenu().type;
-			let ti=t==="f_thema"?1:t==="f_sub_thema"?2:t==="f_sprache"?3:0;
-			viewer.createForm(getNewModel(t));			
+			let ti=t==="f_thema"?1:t==="f_sprache"?2:0;
+			let m = getNewModel(t);
+			viewer.createForm(m);
 			view_h.setEditTitle(E_TITLE[ti].neu,E_TITLE[ti].edit,E_TITLE[ti].del);
 		}
-		catch (e) {setError(e)}
+		catch (e) { setError(e) }
 	}
-	let fillNForm=()=>{viewer.display(getNewModel(getAktMenu().typ));}	
-	let set_view=(nr)=>{viewer.display(getModel(nr));}
-	//MODEL wird in view.js verwendet siehe: edit_click() und menu_click()
+
+	let fillNForm=()=>{
+		try { viewer.display(getNewModel(getAktMenu().type)) }
+		catch (e) { setError(e) }
+	}
+
+	let set_view=async (nr)=>{
+		try { getModel(nr).then(result=>{viewer.display(result)}) }
+		catch (e) { setError(e) }
+	}
+
+	//###### GET ##################
 	let getNewModel=(art)=>{
 		if( art==="f_eintrag") return F_EINTRAG;
 		else if(art==="f_thema") return F_THEMA;
-		else if(art==="f_sub_thema") return f_sub_thema;
 		else if(art==="f_sprache") return F_SPRACHE;
 	}
-	let getModel=(nr)=>{
-		if(aktMenu==null) return;			
-		let m={};
-		try {
-			if(aktMenu.type==="f_eintrag") m=dao.einDao.getById(nr);
-			else if(aktMenu.type==="f_thema") m=dao.temDao.getById(nr);
-			else if(aktMenu.type==="f_sub_thema") m=dao.subsprDao.getById(nr);
-			else if(aktMenu.type==="f_sprache") m=dao.sprDao.getById(nr);
-		}
-		catch (e) {setError(e)}		
-		return m;
+
+	let getModel=async(nr)=>{
+		let prom= new Promise((resolve, reject) => {
+			if(aktMenu==null) resolve({});
+			else{
+				let ret={};
+				try {
+					if(aktMenu.type==="f_eintrag") 	dao.einDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_thema") dao.temDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_sprache") dao.sprDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else {resolve({})}
+				}
+				catch (e) { reject(e) }
+			}
+		});
+		return prom;
 	}
-	let getList=(art)=>{
-		try {
-			if(art=="f_eintrag") return dao.einDao.getList();
-			else if(art=="f_thema") return dao.temDao.getList();
-			else if(art=="f_sub_thema") return dao.subsprDao.getList();
-			else if(art=="f_sprache") return dao.sprDao.getList();
-		}
-		catch (e) {setError(e)}	
+
+	let getList=async (art)=>{
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(art=="f_eintrag") dao.einDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_thema") dao.temDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_sprache") dao.sprDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else resolve([]);
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
-	let getLstByArt=(nr)=>{
-		if(aktMenu==null) return;		
-		try {if(aktMenu.type==="f_eintrag") return dao.einDao.getLstByArt(nr)}
-		catch (e) {setError(e)}		
-		return {};
+
+	let getLstByArt=async(nr)=>{
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(aktMenu==null) return [];
+				if(aktMenu.type==="f_eintrag") dao.temDao.getLstByArt(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+				else{resolve([])}
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
+
+	let getLstUsed=async(t,nr1=0,nr2=0)=>{
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(t==="f_sprache") dao.einDao.getLstUseSpr().then(result=>{resolve(result);},rej=>{reject(rej)});
+				else if(t==="f_thema") dao.einDao.getLstUseThema(nr1).then(result=>{resolve(result);},rej=>{reject(rej)});
+				else if(t==="f_eintrag") dao.einDao.getLstBySprThema(nr1,nr2).then(result=>{resolve(result);},rej=>{reject(rej)});
+				else{ resolve([]) }
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
+	}
+
 	let getMId=(m,feld)=>{
 		if(feld=="Sprache") return m.Sprache;
-		if(feld=="Sub_Sprache") return m.Sub_Sprache;
 		if(feld=="Thema") return m.Thema;
 	}
-	let getMBild=(m,feld)=>{if(feld=="Bild") return m.Bild;}
-	let getMEdit=(m,feld)=>{if(feld=="Edit") return m.Edit;}
-	//MENU
+
+	let getMBild=(m,feld)=>{if(feld=="Bild") return m.Bild}
+
+	let getMEdit=(m,feld)=>{if(feld=="Edit") return m.Edit}
+
+	//###### insert/update/delete ##################
+	let insert=(m,p,s,a)=>{
+		try { return dao.insert(m,p,s,a)	}
+		catch (e) { setError(e) }
+	}
+
+	let update=(m,p,s,a)=>{
+		try { return dao.update(m,p,s,a) }
+		catch (e) { setError(e) }
+	}
+
+	let del=(m,p,s,a)=>{
+		try { return dao.del(m,p,s,a) }
+		catch (e) { setError(e) }
+	}
+
+	//###### MENU ##################
 	let aktMenu;
-	let getListMenu=()=>{		
-		if(menuList==null || menuList.length==0) fillListMenu();
+	let menuList=[];
+	let getListMenu=()=>{
+		if(menuList==null || menuList.length ==0) {
+			let men=new dom.menubar("Sprachen","f_sprache","Programmiersprachen");
+			men.dsRules=getRules("f_sprache");
+			menuList.push(men);
+			men=new dom.menubar("Themen","f_thema","Unterpunkte");
+			men.dsRules=getRules("f_thema");
+			menuList.push(men);
+			men=new dom.menubar("Einträge","f_eintrag","Hilfeeintrag");
+			men.dsRules=getRules("f_eintrag");
+			menuList.push(men);
+			men=new dom.menubar("Javascript Tester","js","öffnet den Javascript Tester");
+			menuList.push(men);
+		}
 		return menuList;
 	}
-	let getMenuBytyp=(typ)=>{for (let r of getListMenu()){if(r.type===typ){return r;break;}}}
-	let menuList=[];
-	let fillListMenu=()=>{
-		//Menu füllen
-		let men=new dom.menubar("Sprachen","f_sprache","Programmiersprachen");
-		men.dsRules=getRules("f_sprache");
-		menuList.push(men);
-		men=new dom.menubar("Thema","f_sub_thema","Unterpunkte");
-		men.dsRules=getRules("f_sub_thema");
-		menuList.push(men);	
-		men=new dom.menubar("Sub Thema","f_thema","Hilfethemen");
-		men.dsRules=getRules("f_thema");
-		menuList.push(men);	
-		men=new dom.menubar("Eintrag","f_eintrag","Hilfeeintrag");
-		men.dsRules=getRules("f_eintrag");
-		menuList.push(men);	
-		men=new dom.menubar("Javascript Tester","js","öffnet den Javascript Tester");		
-		menuList.push(men);
+
+	let setAktMenu=(t)=>{
+		let lst=getListMenu();
+		for (let r of lst){
+			if(r.type===t){
+				aktMenu=r;
+				break;
+			}
+		}
 	}
-	let setAktMenu=(typ)=>aktMenu=getMenuBytyp(typ);			
-	let getAktMenu=()=>aktMenu;
-	//diplay rules
-	let getLstForTree=(typ)=>{		
-		if(typ==="f_eintrag") 
-			return [{type:'f_sprache'}];
+
+	let getAktMenu=()=>{return aktMenu}
+
+	//###### diplay rules ##################
+	let getLstForTree=(typ)=>{
+		if(typ==="f_eintrag")
+			return [{type:'f_sprache',level:0},{type:'f_thema',level:1},{type:'f_eintrag',level:2}];
 		return[];
 	}
+
 	let getRules=(typ)=>{
-		//f_eintrag constructor(id,name,desc,val,thema,sub_spr,spr,date,edit)
 		if(typ==="f_eintrag") return [
 		{feld:'Edit',art:'data',type:'text'},
 		{feld:'Sprache',art:'select',type:'f_sprache'},
-		{feld:'Sub_Sprache',art:'select',type:'f_sub_thema'},
 		{feld:'Thema',art:'select',type:'f_thema'},
 		{feld:'Name',art:'input',type:'text'},
-		{feld:'Desc',art:'textarea',type:'text'},
-		{feld:'Text',art:'textarea',type:'text'}
-		];
-		//constructor(id,name,desc,date,edit)
+		{feld:'Beschreibung',art:'textarea',type:'text',rows:3},
+		{feld:'Text',art:'textarea',type:'text',rows:12}];
 		else if(typ==="f_sprache") return [
 		{feld:'Edit',art:'data',type:'text'},
 		{feld:'Name',art:'input',type:'text'},
-		{feld:'Desc',art:'input',type:'text'}];
-		//constructor(id,name,desc,spr,date,edit)
-		else if(typ==="f_sub_thema") return [
-		{feld:'Edit',art:'data',type:'text'},
-		{feld:'Name',art:'input',type:'text'},
-		{feld:'Desc',art:'input',type:'text'}
-		];
-		//constructor(id,name,desc,sub_spr,spr,date,edit)
+		{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
 		else if(typ==="f_thema") return [
 		{feld:'Edit',art:'data',type:'text'},
 		{feld:'Name',art:'input',type:'text'},
-		{feld:'Desc',art:'input',type:'text'}
-		];
-	}	
+		{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
+	}
+
+	//###### AUTO LOGOUT
+	let idleTime = 0;
+	let resetIdleTime=()=>{ idleTime = 0 }
+
+	let timerIncrement=()=> {
+		try{
+			idleTime = idleTime + 1;
+	    if (idleTime >= 5) {
+				idleTime=0;
+	      view_h.getLogOut();
+	    }
+		}
+		catch (e) {setError(e)}
+	}
+
+	let startTimer=()=>{
+		document.onreadystatechange = () => {
+		  setInterval(timerIncrement, 60000); // 1 minute
+		  document.onclick = e => {idleTime = 0};
+		  document.onmousemove = e => {idleTime = 0 };
+		  document.onkeypress = e => {idleTime = 0 };
+			document.onscroll  = e => {idleTime = 0 };
+		};
+	}
+
+	//###### Public ##################
 	return {
-		getRules: getRules,
-        getLstForTree: getLstForTree,
-		getAktMenu: getAktMenu,
-		setAktMenu: setAktMenu,
-		getMenuBytyp: getMenuBytyp,
-		getListMenu: getListMenu,
-		getMEdit: getMEdit,
-		getMBild: getMBild,
-		getMId: getMId,
-		getLstByArt: getLstByArt,
-		getList: getList,
-		getModel: getModel,
-		set_view: set_view,
-		fillNForm:fillNForm,
-		createNForm: createNForm,
-		setForm: setForm,	
-		setError:setError
+		getRules,
+		getLstForTree,
+		getAktMenu,
+		setAktMenu,
+		getListMenu,
+	  getMEdit,
+		getMBild,
+		getMId,
+		getLstByArt,
+		getList,
+		getModel,
+		set_view,
+		createNForm,
+		setForm,
+		fillNForm,
+		setError,
+		aktEntry,
+		insert,
+		update,
+		del,
+		startTimer,
+		resetIdleTime,
+		getLstUsed
     };
 })();

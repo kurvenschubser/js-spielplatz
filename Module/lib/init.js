@@ -12,21 +12,19 @@ const StorageType = {
 	MongoDb: 5
 };
 "use strict";
-let ini=(function(app = AppType.Fitness, storage = StorageType.Dao){
-/*##################################################################*/
-	/*hier entscheiden welches Program verwendet werden soll*/
-	/*Programm: 0 = Fitness 1 = Programmierhilfe*/
-	const PRO=app;
-	/*hier entscheiden welcher Speicher verwendet werden soll*/
-	/*Speicher: store 0 = Dao 1 = Xml 2 = MySql 3 = MsSql 4 = LowDb*/
-	const STORE=storage;
-/*##################################################################*/
-	/*Liste der Programme*/
+//##################################################################
+	//hier entscheiden welches Programm verwendet werden soll
+	//app: 0 = Fitness | 1 = Programmierhilfe
+	//hier entscheiden welcher Speicher verwendet werden soll
+	//storage: 0 = Dao | 1 = Xml | 2 = MySql | 3 = MsSql | 4 = LowDb | 5 = MongoDb
+//##################################################################*/
+let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
+	//Liste der Programme
 	const LST_CONFOBJ=[
 	{id:0,titel:"Fitness - Stammdaten",v:"0.9.0.0",stor:{}},
 	{id:1,titel:"Programmierhilfe - Stammdaten",v:"0.9.0.1",stor:{}}];
 
-	/*Liste der Speichermöglichkeiten*/
+	//Liste der Speichermöglichkeiten
 	const LST_STORE=[
 	{id:0,art:"Lok",desc:"Datenbank: Lokal",v:"1"},
 	{id:1,art:"Xml",desc:"Datenbank: XML",v:"1"},
@@ -35,13 +33,14 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.Dao){
 	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"},
 	{id:5,art:"Mongo",desc:"Datenbank: MongoDb",v:"1"}];
 
-	/*Globales*/
-	const CONFOBJ=LST_CONFOBJ[PRO];
-	CONFOBJ.stor=LST_STORE[STORE];
+	//Globales
+	const CONFOBJ=LST_CONFOBJ[app];
+	CONFOBJ.stor=LST_STORE[storage];
+
 	//URL für cypress
 	//CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
 	//URL für Seite
-	CONFOBJ.url=`http://localhost:8888/?p=${PRO}&s=${STORE}`;
+	CONFOBJ.url=`http://localhost:8888/?p=${app}&s=${storage}`;
 
 	let setHeight=()=>{
 		let el=document.getElementsByTagName("main")[0];

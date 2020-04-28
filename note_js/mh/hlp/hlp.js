@@ -12,7 +12,7 @@ module.exports = (function () {
 		if (err instanceof Error) {
 			let msg = err.message;
 			let error = { art:'Error', msg:msg };
-			return JSON.stringify(JSON.stringify(error));
+			return JSON.stringify(error);
 		}
 		else {
 			return err;
