@@ -8,40 +8,55 @@ const StorageType = {
 	Xml: 1,
 	MySql: 2,
 	MsSql: 3,
-	LowDb: 4
+	LowDb: 4,
+	MongoDb: 5
 };
 "use strict";
+//##################################################################
+	//hier entscheiden welches Programm verwendet werden soll
+	//app: 0 = Fitness | 1 = Programmierhilfe
+	//hier entscheiden welcher Speicher verwendet werden soll
+	//storage: 0 = Dao | 1 = Xml | 2 = MySql | 3 = MsSql | 4 = LowDb | 5 = MongoDb
+//##################################################################*/
 let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
-/*##################################################################*/
-	/*hier entscheiden welches Program verwendet werden soll*/
-	/*Programm: 0 = Fitness 1 = Programmierhilfe*/
-	const PRO=app;
-	/*hier entscheiden welcher Speicher verwendet werden soll*/
-	/*Speicher: store 0 = Dao 1 = Xml 2 = MySql 3 = MsSql 4 = LowDb*/
-	const STORE=storage;
-/*##################################################################*/
-	/*Liste der Programme*/
+	//Liste der Programme
 	const LST_CONFOBJ=[
 	{id:0,titel:"Fitness - Stammdaten",v:"0.9.0.0",stor:{}},
 	{id:1,titel:"Programmierhilfe - Stammdaten",v:"0.9.0.1",stor:{}}];
 
-	/*Liste der Speichermöglichkeiten*/
+	//Liste der Speichermöglichkeiten
 	const LST_STORE=[
 	{id:0,art:"Lok",desc:"Datenbank: Lokal",v:"1"},
 	{id:1,art:"Xml",desc:"Datenbank: XML",v:"1"},
 	{id:2,art:"MySql",desc:"Datenbank: MySql",v:"1"},
 	{id:3,art:"MsSql",desc:"Datenbank: MsSql",v:"1"},
-	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"}];
+	{id:4,art:"Ldb",desc:"Datenbank: LowDb",v:"1"},
+	{id:5,art:"Mongo",desc:"Datenbank: MongoDb",v:"1"}];
 
-	/*Globales*/
-	const CONFOBJ=LST_CONFOBJ[PRO];
-	CONFOBJ.stor=LST_STORE[STORE];
-	CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
+	//Globales
+	const CONFOBJ=LST_CONFOBJ[app];
+	CONFOBJ.stor=LST_STORE[storage];
+
+	//URL für cypress
+	//CONFOBJ.url=`/api/?p=${PRO}&s=${STORE}`;
+	//URL für Seite
+	CONFOBJ.url=`http://localhost:8888/?p=${app}&s=${storage}`;
 
 	let setHeight=()=>{
-		const h=window.innerHeight-230;
-    const str = '80px 40px ' + h +'px 40px';
-    document.querySelector("main").setAttribute('style','grid-template-rows:' + str + '');
+		let el=document.getElementsByTagName("main")[0];
+		if (el) {
+			let style = getComputedStyle(el);
+			const w=parseInt(window.innerWidth);
+			if (w < 980) {
+				el.style.gridTemplateColumns ="100%";
+				el.style.gridTemplateRows = "minmax(40px, auto) 40px 40px 200px 40px auto minmax(40px, auto)";
+
+			}
+			else{
+				el.style.gridTemplateColumns = "20% 79%";
+				el.style.gridTemplateRows = "80px 40px 780px 40px";
+			}
+		}
 	}
 
 	let init=()=>{
@@ -64,7 +79,7 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 			scrptOb={art:'link',src:"css/index.css",type:"stylesheet",charset:"utf-8"};
 			setScript(scrptOb);
 			document.title=CONFOBJ.titel;
-			window.addEventListener('resize', ini.setHeight);
+			window.addEventListener('resize', setHeight);
 		}
 		catch (e) {console.log(e)}
 	}
@@ -87,5 +102,5 @@ let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
 		catch (e) {throw e}
 	}
 
-	return {CONFOBJ,init,setHeight};
+	return {CONFOBJ,init};
 })();

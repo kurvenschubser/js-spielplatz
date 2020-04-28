@@ -1,124 +1,252 @@
-/*
-Fitness Stammdaten DAO
-*/
-"use strict";
+//Fitness Stammdaten DAO MsSql
 let dao=(function(){
+	"use strict";
+
 	let artDao=(function(){
-		//constructor(id,name,desc){super(id,name,desc)
 		let lst=[];
-		let fillLst=async()=>{
-			let promise = new Promise((resolve, reject) => {
-				fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
-					function(response) {
-					  response.text().then(function(text) {
-							if(text.startsWith("<p><b>ACHTUNG")){
-								cont.setError(text);
-								return;
-							}
-							if(text==='') return;
-							let doc=JSON.parse(text);
-							let ge =null;
-							for (let key in doc) {
-								let obj = doc[key];
-								ge = new dom.f_arten(obj.id,obj.name,obj.beschreibung);
-								lst.push(ge);
-							}
-							resolve('Lst Arten done')
-					  },
-					  function(err){cont.setError(err)}
-				)});
-			});
-			await promise;
-		}
+
 		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
-		}
-		let getById=(nr)=>{for (let key of getList()) {
-			if(key.Id === parseInt(nr)){
-				return key;
-				break;
-			}
-		}}
-		return {getList: getList,getById: getById,fillLst:fillLst};
-	})();
-	let egDao=(function(){
-		//constructor(id,name,desc,farbe,sort)
-		let lst=[];
-		let fillLst=async ()=>{
-			let promise = new Promise((resolve, reject) => {
-				fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
-					function(response) {
-					  response.text().then(function(text) {
-							if(text.startsWith("<p><b>ACHTUNG")){
-								cont.setError(text);
-								return;
-							}
-							if(text==='') return;
-							let doc=JSON.parse(text);
-							//Liste füllen
-							let ge =null;
-							for (let key in doc) {
-								let obj = doc[key];
-								//255,255,0,128
-								let tmp=obj.farbe.split(',');
-								let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
-									ge = new dom.f_eigenschaft(obj.id,obj.name,obj.beschreibung,cl,obj.sortfield);
-									lst.push(ge);
-							}
-							resolve('Lst Eigenschaften done')
-					  },
-					  function(err){cont.setError(err)}
-				)});
-			});
-			await promise;
-		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
-		}
-		let getById=(nr)=>{for (let key of dao.egDao.getList()) if(key.Id === parseInt(nr)){return key;break;}}
-		return {getList: getList,getById: getById,fillLst:fillLst};
-	})();
-	let gerDao=(function(){
-		//constructor(id,name,desc,art,bild)
-		let lst=[];
-		let fillLst=async()=>{
-			let promise = new Promise((resolve, reject) => {
-			fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
-				function(response) {
-				  response.text().then(function(text) {
-					if(text.startsWith("<p><b>ACHTUNG")){
-						cont.setError(text);
-						return;
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									let doc;
+									try{doc=JSON.parse(text)}
+									catch (e) {reject(e)}
+									if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+									let ge =null;
+									for (let val of doc) {
+										ge = new dom.f_arten(val.id,val.name,val.beschreibung);
+										lst.push(ge);
+									}
+								}).then(result=>{resolve(lst)})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
 					}
-					if(text==='') return;
-					let doc=JSON.parse(text);
-					let ge =null;
-					for (let key in doc) {
-						let obj = doc[key];
-						ge = new dom.f_geraete(obj.id,obj.name,obj.beschreibung,obj.art,obj.bild);
-						lst.push(ge);
-					}
-					resolve('Lst Geräte done')
-				  },
-				  function(err){cont.setError(err)}
-				)});
+					catch (e) {reject(e)}
+				}
+				else {resolve(lst)}
 			});
-			await promise;
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
+
+		let getById=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
 		}
-		let getLstByArt=(nr)=>{
-			let nLst=[];
-			for (let key of getList()) {if(key.Art === parseInt(nr))nLst.push(key)};
-			return nLst;
-		}
-		let getById=(nr)=>{for (let key of dao.gerDao.getList()) if(key.Id === parseInt(nr)){return key;break;}}
-		return {getList: getList,getById: getById,getLstByArt: getLstByArt,fillLst:fillLst};
+
+		return {getList,getById};
 	})();
 
-	return {artDao: artDao,gerDao: gerDao,egDao: egDao};
+	let egDao=(
+		function(){
+		let lst=[];
+
+		let getList=()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									if(text===null || text==='') return '';
+									let doc;
+									try{doc=JSON.parse(text)}
+									catch (e) {reject(e)}
+									if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+									let ge =null;
+									for (let val of doc) {
+										let tmp=val.farbe.split(',');
+										let cl= hlp.rgb2hex(tmp[0],tmp[1],tmp[2]);
+											ge = new dom.f_eigenschaft(val.id,val.name,val.beschreibung,cl,val.sortfield);
+											lst.push(ge);
+									}
+								}).then(result=>{resolve(lst)})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
+					}
+					catch (e) {reject(e)}
+				}
+				else {resolve(lst)}
+			});
+		}
+
+		let getById=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
+		}
+
+		return {getList,getById};
+	})();
+
+	let gerDao=(function(){
+		let lst=[];
+		let lstUseArt;
+
+		let getList=()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									let doc;
+									try{doc=JSON.parse(text)}
+									catch (e) {reject(e)}
+									if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+									let ge =null;
+									for (let val of doc) {
+										ge = new dom.f_geraete(val.id,val.name,val.beschreibung,val.art,val.bild);
+										lst.push(ge);
+									}
+								}).then(result=>{resolve(lst)})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
+					}
+					catch (e) {reject(e)}
+				}
+				else { resolve(lst) }
+			});
+		}
+
+		let getById=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
+		}
+
+		let getLstByArt=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let nLst=[];
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Art === parseInt(nr))
+								nLst.push(key)
+						};
+						resolve(nLst)
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
+		}
+
+		let getLstUseArten=()=>{
+			return new Promise((resolve, reject) => {
+				try{
+					if (!lstUseArt) {
+						lstUseArt=[];
+						getList().then(result=>{
+							artDao.getList().then(val=>{
+								let lstArt=val;
+								for (let keyart of lstArt) {
+									for (let key of result) {
+										if(key.Art === keyart.Id){
+											lstUseArt.push(keyart);
+											break;
+										}
+									};
+								};
+								resolve(lstUseArt);
+							}).catch(e=>{reject(e)});
+						}).catch(e=>{reject(e)});
+					}
+					else {
+						resolve(lstUseArt);
+					}
+				}
+				catch (e) {reject(e)}
+			});
+		}
+
+		return {getList,getById,getLstByArt,getLstUseArten};
+	})();
+
+	let data = (m,p,s,a,ac) => {
+		let prom = new Promise((resolve,reject) => {
+			try{
+				let xhr = new XMLHttpRequest();
+				let url = `${ini.CONFOBJ.url}&a=${a}&ac=${ac}`;
+				//let url = `/api/?p=${p}&s=${s}&a=${a}&ac=${ac}`;
+				if(ac===0){xhr.open("GET", url, true)}
+				else{xhr.open("POST", url, true)}
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						let result = this.responseText;
+						resolve(result);
+					}
+				};
+				let val =[]
+				if(a==0) val = JSON.stringify([{id:m.Id,name:m.Name,beschreibung:m.Beschreibung}])
+				else if(a==1) val = JSON.stringify([{id:m.Id,name:m.Name,beschreibung:m.Beschreibung,farbe:m.Farbe,sort:m.Sortierung}])
+				else if(a==2) val = JSON.stringify([{id:m.Id,name:m.Name,beschreibung:m.Beschreibung,art:m.Art,bild:m.Bild}])
+				xhr.send(val);
+			}
+			catch (e) {reject(e)}
+		});
+		return prom;
+	}
+
+	let insert=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,1); }
+		catch (e) { throw e; }
+	}
+
+	let update=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,2); }
+		catch (e) { throw e; }
+	}
+
+	let del=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,3); }
+		catch (e) { throw e; }
+	}
+
+	return {artDao,gerDao,egDao,insert,update,del};
 })();

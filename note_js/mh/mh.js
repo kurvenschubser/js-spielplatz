@@ -1,6 +1,6 @@
 //node -version
 //v12.16.1
-const http = require("http"), fs = require("fs");
+const http = require("http"), fs = require("fs"),url = require("url"),hlp = require("./hlp/hlp");
 http.createServer(function (oreq, ores) {
 	"use strict";
 	if (!oreq.url.startsWith("/api")) {
@@ -27,7 +27,7 @@ http.createServer(function (oreq, ores) {
     // request method
     method: oreq.method,
     // headers to send
-    headers: oreq.headers,
+    headers: oreq.headers
   };
 
 	console.log("options", options);
@@ -70,12 +70,11 @@ http.createServer(function (oreq, ores) {
 
   creq.end();
 }).listen(8080, "localhost");
-console.log("starting static file server on localhost:8080 with proxy to localhost:8888 whenever url starts with '/api'.")
+console.log("starting static file server on localhost:8080 with proxy to localhost:8888 whenever url starts with '/api'.");
 
 //http://localhost:8888/?p=0&s=4&a=0&ac=0
 http.createServer(function (req, res) {
 	"use strict";
-	const hlp = require("./hlp/hlp"), http = require("http"),url = require("url");
 	console.log("received request with method " + req.method);
 	try{
 		res.setHeader("Access-Control-Allow-Origin", "*");
@@ -83,151 +82,252 @@ http.createServer(function (req, res) {
 		res.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
 		res.writeHead(200,{"Content-Type":"application/json"});
 		if ( req.method === "OPTIONS" ) {
-			res.writeHead(200);
 			res.end();
 			return;
 		}
+
 		var q = url.parse(req.url, true).query;
 		//p=0 Fitness	=> 	a=0 f_arten 	a=1 f_eigenschaft 	a=2 f_geraete
-		//p=1 Proghilfe	=> 	a=0 f_sprache 	a=1 f_sub_sprache 	a=2 f_thema 	a=3 f_eintrag
-		//ac action => 		ac = 0 getLst	ac=1 insert 		ac=2 update 	ac=3 delete
-		console.log("q", q);
+		//p=1 Proghilfe	=> 	a=0 f_sprache  a=1 f_thema 	a=3 f_eintrag
+		//ac action => 	ac = 0 get	ac=1 insert 		ac=2 update 	ac=3 delete
+		const outStr="ACHTUNG!\r\n\r\nDie angeforderten Daten können nicht geliefert werden!"
 		if(q.p==null){
-			res.write("<p><b>ACHTUNG</b></p><p>Der Parameter p wurde nicht übergeben!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-			res.end()
+			res.write(hlp.getError(Error(`${outStr}\r\nDer Parameter p wurde nicht übergeben!`)));
+			res.end();
 		}
 		else if(q.s==null) {
-			res.write("<p><b>ACHTUNG</b></p><p>Der Parameter s wurde nicht übergeben!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-			res.end()
+			res.write(hlp.getError(Error(`${outStr}\r\nDer Parameter s wurde nicht übergeben!`)));
+			res.end();
 		}
 		else if(q.a==null)	{
-			res.write("<p><b>ACHTUNG</b></p><p>Der Parameter a wurde nicht übergeben!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-			res.end()
+			res.write(hlp.getError(Error(`${outStr}\r\nDer Parameter a wurde nicht übergeben!`)));
+			res.end();
 		}
 		else if(q.ac==null)	{
-			res.write("<p><b>ACHTUNG</b></p><p>Der Parameter ac wurde nicht übergeben!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-			res.end()
+			res.write(hlp.getError(Error(`${outStr}\r\nDer Parameter ac wurde nicht übergeben!`)));
+			res.end();
 		}
 		else{
-			let p=parseInt(q.p)
-			let s=parseInt(q.s)
-			let a=parseInt(q.a)
-			let ac=parseInt(q.ac)
-			if(s==4) {//LowDb
+			let p=parseInt(q.p);
+			let s=parseInt(q.s);
+			let a=parseInt(q.a);
+			let ac=parseInt(q.ac);
+			if(s==5){//###### MongoDB ######
+				const ms=require("./dao/mongoDao.js");
+				if(ac==0){
+					try{
+						ms.getData(p,a).then(
+							val => {
+								res.write(val?JSON.stringify(val):"object is null");
+								res.end();
+						}, rej =>{
+							res.write(hlp.getError(rej));
+							res.end();
+						});
+					}
+					catch(err){
+						res.write(hlp.getError(err));
+						res.end();
+					}
+				}
+				else if(ac>0){
+					//insert Update Delete
+					res.write(hlp.getError(Error(`${outStr}\r\nMongoDb Insert/Update/Delete sind nicht definiert!`)));
+					res.end();
+				}
+				else{
+					res.write(hlp.getError(Error(`${outStr}\r\nDie Schnittstelle MongoDb ist nicht definiert!`)));
+					res.end();
+				}
+			}
+			else if(s==4) {//###### LowDb ######
 				const ms=require("./dao/ldbDao.js");
 				if(ac > 0){
 					let data = []
 					req.on("data", chunk => {
-						const jsObj=JSON.parse(chunk)
+						const jsObj=JSON.parse(chunk);
 						for(const x of jsObj){data.push(x)}
-					})
+					});
 					req.on("end", () => {
-						let outp="["
-						for(const x of data){
-							try{
-								if(ac==1){
-									//insert
+						let outp;
+						try {
+							for(const x of data) {
+								if(ac==1){//insert
 									let prom=new Promise((resolve,reject) => {
-										let oid= ms.ldbDao.getMaxId(p,a);
-										resolve(oid);
-									}).then(val => {
+										try{
+											let oid= ms.getMaxId(p,a);
+											resolve(oid);
+										}
+										catch(err){reject(err)}
+									}).then(
+									val => {
 										if(val>0){
 											x.id=val;
-											ms.ldbDao.insert(x,p,a)
-											outp +="{"+JSON.stringify(x.id) +"}"
+											ms.insert(x,p,a);
+											outp +=`{${JSON.stringify(x.id)}}`
 										}
+									},
+									rej=>
+									{
+										res.write(hlp.getError(rej));
+										res.end();
+									});
+								}
+								else if(ac==2){//Update
+									let prom=new Promise((resolve,reject) => {
+										try{
+											ms.update(x,p,a);
+											resolve(JSON.stringify(x.id));
+										}
+										catch(err){reject(err)}
 									})
-								}
-								else if(ac==2){
-									//Update
-									let prom=new Promise((resolve,reject) => {
-										ms.ldbDao.update(x,p,a)
-										outp +="{"+JSON.stringify(x.id) +"}"
-										resolve(outp);
+									.then(
+									val => {
+											res.write(`${val}`);
+											res.end();
+									},
+									rej => {
+										res.write(hlp.getError(rej));
+										res.end();
 									});
 								}
-								else if(ac==3){
-									//Delete
+								else if(ac==3){//Delete
 									let prom=new Promise((resolve,reject) => {
-										ms.ldbDao.del(x,p,a)
-										outp +="{"+JSON.stringify(x.id) +"}"
-										resolve(outp);
-									});
+										//try{
+											//ms.del(x,p,a);
+											//resolve(JSON.stringify(x.id));
+										//}
+										//catch(err){reject(err)}
+										reject('LowDb delete ist noch nicht definiert!');
+									}).then(
+									val => {
+											res.write(`${val}`);
+											res.end();
+									},
+									rej => {
+										res.write(hlp.getError(rej));
+										res.end();
+									});;
 								}
-							}
-							catch(err){console.log(err)}
+							}//ende for
 						}
-						outp="]";
-						res.write(outp)
-						res.end()
+						catch(err){
+							outp = hlp.getError(err);
+							res.write(outp);
+							res.end();
+						}
 					})
 				}
-				if(ac==0){
+				if(ac==0){//Get
 					let prom=new Promise((resolve, reject) => {
-						let val= ms.ldbDao.getData(p,a)
-						resolve(val);
-					}).then(val => {
-						res.write(val?JSON.stringify(val):"object is null")
-						res.end()
+						try{
+							let val= ms.getData(p,a)
+							resolve(val);
+						}
+						catch(err){reject(err)}
+					}).then(
+					val => {
+						res.write(val?JSON.stringify(val):"object is null");
+						res.end();
+					},
+					rej => {
+						res.write(hlp.getError(rej));
+						res.end();
 					});
 				}
 			}
-			else if(s==3) {//MsSql
-				const sql = require("mssql")
+			else if(s==3) {//###### MsSql ######
 				const ms=require("./dao/mssqlDao.js");
 				if(ac==0){
-					let val
-					sql.connect(ms.mssqlDao.getConf(p)).then(pool => {
-						return pool.request().query(ms.mssqlDao.getQueryStr(p,a))
-					}).then(result => {
-						val=JSON.stringify(result.recordset);
-						res.write(val?val:"object is null")
-						res.end()
-					}).then(()=>{
-						sql.close()
-					}).catch(err => {throw err})
+					try{
+						ms.getData(p,a).then(
+						val => {
+							res.write(val?JSON.stringify(val):"object is null");
+							res.end();
+						}, rej =>{
+							res.write(hlp.getError(rej));
+							res.end();
+						});
+					}
+					catch(err){
+						res.write(hlp.getError(err));
+						res.end();
+					}
 				}
 				else if(ac>0){
-					//insertUpdateDelete
-					res.write("<p><b>ACHTUNG</b></p><p>Die Insert/Update/Delete sind noch nicht definiert!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-					res.end()
+					//insert Update Delete
+					res.write(hlp.getError(Error(`${outStr}\r\nMsSql Insert/Update/Delete sind noch nicht definiert!`)));
+					res.end();
 				}
 				else{
-					res.write("<p><b>ACHTUNG</b></p><p>Die Schnittstelle ist nicht definiert!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-					res.end()
+					res.write(hlp.getError(Error(`${outStr}\r\nDie Schnittstelle MsSql ist noch nicht definiert!`)));
+					res.end();
 				}
 			}
-			else if(s==2){//MySql
-				res.write("<p><b>ACHTUNG</b></p><p>Die Schnittstelle MySql ist noch nicht definiert!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-				res.end()
+			else if(s==2) {//###### MySql ######
+				const ms=require("./dao/mysqlDao.js");
+				if(ac==0){
+					try{
+						ms.getData(p,a).then(
+							val => {
+								res.write(val?JSON.stringify(val):"object is null");
+								res.end();
+						}, rej =>{
+							res.write(hlp.getError(rej));
+							res.end();
+						});
+					}
+					catch(err){
+						res.write(hlp.getError(err));
+						res.end();
+					}
+				}
+				else if(ac>0){
+					//insert Update Delete
+					res.write(hlp.getError(Error(`${outStr}\r\nMySql Insert/Update/Delete sind noch nicht definiert!`)));
+					res.end();
+				}
+				else{
+					res.write(hlp.getError(Error(`${outStr}\r\nDie Schnittstelle MySql ist noch nicht definiert!`)));
+					res.end();
+				}
 			}
-			else if(s==1){//Xml
+			else if(s==1) {//###### Xml ######
 				const ms=require("./dao/xmlDao.js");
 				if(ac==0){
 					let prom=new Promise((resolve, reject) => {
-						let val= ms.xmlDao.getData(p,a)
-						resolve(val);
+						try{
+							let val= ms.getData(p,a)
+							resolve(val);
+						}
+						catch(err){reject(err)}
 					}).then(val => {
-						res.write(val?JSON.stringify(val):"object is null")
-						res.end()
+						res.write(val?JSON.stringify(val):"object is null");
+						res.end();
+					}, rej => {
+						res.write(hlp.getError(rej));
+						res.end();
 					});
 				}
 				else if(ac>0){
-					//insertUpdateDelete
-					res.write("<p><b>ACHTUNG</b></p><p>Die Insert/Update/Delete sind noch nicht definiert!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-					res.end()
+					//insert Update Delete
+					res.write(hlp.getError(Error(`${outStr}\r\nXml Insert/Update/Delete sind noch nicht definiert!`)));
+					res.end();
 				}
 				else{
-					res.write("<p><b>ACHTUNG</b></p><p>Die Schnittstelle ist nicht definiert!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-					res.end()
+					res.write(hlp.getError(Error(`${outStr}\r\nDie Schnittstelle Xml ist noch nicht definiert!`)));
+					res.end();
 				}
 			}
 			else{
-				res.write("<p><b>ACHTUNG</b></p><p>Die angefragte Schnittstelle exisitiert nicht!<br/><b>Die Seite kann nicht angezeigt werden!</b></p>")
-				res.end()
+				res.write(hlp.getError(Error(`${outStr}\r\nDie angefragte Schnittstelle exisitiert nicht!`)));
+				res.end();
 			}
 		}
 	}
-	catch(err){console.log(err)}
+	catch(err){
+		res.write(hlp.getError(err));
+		res.end();
+	}
 }).listen(8888,"localhost")
-console.log("starting api server localhost:8888")
+console.log("starting api server localhost:8888");

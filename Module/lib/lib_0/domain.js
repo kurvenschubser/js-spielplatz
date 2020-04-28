@@ -13,11 +13,13 @@ let dom=(function(){
 		}
 		toString(){return `[${this.Id}] ${this.Name}`;}
 	}
+
 	class f_arten extends f_basic
 	{
 		constructor(id,name,desc){super(id,name,desc)}
 		toString(){return super.toString();}
 	}
+
 	class f_eigenschaft extends f_basic
 	{
 		constructor(id,name,desc,farbe,sort){
@@ -27,6 +29,7 @@ let dom=(function(){
 		}
 		toString(){return super.toString();}
 	}
+
 	class f_geraete extends f_basic
 	{
 		constructor(id,name,desc,art,bild){
@@ -36,6 +39,7 @@ let dom=(function(){
 		}
 		toString(){return super.toString();}
 	}
+
 	class menubar extends f_basic
 	{
 		constructor(name,type,desc){
@@ -45,9 +49,9 @@ let dom=(function(){
 		}
 	}
 	return {
-		f_arten: f_arten,
-    f_eigenschaft: f_eigenschaft,
-		f_geraete: f_geraete,
-		menubar: menubar
+		f_arten,
+    f_eigenschaft,
+		f_geraete,
+		menubar
     };
 })();

@@ -3,7 +3,7 @@
 
 **Anforderung:**  
 * Eine Struktur für zwei Anwendungen (Stammdaten Fitness APP / Stammdaten Programierhilfe APP)
-* Datenbindung an MSSQL, MySql, Xml oder LowDb  
+* Datenbindung an MSSQL, MySql, Xml, LowDb oder MongoDb 
 * Online/Offline mit indexedDB  
 * ECMA6 Standard  
 
@@ -16,6 +16,7 @@ Node Version: v12.16.1
 `$ npm install --save mssql`   
 `$ npm install --save mysql`   
 `$ npm install --save lowdb`  
+`$ npm install --save mongodb`  
 `$ npm install --save http`    
 
 --------------------------------------------------------------------------  

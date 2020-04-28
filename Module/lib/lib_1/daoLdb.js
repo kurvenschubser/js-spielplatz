@@ -1,214 +1,335 @@
-/*
-Programmierhilfe Stammdaten DAO
-*/
-"use strict";
+//Programmierhilfe Stammdaten DAO LowDb
 let dao=(function(){
+	"use strict";
 	let einDao=(function(){
-		//f_eintrag constructor(id,name,desc,val,thema,sub_spr,spr,date,edit)
 		let lst=[];
-		async function fillLst(){
-			fetch(`${ini.CONFOBJ.url}&a=3&ac=0`).then(
-			  function(response) {
-			  response.text().then(function(text) {
-				if(text.startsWith("<p><b>ACHTUNG")){
-					cont.setError(text);
-					return;
+		let lstUseSpr;
+		let lstUseThema;
+		let lstUseEin;
+
+		let getList=()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									let doc;
+									try{
+										doc=JSON.parse(text);
+										if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+										doc=JSON.parse(JSON.parse(text));
+										let ge =null;
+										for (let val of doc) {
+											ge = new dom.f_eintrag(val.id,val.titel,'-',val.text,val.sub,val.lang,val.sort,val.datum,val.edit);
+											lst.push(ge);
+										}
+									}
+									catch (e) { reject(e)}
+								}).then(result=>{
+									resolve(lst);
+								})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
+					}
+					catch (e) {reject(e)}
 				}
-				let doc=JSON.parse(text);
-				//Liste füllen
-				let ge =null;
-				for (let val of JSON.parse(doc)){
-					ge = new dom.f_eintrag(val.id,val.titel,'-',val.text,val.sub_sub,val.sub,val.lang,val.datum,val.edit);
-					lst.push(ge);
-				}
-			  },function(err){cont.setError(text)})
+				else {resolve(lst)}
 			});
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
+
+		let getById =(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
 		}
-		let getById=(nr)=>{
-			for (let key of getList())
-				if(key.Id === parseInt(nr)){return key;break;}
-		}
+
 		let getLstByArt=(nr)=>{
-			let lstN=[];
-			for (let key of getList()) if(key.Sprache === parseInt(nr))lstN.push(key);
-			return lstN;
+			return new Promise((resolve, reject) => {
+				let nLst=[];
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Thema === parseInt(nr))
+								nLst.push(key)
+						};
+						resolve(nLst)
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e)}
+			});
 		}
-		let insert=(m,p,s,a)=>{
-			let val = data(m,p,s,a,1)
-			console.log(val)
+
+		let getLstUseSpr=()=>{
+			return new Promise((resolve, reject) => {
+				try{
+					if (!lstUseSpr) {
+						lstUseSpr=[];
+						getList().then(result=>{
+							sprDao.getList().then(val=>{
+								let lstSpr=val;
+								for (let keyspr of lstSpr) {
+									for (let key of result) {
+										if(key.Sprache === keyspr.Id){
+											lstUseSpr.push(keyspr);
+											break;
+										}
+									};
+								};
+								resolve(lstUseSpr);
+							}).catch(e=>{reject(e)});
+						}).catch(e=>{reject(e)});
+					}
+					else {resolve(lstUseSpr);}
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		let update=(m,p,s,a)=>{
-			let val = data(m,p,s,a,2)
-			console.log(val)
+
+		let getLstUseThema=(nr)=>{
+			return new Promise((resolve, reject) => {
+				try{
+					lstUseThema=[];
+					getList().then(result=>{
+						temDao.getList().then(val=>{
+							let lstTem=val;
+							for (let keytem of lstTem) {
+								for (let key of result) {
+									if(key.Thema === keytem.Id && key.Sprache === nr){
+										lstUseThema.push(keytem);
+										break;
+									}
+								};
+							};
+							resolve(lstUseThema);
+						}).catch(e=>{reject(e)});
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		let del=(m,p,s,a)=>{
-			let val = data(m,p,s,a,3)
-			console.log(val)
+
+		let getLstBySprThema=(spr,tem)=>{
+			return new Promise((resolve, reject) => {
+				try{
+					lstUseEin=[];
+					getList().then(result=>{
+						for (let key of result) {
+							if(key.Thema === tem && key.Sprache === spr){
+								lstUseEin.push(key);
+							}
+						};
+						resolve(lstUseEin);
+					}).catch(e=>{reject(e);});
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		return {getList: getList,getById: getById,getLstByArt: getLstByArt,fillLst:fillLst,insert:insert,update:update,del:del}
+
+		return {getList,getById,getLstByArt,getLstUseSpr,getLstUseThema,getLstBySprThema}
+
 	})();
+
 	let sprDao=(function(){
-		//f_sprache constructor(id,name,desc,date,edit)
 		let lst=[];
-		async function fillLst(){
-			fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
-			  function(response) {
-			  response.text().then(function(text) {
-				if(text.startsWith("<p><b>ACHTUNG")){
-					cont.setError(text);
-					return;
+
+		let getList=()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=0&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									let doc;
+									try{
+										doc=JSON.parse(text) ;
+										if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+										doc=JSON.parse(JSON.parse(text)) ;
+										let ge =null;
+										for (let val of doc) {
+											ge = new dom.f_sprache(val.id,val.bez,val.beschr,val.datum,val.edit);
+											lst.push(ge);
+										}
+									}
+									catch (e) {reject(e)}
+								}).then(result=>{resolve(lst)})
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
+					}
+					catch (e) {reject(e)}
 				}
-				let doc=JSON.parse(text);
-				//Liste füllen
-				let ge =null;
-				for (let val of JSON.parse(doc)){
-					ge = new dom.f_sprache(val.id,val.bez,val.beschr,val.datum,val.edit);
-					lst.push(ge);
-				}
-			  },function(err){cont.setError(text)})
+				else {resolve(lst)}
 			});
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
-		}
-		let getById=(nr)=>{
-			for (let key of getList())
-				if(key.Id === parseInt(nr)){return key;break;}
-		}
-		let insert=(m,p,s,a)=>{
-			let val = data(m,p,s,a,1)
-			console.log(val)
-		}
-		let update=(m,p,s,a)=>{
-			let val = data(m,p,s,a,2)
-			console.log(val)
-		}
-		let del=(m,p,s,a)=>{
-			let val = data(m,p,s,a,3)
-			console.log(val)
-		}
-		return {getList: getList,getById: getById,fillLst:fillLst,insert:insert,update:update,del:del};
-	})();
-	let subsprDao=(function(){
-		//f_sub_thema constructor(id,name,desc,date,edit)
-		let lst=[];
-		async function fillLst(){
-			fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
-			  function(response) {
-			  response.text().then(function(text) {
-				if(text.startsWith("<p><b>ACHTUNG")){
-					cont.setError(text);
-					return;
+
+		let getById =(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
 				}
-				let doc=JSON.parse(text);
-				//Liste füllen
-				let ge =null;
-				for (let val of JSON.parse(doc)){
-					ge = new dom.f_sub_thema(val.id,val.sub_desc,'-',val.datum,val.edit);
-					lst.push(ge);
-				}
-			  },function(err){cont.setError(text)})
+				catch (e) {	reject(e);}
 			});
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
+
+		let getLstByArt=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let nLst=[];
+				try{
+					getList().then(result=>{
+							einDao.getList().then(val=>{
+								for (let key of lst) {
+									for (let keyEin of val) {
+										if (keyEin.Sprache===key.id && !(key in nLst)) {
+												nLst.push(key);
+										}
+									}
+								};
+							});
+						resolve(nLst)
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		let getById=(nr)=>{
-			for (let key of getList())
-				if(key.Id === parseInt(nr)){return key;break;}
-		}
-		let insert=(m,p,s,a)=>{
-			let val = data(m,p,s,a,1)
-			console.log(val)
-		}
-		let update=(m,p,s,a)=>{
-			let val = data(m,p,s,a,2)
-			console.log(val)
-		}
-		let del=(m,p,s,a)=>{
-			let val = data(m,p,s,a,3)
-			console.log(val)
-		}
-		return {getList: getList,getById: getById,fillLst:fillLst,insert:insert,update:update,del:del};
+
+		return {getList,getById,getLstByArt};
 	})();
+
 	let temDao=(function(){
-		//f_thema constructor(id,name,desc,date,edit)
 		let lst=[];
-		async function fillLst(){
-			fetch(`${ini.CONFOBJ.url}&a=2&ac=0`).then(
-			  function(response) {
-			  response.text().then(function(text) {
-				if(text.startsWith("<p><b>ACHTUNG")){
-					cont.setError(text);
-					return;
+
+		let getList=()=>{
+			return new Promise((resolve, reject) => {
+				if(lst===null || lst.length ==0){
+					view_h.setWait(true);
+					try{
+						fetch(`${ini.CONFOBJ.url}&a=1&ac=0`).then(
+							function(response) {
+								response.text().then(function(text) {
+									let doc;
+									try{
+										doc=JSON.parse(text);
+										if(doc.art && doc.art == 'Error'){reject(Error(doc.msg))}
+										doc=JSON.parse(JSON.parse(text)) ;
+										let ge =null;
+										for (let val of doc) {
+											ge = new dom.f_thema(val.id,val.sub_desc,val.spr,val.datum,val.edit);
+											lst.push(ge);
+										}
+									}
+									catch (e) { reject(e) }
+								}).then(result=>{resolve(lst)})//ende response.then
+							}//ende function (response)
+						)//ende fetch.then
+						.catch(e=>{reject(e)})
+					}
+					catch (e) {reject(e)}
 				}
-				let doc=JSON.parse(text);
-				let ge =null;
-				for (let val of JSON.parse(doc)){
-					ge = new dom.f_thema(val.id,val.titel,'-',val.dat,val.edit);
-					lst.push(ge);
-				}
-			  },function(err){cont.setError(text)})
+				else {resolve(lst)}
 			});
 		}
-		let getList=()=>{
-			if(lst===null || lst.length ==0) fillLst();
-			return lst;
+
+		let getById =(nr)=>{
+			return new Promise((resolve, reject) => {
+				let ret={};
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Id === parseInt(nr)){
+								ret= key;
+								break;
+							}
+						}
+						resolve(ret);
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		let getById=(nr)=>{
-			for (let key of getList())
-				if(key.Id === parseInt(nr)){return key;break;}
+
+		let getLstByArt=(nr)=>{
+			return new Promise((resolve, reject) => {
+				let nLst=[];
+				try{
+					getList().then(result=>{
+						for (let key of lst) {
+							if(key.Sprache === parseInt(nr))
+								nLst.push(key)
+						};
+						resolve(nLst)
+					}).catch(e=>{reject(e)});
+				}
+				catch (e) {reject(e);}
+			});
 		}
-		let insert=(m,p,s,a)=>{
-			let val = data(m,p,s,a,1)
-			console.log(val)
-		}
-		let update=(m,p,s,a)=>{
-			let val = data(m,p,s,a,2)
-			console.log(val)
-		}
-		let del=(m,p,s,a)=>{
-			let val = data(m,p,s,a,3)
-			console.log(val)
-		}
-		return {getList: getList,getById: getById,fillLst:fillLst,insert:insert,update:update,del:del};
+
+		return {getList,getById,getLstByArt};
 	})();
+
 	let data = (m,p,s,a,ac) => {
-		let result;
-		let xhr = new XMLHttpRequest();
-		let url = `/api/?p=${p}&s=${s}&a=${a}&ac=${ac}`; 
-		if(ac===0){
-			xhr.open("GET", url, true);
-			xhr.setRequestHeader("Content-Type", "application/json");
-		}
-		else{
-			xhr.open("POST", url, true);
-			xhr.setRequestHeader("Content-Type", "application/json");
-		}
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {result = this.responseText}
-		};
-		var data =[]
-		if(p==1){
-			if(a==0) data =JSON.stringify([{id:m.Id,name:m.Name,desc:m.Desc}])
-			else if(a==1) data =JSON.stringify([{id:m.Id,bez:m.Name,desc:m.Desc,datum:m.Datum,edit:m.Edit}])
-			else if(a==2)data =JSON.stringify([{id:m.Id,titel:m.Name,desc:m.Desc,datum:m.Datum,edit:m.Edit}])
-			else if(a==3)data =JSON.stringify([{id:m.Id,name:m.Name,titel:m.Desc,text:m.Text,sub:m.Thema,sub_sub:m.Sub_Sprache,lang:m.Sprache,sort:m.sort,datum:m.Datum,edit:m.Edit}])
-			this.Id=id;
-			this.Name=name;
-			this.Desc=desc;
-			this.Datum=date;
-			this.Edit=edit;
-		}
-		xhr.send(data);
-		return result;
+		let prom = new Promise((resolve,reject) => {
+			try{
+				let xhr = new XMLHttpRequest();
+				let url = `${ini.CONFOBJ.url}&a=${a}&ac=${ac}`;
+				if(ac===0){xhr.open("GET", url, true)}
+				else{xhr.open("POST", url, true)}
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						let result = this.responseText;
+						resolve(result);
+					}
+				};
+				let val =[]
+				if(a==0) data =JSON.stringify([{id:m.Id,bez:m.Name,beschr:m.Beschreibung,datum:m.Datum,edit:m.Edit}])
+				else if(a==1) data =JSON.stringify([{id:m.Id,sub_desc:m.Name,spr:m.Sprache,datum:m.Datum,edit:m.Edit}])
+				else if(a==2)data =JSON.stringify([{id:m.Id,titel:m.Name,text:m.Text,sub:m.Thema,lang:m.Sprache,sort:m.sort,datum:m.Datum,edit:m.Edit}])
+				xhr.send(val);
+			}
+			catch (e) {reject(e)}
+		});
+		return prom;
 	}
 
-	return {einDao: einDao,sprDao: sprDao,subsprDao:subsprDao,temDao: temDao};
+	let insert=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,1); }
+		catch (e) { throw e; }
+	}
+
+	let update=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,2); }
+		catch (e) { throw e; }
+	}
+
+	let del=(m,p,s,a)=>{
+		try{ return data(m,p,s,a,3); }
+		catch (e) { throw e; }
+	}
+
+	return {einDao,sprDao,temDao,insert,update,del};
 })();

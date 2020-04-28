@@ -1,31 +1,144 @@
-body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial';font-size:100%}
-body>main {display:grid;grid-gap:15px;grid-template-columns:2fr 4fr;grid-template-rows:80px 40px 400px 40px;grid-template-areas:"header  header " "tl tr" "sidebar content" "footer  footer"}
+body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial';font-size:100%;color:#fff}
 #botomhead,#menu,#stl,#str,#footer,#head,#wait {color:#fff;background-color:#999;border-radius:5px}
-#right,#left {color:#fff}
-#right>section>img,#right>section>input,#right>section>textarea,#div_edit>img ,#right>section>select{border-radius:4px}
-#botomhead>section:first-child {font-size:120%;padding-top:7px;width:150px;height:25px;position:absolute;left:5px;top:40px;vertical-align:middle;text-align:center;cursor:pointer}
-#menu>section {padding-top:10px}
+#botomhead>section:first-child {padding-left:0px}
+#botomhead>section>li {padding-left:10px;}
+#botomhead>section>label:first-child {padding-left:10px}
+#botomhead>section:first-child {font-size:120%;padding-top:7px;width:150px;height:25px;position:absolute;left:0px;top:15px;padding-left:0px;vertical-align:middle;cursor:pointer}
+#menu>section {padding-top:10px;text-align:left;margin-left:10px}
 #menu>section:last-child {padding-bottom:15px}
-#head {grid-area: header;font-size:150%;text-align:center;padding-top:30px}
-#stl {grid-area:tl}
-#str { grid-area:tr}
-#stl,#str {vertical-align:middle;padding:7px;padding-left:30px;font-size:120%}
+#menu>section:hover {font-size:105%}
+#menu>section:last-child:hover {font-size:130%}
+#stl {grid-area:tl;cursor:pointer}
+#str {grid-area:tr}
 #left>ul>li {list-style-type:none;margin-bottom:20px;cursor:pointer}
 #left>ul>li>ul>li {list-style-type:none;margin:6px;margin-left:-25px;margin-top:15px}
 #left>ul>li>ul>li:first-child {margin-top:15px}
-#left_m {grid-area:sidebar;overflow-y:scroll;scroll-behavior:smooth}
-#right>section {margin-top:8px;margin-left:3px}
-#right>section>label {text-align:right;padding-right:5px;width:120px;vertical-align:top;display:inline-block}
-#right>section>input,#right>section>textarea {min-height:25px;width:400px;font-family:'Arial';font-size:100%}
-#right>section>select {width:406px;font-size:100%}
-#right>section>img {height:250px;margin-left:6px}
-#right {margin-top:20px}
-#right_m {grid-area:content;position:relative;overflow-y:scroll;scroll-behavior:smooth}
-#div_edit {margin:8px;margin-left:20px}
+#left>ul>li>ul>li>ul>li {list-style-type:none;margin:3px;margin-left:-20px;margin-top:10px}
+#left>ul>li>ul>li>ul>li:first-child {margin-top:10px}
+#left_m {grid-area:sidebar;overflow:auto;scroll-behavior:smooth}
+#div_edit {margin:8px;margin-left:5px}
 #div_edit>img {height:30px;margin-left:15px;margin-top:5px;cursor:pointer}
-#footer {grid-area:footer;padding-left:30px;padding-top:10px;font-size:100%}
+#div_edit>span:hover {font-size:190%}
+#navsec {margin-left:5px;}
+#right>section>img,#right>section>input,#right>section>textarea,#div_edit>img ,#right>section>select{border-radius:3px;font-size:100%}
+#right>section>textarea {min-height:25px;width:600px;font-family:'Arial';font-size:100%}
+#right>section>img {height:250px;margin-left:6px}
+#right {margin-top:20px;margin-bottom:10px}
+#right>section {margin-top:8px;margin-left:3px}
+#right_m {grid-area:content;position:relative;overflow:auto;scroll-behavior:smooth}
 #wait {height:0px;background-color:#444;display:none;position:absolute;top:0px;left:0px;bottom:0px;right:0px;width:100%;height:100%;line-height:500px;vertical-align:middle;text-align:center;font-size:150%}
-.topleft {position:absolute;top:0;left:0}
-.topright {position:absolute;top:0;right:0}
-.bottomleft {position:absolute;bottom:0;left:0}
-.bottomright {position:absolute;bottom:0;right:0}
+
+/*LOGIN*/
+#logdiv {height:0px;position:absolute;top:0px;left:0px;bottom:0px;right:0px;width:100%;height:100%;font-size:150%;display:flex;align-items:center;background-color:#444}
+#login {margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%)}
+#lbl_head { grid-area:head;text-align:center;vertical-align:middle;line-height:60px;background-color:#999 }
+#lbl_user { grid-area:lbln }
+#user_name { grid-area:valn }
+#lbl_pwd { grid-area:lblp }
+#user_pwd { grid-area:valp }
+#btnLogOk { grid-area:btno;margin-bottom:5px;font-size:200%;cursor:pointer;autofocus }
+#btnLogOk:hover {font-size:210%}
+#login>input,#login>label {font-size:100%}
+
+/*ERROR*/
+#errorDiv {visibility:hidden;height:0px;position:absolute;top:0px;left:0px;bottom:0px;right:0px;width:100%;height:100%;font-size:100%;display:flex;align-items: center}
+#msb {
+  display:grid;grid-gap:10px;
+  grid-template-columns:350px;
+  grid-template-rows:minmax(40px,auto) minmax(80px,auto) 40px;
+  grid-template-areas:"title" "lbl" "btn";
+  margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);
+  background-color:#444;
+  border: 1px solid #999
+}
+#lblTitle {grid-area:title;padding:10px;background-color:#999}
+#lblMsb {grid-area:lbl;padding:10px}
+#msbOk {grid-area:btn;padding:5px}
+
+/*ICONS https://fontawesome.com*/
+.btnEdit {font-size:200%;margin-top:15px;padding-right:20px}
+.btnLogout {font-size:120%;width:90%;border-top:1px solid #444;margin-top:10px;}
+.fa,.fas {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+.fa.fa-pull-left,.fas.fa-pull-left {margin-right: .3em; }
+.fa.fa-pull-right,.fas.fa-pull-right {margin-left: .3em; }
+.fa,.fas {font-family: 'Font Awesome 5 Free';font-weight: 900; }
+.far {font-family: 'Font Awesome 5 Free';font-weight: 400; }
+.fa-file:before { content: "\f15b"; }
+.fa-save:before { content: "\f0c7"; }
+.fa-trash-alt:before { content: "\f2ed"; }
+.fa-align-justify:before { content: "\f039"; }
+.fa-running:before { content: "\f70c"; }
+.fa-sign-in-alt:before { content: "\f2f6"; }
+.fa-sign-out-alt:before { content: "\f2f5"; }
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("webfonts/fa-solid-900.eot");
+  src: url("webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("webfonts/fa-solid-900.woff2") format("woff2"), url("webfonts/fa-solid-900.woff") format("woff"), url("webfonts/fa-solid-900.ttf") format("truetype"), url("webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+
+/*MEDIA QUERY*/
+@media only screen and (max-width: 599px),(min-width: 600px ) {
+  body>main {
+    display:grid;
+    grid-gap:0px;
+    grid-template-columns:100%;
+    grid-template-rows:minmax(40px, auto) 40px 40px 200px 40px auto minmax(40px, auto);
+    grid-template-areas:"header" "menu" "tl"  "sidebar" "tr" "content" "footer"}
+  #botomhead{grid-area:menu}
+  #botomhead,#menu,#stl,#str,#footer,#head,#wait {border-radius:0px}
+  #head {grid-area: header;font-size:100%;text-align:center;padding-top:5px}
+  #stl,#str {vertical-align:middle;padding:5px;padding-left:10px;padding-top:11px}
+  #right>section>label {padding-left:0px;padding-right:5px;vertical-align:top}
+  #right>section>input,#right>section>textarea,#right>section>select {display:block;width:90%}
+  #right>section>img {display:block}
+  #footer {grid-area:footer;padding-left:10px;padding-top:11px}
+  .btnMenu {font-size:200%;margin-top:15px;padding-left:10px}
+  #login {
+    display:grid;
+    grid-gap:10px;
+    grid-template-columns:420px;
+    grid-template-rows:minmax(60px, auto) 30px 40px 30px 40px 50px;
+    grid-template-areas:"head" "lbln" "valn" "lblp" "valp" "btno";
+    height:300px;
+    width:420px;
+  }
+}
+@media only screen and (min-width: 980px ),(min-width: 1260px ) {
+  body>main {
+    display:grid;
+    grid-gap:15px;
+    grid-template-columns:20% 79%;
+    grid-template-rows:80px 40px 780px 40px;
+    grid-template-areas:"header header" "tl tr" "sidebar content" "footer footer"}
+  #botomhead,#menu,#stl,#str,#footer,#head,#wait {border-radius:5px}
+  #head {grid-area: header;font-size:150%;text-align:center;padding-top:30px}
+  #div_edit {margin-left:30px}
+  #stl,#str {vertical-align:middle;padding:7px;padding-left:30px;font-size:120%}
+  #right>section>input,#right>section>textarea,#right>section>select {display:inline-block;width:600px;}
+  #right>section>img {display:inline-block}
+  #right>section>label {text-align:right;padding-right:5px;width:120px;vertical-align:top;display:inline-block}
+  #footer {grid-area:footer;padding-left:30px;padding-top:10px}
+  .btnMenu {font-size:250%;margin-top:0px;padding-left:10px}
+  #lbl_user { text-align:right }
+  #lbl_pwd { text-align:right }
+  #login {
+    display:grid;
+    grid-gap:10px;
+    grid-template-columns:120px 300px;
+    grid-template-rows:minmax(60px, auto) 40px 40px 50px;
+    grid-template-areas:"head head" "lbln valn" "lblp valp" "btnc btno";
+    height:230px;
+    width:450px;
+  }
+}

@@ -9,42 +9,42 @@ let dom=(function(){
 		constructor(id,name,desc,date,edit){
 			this.Id=id;
 			this.Name=name;
-			this.Desc=desc;
+			this.Beschreibung=desc;
 			this.Datum=date;
 			this.Edit=edit;
-		}		
+		}
 		toString(){return `[${this.Id}] ${this.Name}`;}
 	}
+
 	class f_eintrag extends f_basic
 	{
-		constructor(id,name,desc,val,thema,sub_spr,spr,date,edit){
-			super(id,name,desc,date,edit);			
+		constructor(id,name,desc,text,thema,spr,sort,date,edit){
+			super(id,name,desc,date,edit);
 			this.Thema=thema;
-			this.Sub_Sprache=sub_spr;
 			this.Sprache=spr;
-			this.Text=val;			
-		}	
+			this.Sort=sort;
+			this.Text=text;
+		}
 		toString(){return super.toString();}
 	}
+
 	class f_thema extends f_basic
 	{
-		constructor(id,name,desc,date,edit){
-			super(id,name,desc,date,edit)
-		}	
+		constructor(id,name,sprache,date,edit){
+			super(id,name,'',date,edit);
+			this.Sprache=sprache;
+		}
 		toString(){return super.toString();}
 	}
-	class f_sub_thema extends f_basic
+
+	class f_sprache extends f_basic
 	{
 		constructor(id,name,desc,date,edit){
 			super(id,name,desc,date,edit);
 		}
 		toString(){return super.toString();}
 	}
-	class f_sprache extends f_basic
-	{
-		constructor(id,name,desc,date,edit){super(id,name,desc,date,edit)}	
-		toString(){return super.toString();}
-	}
+
 	/*REQUIRED for MENU*/
 	class menubar extends f_basic
 	{
@@ -53,12 +53,7 @@ let dom=(function(){
 			this.type=type;
 			this.dsRules=[];
 		}
-	}	
-	return {
-		f_eintrag:f_eintrag,
-        f_thema:f_thema,
-		f_sub_thema:f_sub_thema,
-		f_sprache:f_sprache,
-		menubar:menubar
-    }; 
+	}
+
+	return {f_eintrag,f_thema,f_sprache,menubar};
 })();

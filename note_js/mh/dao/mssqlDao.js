@@ -1,9 +1,11 @@
-"use strict";
-exports.mssqlDao=(function(){
+module.exports=( function()  {
+	"use strict";
+	const sql = require("mssql");
 	let getConf=(p)=>{
-		const config={user:'michi',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snip',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
+		const config={user:'xxx',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snipp',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
 		return config;
 	}
+
 	let getQueryStr=(p,a)=>{
 		let val=''
 		if(p==0){//Fitness App
@@ -18,16 +20,32 @@ exports.mssqlDao=(function(){
 			if(a==0)//f_sprache
 				val='select id,bez,beschr,datum,edit from Lang order by bez'
 			else if(a==1)//f_sub_sprache
-				val='select id,sub_desc,spr,datum,edit from Sub_lang order by sub_desc'
-			else if(a==2)//f_thema
-				val='select id,titel,sub_lang,dat,edit from Sub_sub_lang order by titel'
-			else if(a==3)//f_eintrag
-				val='select tc.id,ss.titel,tc.text,tc.sub_sub,sl.id sub,l.id lang,tc.sort,tc.datum,tc.edit from Text_content tc inner join Sub_sub_lang ss on ss.id=tc.sub_sub inner join Sub_lang sl on sl.Id = ss.sub_lang inner join Lang l on l.id = sl.spr order by ss.titel'
+				val='select id,titel,spr,datum,edit from f_thema order by titel'
+			else if(a==2)//f_eintrag
+				val='select id,titel,text,lang,sub,sort,datum,edit from f_eintrag order by lang,sub,titel'
 		}
 		return val
 	}
-	let insert=async (m,p,a)=>{}
-	let update=async (m,p,a)=>{}
-	let del=async (m,p,a)=>{}
-	return {insert:insert,update:update,del:del,getQueryStr:getQueryStr,getConf:getConf};
+
+	let getData=(p,a)=>{
+		let prom = new Promise((resolve,reject) => {
+			try{
+				sql.connect(getConf(p)).then(pool => {
+					return pool.request().query(getQueryStr(p,a));
+				}).then(result => {
+					sql.close();
+					resolve(result.recordset);
+				}, rej=>{
+					reject(rej);
+				}).catch(err => {reject(rej)})
+			}
+			catch(err){reject(err)}
+		});
+		return prom;
+	}
+
+	let insert=(m,p,a)=>{}
+	let update=(m,p,a)=>{}
+	let del=(m,p,a)=>{}
+	return {insert,update,del,getData};
 })();

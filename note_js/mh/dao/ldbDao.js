@@ -1,4 +1,4 @@
-exports.ldbDao = (function () {
+module.exports = ( function () {
   "use strict";
   const low = require('lowdb'),FileAsync = require('lowdb/adapters/FileAsync');
 	let adapter,db;
@@ -13,8 +13,7 @@ exports.ldbDao = (function () {
 			else if(p==1){
 				if(a==0) db.get('f_sprache').push(m).write();
 				else if(a==1) db.get('f_sub_thema').push(m).write();
-				else if(a==2) db.get('f_thema').push(m).write();
-				else if(a==3) db.get('f_eintrag').push(m).write();
+				else if(a==2) db.get('f_eintrag').push(m).write();
 			}
 		}
 	}
@@ -29,8 +28,7 @@ exports.ldbDao = (function () {
 		else if(p==1){
 			if(a==0) db.get('f_sprache').find({id:m.id}).assign({bez:m.bez,beschr:m.beschr,datum:m.datum,edit:m.edit}).write();
 			else if(a==1) db.get('f_sub_thema').find({id:m.id}).assign({sub_desc:m.sub_desc,spr:m.spr,datum:m.datum,edit:m.edit}).write();
-			else if(a==2) db.get('f_thema').find({id:m.id}).assign({titel:m.titel,sub_lang:m.sub_lang,datum:m.datum,edit:m.edit}).write();
-			else if(a==3) db.get('f_eintrag').find({id:m.id}).assign({titel:m.titel,text:m.text,sub_sub:m.sub_sub,sub:m.sub,lang:m.lang,sort:m.sort,datum:m.datum,edit:m.edit}).write();
+			else if(a==2) db.get('f_eintrag').find({id:m.id}).assign({titel:m.titel,text:m.text,sub:m.sub,lang:m.lang,sort:m.sort,datum:m.datum,edit:m.edit}).write();
 		}
 	}
 
@@ -44,8 +42,7 @@ exports.ldbDao = (function () {
 		else if(p==1){
 			if(a==0) db.get('f_sprache').remove({id:m.id}).write();
 			else if(a==1) db.get('f_sub_thema').remove({id:m.id}).write();
-			else if(a==2) db.get('f_thema').remove({id:m.id}).write();
-			else if(a==3) db.get('f_eintrag').remove({id:m.id}).write();
+			else if(a==2) db.get('f_eintrag').remove({id:m.id}).write();
 		}
 	}
 
@@ -60,8 +57,7 @@ exports.ldbDao = (function () {
 		else if(p==1){
 			if(a==0) val=db.get('f_sprache').value();
 			else if(a==1) val=db.get('f_sub_thema').value();
-			else if(a==2) val=db.get('f_thema').value();
-			else if(a==3) val=db.get('f_eintrag').value();
+			else if(a==2) val=db.get('f_eintrag').value();
 		}
 		return JSON.stringify(val);
 	}
@@ -77,8 +73,7 @@ exports.ldbDao = (function () {
 		else if(p==1){
 			if(a==0) dbVal=db.get('f_sprache').value();
 			else if(a==1) dbVal=db.get('f_sub_thema').value();
-			else if(a==2) dbVal=db.get('f_thema').value();
-			else if(a==3) dbVal=db.get('f_eintrag').value();
+			else if(a==2) dbVal=db.get('f_eintrag').value();
 		}
 		let getMax = (accu, curVal) => accu.id < curVal.id? curVal: accu;
 		let lastId = dbVal.reduce(getMax);
@@ -97,8 +92,7 @@ exports.ldbDao = (function () {
 		else if(p==1){
 			if(a==0) db.defaults({f_sprache:[]}).write();
 			else if(a==1) db.defaults({f_sub_thema:[]}).write();
-			else if(a==2) db.defaults({f_thema:[]}).write();
-			else if(a==3) db.defaults({f_eintrag:[]}).write();
+			else if(a==2) db.defaults({f_eintrag:[]}).write();
 		}
 	}
 

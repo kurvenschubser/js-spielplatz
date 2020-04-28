@@ -1,6 +1,4 @@
-/*
-Fitness Stammdaten Controler
-*/
+//Fitness Stammdaten Controler
 let cont =(function(){
 	"use strict";
 	//###### CONST ##################
@@ -11,13 +9,7 @@ let cont =(function(){
 	//###### SET ##################
 	let aktEntry;
 	let setError=(e)=>{
-		try {
-
-			//view_h.clear_r();
-			//document.getElementById('div_edit').style.visibility='hidden';
-			//document.getElementById('right').insertAdjacentHTML('beforeend',`<p><b>${e.message}</b></p>`)
-			console.log(e);
-		}
+		try { view_h.setMsb(`${ini.CONFOBJ.titel}`,e) }
 		catch (e){alert(e)}
 	}
 
@@ -37,12 +29,18 @@ let cont =(function(){
 			viewer.createForm(m);
 			view_h.setEditTitle(E_TITLE[ti].neu,E_TITLE[ti].edit,E_TITLE[ti].del);
 		}
-		catch (e) {setError(e)}
+		catch (e) { setError(e) }
 	}
 
-	let fillNForm=()=>{viewer.display(getNewModel(getAktMenu().type))}
+	let fillNForm=()=>{
+		try { viewer.display(getNewModel(getAktMenu().type)) }
+		catch (e) { setError(e) }
+	}
 
-	let set_view=async (nr)=>{getModel(nr).then(result=>{viewer.display(result)})}
+	let set_view=async (nr)=>{
+		try { getModel(nr).then(result=>{viewer.display(result)}) }
+		catch (e) { setError(e) }
+	}
 
 	//###### GET ##################
 	let getNewModel=(art)=>{
@@ -52,84 +50,79 @@ let cont =(function(){
 	}
 
 	let getModel=async(nr)=>{
-		return new Promise((resolve, reject) => {
+		let prom = new Promise((resolve, reject) => {
 			if(aktMenu==null) resolve({});
 			else{
 				let ret={};
 				try {
-					if(aktMenu.type==="f_arten") 	dao.artDao.getById(nr).then(result=>{resolve(result)});
-					else if(aktMenu.type==="f_eigenschaft") dao.egDao.getById(nr).then(result=>{resolve(result)});
-					else if(aktMenu.type==="f_geraete") dao.gerDao.getById(nr).then(result=>{resolve(result)});
+					if(aktMenu.type==="f_arten") 	dao.artDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_eigenschaft") dao.egDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_geraete") dao.gerDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
 					else {resolve({})}
 				}
-				catch (e) {setError(e)}
+				catch (e) { reject(e) }
 			}
 		});
+		return prom;
 	}
 
 	let getList=async (art)=>{
-		try {
-			return new Promise((resolve, reject) => {
-				if(art=="f_arten") dao.artDao.getList().then(result=>{resolve(result)});
-				else if(art=="f_eigenschaft") dao.egDao.getList().then(result=>{resolve(result)});
-				else if(art=="f_geraete") dao.gerDao.getList().then(result=>{resolve(result)});
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(art=="f_arten") dao.artDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_eigenschaft") dao.egDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_geraete") dao.gerDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
 				else resolve([]);
-			});
-		}
-		catch (e) {setError(e)}
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
 
 	let getLstByArt=async(nr)=>{
-		try {
-				return new Promise((resolve, reject) => {
-					if(aktMenu==null) return [];
-					if(aktMenu.type==="f_geraete"){
-						dao.gerDao.getLstByArt(nr).then(result=>{
-							resolve(result)});
-					}
-					else{resolve([])}
-				});
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(aktMenu==null) return [];
+				if(aktMenu.type==="f_geraete") dao.gerDao.getLstByArt(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+				else{ resolve([]) }
 			}
-		catch (e) {setError(e)}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
 
-	let getMId=(m,feld)=>{if(feld=="Art") return m.Art;}
+	let getLstUsed=async(t,nr1=0,nr2=0)=>{
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(t==="f_arten") dao.gerDao.getLstUseArten().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(t==="f_geraete") dao.gerDao.getLstByArt(nr1).then(result=>{resolve(result)},rej=>{reject(rej)});
+				else{ resolve([]) }
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
+	}
 
-	let getMBild=(m,feld)=>{if(feld=="Bild") return m.Bild;}
+	let getMId=(m,feld)=>{ if(feld=="Art") return m.Art}
 
-	let getMEdit=(m,feld)=>{if(feld=="Edit") return m.Edit;}
+	let getMBild=(m,feld)=>{if(feld=="Bild") return m.Bild}
+
+	let getMEdit=(m,feld)=>{if(feld=="Edit") return m.Edit}
 
 	//###### insert/update/delete ##################
 	let insert=(m,p,s,a)=>{
-		let val;
-		if(p==0){
-			if(aktMenu.type==="f_arten")  val = dao.artDao.insert(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.insert(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.insert(m,p,s,a);
-		}
-		else if(p==1){}
-		return val;
+		try { return dao.insert(m,p,s,a)	}
+		catch (e) { setError(e) }
 	}
 
 	let update=(m,p,s,a)=>{
-		let val;
-		if(p==0){
-			if(aktMenu.type==="f_arten")  val = dao.artDao.update(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.update(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.update(m,p,s,a);
-		}
-		else if(p==1){}
-		return val;
+		try { return dao.update(m,p,s,a) }
+		catch (e) { setError(e) }
 	}
 
 	let del=(m,p,s,a)=>{
-		if(p==0){
-			if(aktMenu.type==="f_arten")  val = dao.artDao.del(m,p,s,a);
-			else if(aktMenu.type==="f_eigenschaft") val = dao.egDao.del(m,p,s,a);
-			else if(aktMenu.type==="f_geraete") val = dao.gerDao.del(m,p,s,a);
-		}
-		else if(p==1){}
-		return val;
+		try { return dao.del(m,p,s,a) }
+		catch (e) { setError(e) }
 	}
 
 	//###### MENU ##################
@@ -160,21 +153,54 @@ let cont =(function(){
 		}
 	}
 
-	let getAktMenu=()=>{
-		return aktMenu
-	}
+	let getAktMenu=()=>{return aktMenu}
 
 	//###### diplay rules ##################
 	let getLstForTree=(typ)=>{
-		if(typ==="f_geraete") return [{type:'f_arten'}];
+		if(typ==="f_geraete") return [{type:'f_arten',level:0},{type:'f_geraete',level:1}];
 		return [];
 	}
 
 	let getRules=(typ)=>{
-		if(typ==="f_eigenschaft")return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sortierung',art:'input',type:'number'},{feld:'Beschreibung',art:'textarea',type:'text'}];
-		else if(typ==="f_geraete")return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Beschreibung',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];
-		else if(typ==="f_arten"){return [{feld:'Name',art:'input',type:'text'},{feld:'Beschreibung',art:'textarea',type:'text'}];}
+		if(typ==="f_eigenschaft") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Farbe',art:'input',type:'color'},
+			{feld:'Sortierung',art:'input',type:'number'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
+		else if(typ==="f_geraete") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Art',art:'select',type:'f_arten'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3},
+			{feld:'Bild',art:'img',type:'text'}];
+		else if(typ==="f_arten") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
 		else return [];
+	}
+
+	//###### AUTO LOGOUT
+	let idleTime = 0;
+	let resetIdleTime=()=>{ idleTime = 0 }
+
+	let timerIncrement=()=> {
+		try{
+			idleTime = idleTime + 1;
+	    if (idleTime >= 5) {
+				idleTime=0;
+	      view_h.getLogOut();
+	    }
+		}
+		catch (e) {setError(e)}
+	}
+
+	let startTimer=()=>{
+		document.onreadystatechange = () => {
+		  setInterval(timerIncrement, 60000); // 1 minute
+		  document.onclick = e => {idleTime = 0};
+		  document.onmousemove = e => {idleTime = 0 };
+		  document.onkeypress = e => {idleTime = 0 };
+			document.onscroll  = e => {idleTime = 0 };
+		};
 	}
 
 	//###### Public ##################
@@ -198,6 +224,9 @@ let cont =(function(){
 		aktEntry,
 		insert,
 		update,
-		del
+		del,
+		startTimer,
+		resetIdleTime,
+		getLstUsed
     };
 })();

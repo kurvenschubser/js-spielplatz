@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- f_eintrag constructor(id,name,desc,val,thema,sub_spr,spr,date,edit)-->
 <DB v="1">
-<!-- //f_thema constructor(id,name,desc,sub_spr,spr,date,edit)-->
-<lst_f_thema>
-	<f_thema id='1'>
-		<name>Variable</name>
-		<desc>Definition</desc>	
-		<date>1582641949849</date>
-		<edit>1582641949849</edit>
-	</f_thema>
-	<f_thema id='2'>
-		<name>Function</name>
-		<desc>Definition</desc>	
-		<date>1582641949849</date>
-		<edit>1582641949849</edit>
-	</f_thema>
-	<f_thema id='3' >
-		<name>String</name>
-		<desc>Definition</desc>	
-		<date>1582641949849</date>
-		<edit>1582641949849</edit>
-	</f_thema>
-</lst_f_thema>
+<lst_f_eintrag>
+	<f_eintrag id='1' thema='2' spr='2'>
+		<name>#Arrow Operator</name>
+		<desc>Der Ausdruck einer Pfeilfunktion hat eine kürzere Syntax als ein Funktionsausdruck und hat kein eigenes this</desc>
+		<val>console.log(materials.map(material => material.length));</val>
+		<date>2020-04-08 07:21:47.933</date>
+		<edit>2020-04-08 07:21:47.933</edit>
+	</f_eintrag>
+	<f_eintrag id='2' thema='2' spr='2'>
+		<name>Test</name>
+		<desc>Test</desc>
+		<val>Test</val>
+		<date>2020-04-08 07:21:47.933</date>
+		<edit>2020-04-08 07:21:47.933</edit>
+	</f_eintrag>
+</lst_f_eintrag>
 </DB>
