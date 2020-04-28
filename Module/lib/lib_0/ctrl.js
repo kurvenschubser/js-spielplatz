@@ -1,6 +1,4 @@
-/*
-Fitness Stammdaten Controler
-*/
+//Fitness Stammdaten Controler
 let cont =(function(){
 	"use strict";
 	//###### CONST ##################
@@ -52,45 +50,57 @@ let cont =(function(){
 	}
 
 	let getModel=async(nr)=>{
-		return new Promise((resolve, reject) => {
+		let prom = new Promise((resolve, reject) => {
 			if(aktMenu==null) resolve({});
 			else{
 				let ret={};
 				try {
-					if(aktMenu.type==="f_arten") 	dao.artDao.getById(nr).then(result=>{resolve(result)});
-					else if(aktMenu.type==="f_eigenschaft") dao.egDao.getById(nr).then(result=>{resolve(result)});
-					else if(aktMenu.type==="f_geraete") dao.gerDao.getById(nr).then(result=>{resolve(result)});
+					if(aktMenu.type==="f_arten") 	dao.artDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_eigenschaft") dao.egDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
+					else if(aktMenu.type==="f_geraete") dao.gerDao.getById(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
 					else {resolve({})}
 				}
-				catch (e) { setError(e) }
+				catch (e) { reject(e) }
 			}
 		});
+		return prom;
 	}
 
 	let getList=async (art)=>{
-		try {
-			return new Promise((resolve, reject) => {
-				if(art=="f_arten") dao.artDao.getList().then(result=>{resolve(result)});
-				else if(art=="f_eigenschaft") dao.egDao.getList().then(result=>{resolve(result)});
-				else if(art=="f_geraete") dao.gerDao.getList().then(result=>{resolve(result)});
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(art=="f_arten") dao.artDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_eigenschaft") dao.egDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(art=="f_geraete") dao.gerDao.getList().then(result=>{resolve(result)},rej=>{reject(rej)});
 				else resolve([]);
-			});
-		}
-		catch (e) { setError(e) }
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
 
 	let getLstByArt=async(nr)=>{
-		try {
-			return new Promise((resolve, reject) => {
+		let prom = new Promise((resolve, reject) => {
+			try{
 				if(aktMenu==null) return [];
-				if(aktMenu.type==="f_geraete"){
-						dao.gerDao.getLstByArt(nr).then(result=>{
-							resolve(result)});
-				}
+				if(aktMenu.type==="f_geraete") dao.gerDao.getLstByArt(nr).then(result=>{resolve(result)},rej=>{reject(rej)});
 				else{ resolve([]) }
-			});
-		}
-		catch (e) { setError(e) }
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
+	}
+
+	let getLstUsed=async(t,nr1=0,nr2=0)=>{
+		let prom = new Promise((resolve, reject) => {
+			try{
+				if(t==="f_arten") dao.gerDao.getLstUseArten().then(result=>{resolve(result)},rej=>{reject(rej)});
+				else if(t==="f_geraete") dao.gerDao.getLstByArt(nr1).then(result=>{resolve(result)},rej=>{reject(rej)});
+				else{ resolve([]) }
+			}
+			catch (e) { reject(e) }
+		});
+		return prom;
 	}
 
 	let getMId=(m,feld)=>{ if(feld=="Art") return m.Art}
@@ -147,14 +157,24 @@ let cont =(function(){
 
 	//###### diplay rules ##################
 	let getLstForTree=(typ)=>{
-		if(typ==="f_geraete") return [{type:'f_arten'}];
+		if(typ==="f_geraete") return [{type:'f_arten',level:0},{type:'f_geraete',level:1}];
 		return [];
 	}
 
 	let getRules=(typ)=>{
-		if(typ==="f_eigenschaft") { return [{feld:'Name',art:'input',type:'text'},{feld:'Farbe',art:'input',type:'color'},{feld:'Sortierung',art:'input',type:'number'},{feld:'Beschreibung',art:'textarea',type:'text'}];}
-		else if(typ==="f_geraete") { return [{feld:'Name',art:'input',type:'text'},{feld:'Art',art:'select',type:'f_arten'},{feld:'Beschreibung',art:'textarea',type:'text'},{feld:'Bild',art:'img',type:'text'}];}
-		else if(typ==="f_arten") { return [{feld:'Name',art:'input',type:'text'},{feld:'Beschreibung',art:'textarea',type:'text'}];}
+		if(typ==="f_eigenschaft") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Farbe',art:'input',type:'color'},
+			{feld:'Sortierung',art:'input',type:'number'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
+		else if(typ==="f_geraete") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Art',art:'select',type:'f_arten'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3},
+			{feld:'Bild',art:'img',type:'text'}];
+		else if(typ==="f_arten") return [
+			{feld:'Name',art:'input',type:'text'},
+			{feld:'Beschreibung',art:'textarea',type:'text',rows:3}];
 		else return [];
 	}
 
@@ -206,6 +226,7 @@ let cont =(function(){
 		update,
 		del,
 		startTimer,
-		resetIdleTime
+		resetIdleTime,
+		getLstUsed
     };
 })();

@@ -22,12 +22,8 @@ let view_h =(function(){
 
 	let clear_r=()=>{
 		let cDiv = document.getElementById("right");
-		if(cDiv===null) {
-			return;
-		}
-		while(cDiv.firstChild) {
-			cDiv.removeChild(cDiv.firstChild);
-		}
+		if(cDiv===null) {return}
+		while(cDiv.firstChild) {cDiv.removeChild(cDiv.firstChild)}
 	}
 
 	let clear_l=()=>{
@@ -53,9 +49,7 @@ let view_h =(function(){
 		if(eleD!=null) eleD.title = txD;
 	}
 
-	let setLblStatus=(txt)=>{
-		document.getElementById("footer").innerText=ini.CONFOBJ.titel+" ["+txt+"]"
-	}
+	let setLblStatus=(txt)=>{document.getElementById("footer").innerText=ini.CONFOBJ.titel+" ["+txt+"]"}
 
 	let setWait=(a)=>{
 		if (a==true) {
@@ -71,13 +65,9 @@ let view_h =(function(){
 		}
 	}
 
-	let setLeftHead=(txt)=>{
-		document.getElementById("stl").innerText=txt;
-	}
+	let setLeftHead=(txt)=>{document.getElementById("stl").innerText=txt}
 
-	let setRightHead=(txt)=>{
-		document.getElementById("str").innerText=txt;
-	}
+	let setRightHead=(txt)=>{document.getElementById("str").innerText=txt}
 
 	let createLi=(value,l)=>{
 		let child = document.createElement("li");
@@ -111,7 +101,6 @@ let view_h =(function(){
 	}
 
 	let toggleColoumWidth=()=>{
-		//body>main
 		let el=document.getElementsByTagName('main')[0];
 		let style = getComputedStyle(el);
 		const w=parseInt(window.innerWidth);
@@ -149,11 +138,8 @@ let view_h =(function(){
 
 	let getCancelOk=(val)=>{
   	var retVal = confirm(val);
-    if( retVal == true ){
-      return true;
-    } else {
-      return false;
-    }
+    if( retVal == true ){return true}
+		else {return false}
   }
 
 	let getLogin=()=>{
@@ -198,11 +184,7 @@ let view_h =(function(){
 	}
 
 	let resetActiveLi=()=>{
-		for (let key of document.getElementById("left").getElementsByTagName("li")) {
-			//console.log(key.classList);
-			//key.classList.remove("eleli");
-			key.setAttribute('style','font-weight:normal');
-		}
+		for (let key of document.getElementById("left").getElementsByTagName("li")) {key.setAttribute('style','font-weight:normal')}
 	}
 
 	return{

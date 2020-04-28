@@ -8,8 +8,8 @@ module.exports = ( function () {
 		return result;
 	}
 
-	let insert=async (m,p,a)=>{}
-	let update=async (m,p,a)=>{}
-	let del=async (m,p,a)=>{}
+	let insert= (m,p,a)=>{}
+	let update= (m,p,a)=>{}
+	let del= (m,p,a)=>{}
 	return {insert,update,del,getData};
 })();

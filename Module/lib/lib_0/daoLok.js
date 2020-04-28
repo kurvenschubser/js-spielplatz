@@ -1,18 +1,17 @@
-/*
-Fitness Stammdaten Lokal DAO
-*/
+//Fitness Stammdaten DAO Lokal
+
 let dao=(function(){
 	"use strict";
 
 	let artDao=(function(){
 		let lst=[];
 
-		let getList=async ()=>{
+		let getList=()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
-					let fart = new dom.f_arten(1,'Kraft','Kraftsport Muskelaufbau');
+					let fart = new dom.f_arten(1,'Cardio','Ausdauer Sport');
 					lst.push(fart);
-					fart = new dom.f_arten(2,'Cardio','Ausdauer Sport');
+					fart = new dom.f_arten(2,'Kraft','Kraftsport Muskelaufbau');
 					lst.push(fart);
 					resolve(lst)
 				}
@@ -20,7 +19,7 @@ let dao=(function(){
 			});
 		}
 
-		let getById=async (nr)=>{
+		let getById=(nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
 				try{
@@ -45,7 +44,7 @@ let dao=(function(){
 		function(){
 		let lst=[];
 
-		let getList=async ()=>{
+		let getList=()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
 					let eg = new dom.f_eigenschaft(1,'Kg','Kilogramm',hlp.rgb2hex(255,255,0),5);
@@ -58,7 +57,7 @@ let dao=(function(){
 			});
 		}
 
-		let getById=async (nr)=>{
+		let getById=(nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
 				try{
@@ -81,8 +80,9 @@ let dao=(function(){
 
 	let gerDao=(function(){
 		let lst=[];
+		let lstUseArt;
 
-		let getList=async ()=>{
+		let getList=()=>{
 			return new Promise((resolve, reject) => {
 				if(lst===null || lst.length ==0){
 					let ge = new dom.f_geraete(7,'Seilzug','Seilzugbeschreibung',1,'seilzug.jpg');
@@ -95,7 +95,7 @@ let dao=(function(){
 			});
 		}
 
-		let getById=async (nr)=>{
+		let getById=(nr)=>{
 			return new Promise((resolve, reject) => {
 				let ret={};
 				try{
@@ -113,7 +113,7 @@ let dao=(function(){
 			});
 		}
 
-		let getLstByArt=async(nr)=>{
+		let getLstByArt=(nr)=>{
 			return new Promise((resolve, reject) => {
 				let nLst=[];
 				try{
@@ -129,14 +129,51 @@ let dao=(function(){
 			});
 		}
 
-		return {getList,getById,getLstByArt};
+		let getLstUseArten=()=>{
+			return new Promise((resolve, reject) => {
+				try{
+					if (!lstUseArt) {
+						lstUseArt=[];
+						getList().then(result=>{
+							artDao.getList().then(val=>{
+								let lstArt=val;
+								for (let keyart of lstArt) {
+									for (let key of result) {
+										if(key.Art === keyart.Id){
+											lstUseArt.push(keyart);
+											break;
+										}
+									};
+								};
+								resolve(lstUseArt);
+							});
+						});
+					}
+					else {
+						resolve(lstUseArt);
+					}
+				}
+				catch (e) {cont.setError(e)}
+			});
+		}
+
+		return {getList,getById,getLstByArt,getLstUseArten};
 	})();
 
-	let insert=async (m,p,s,a)=>{}
+	let insert=(m,p,s,a)=>{
+		try{return new Promise((resolve,reject) => {resolve(m.Id);})}
+		catch (e) { throw e; }
+	}
 
-	let update=async (m,p,s,a)=>{}
+	let update=(m,p,s,a)=>{
+		try{return new Promise((resolve,reject) => {resolve(m.Id);})}
+		catch (e) { throw e; }
+	}
 
-	let del=async (m,p,s,a)=>{}
+	let del=(m,p,s,a)=>{
+		try{return new Promise((resolve,reject) => {resolve(m.Id);})}
+		catch (e) { throw e; }
+	}
 
 	return {artDao,gerDao,egDao,insert,update,del};
 })();

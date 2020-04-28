@@ -13,13 +13,15 @@ body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial
 #left>ul>li {list-style-type:none;margin-bottom:20px;cursor:pointer}
 #left>ul>li>ul>li {list-style-type:none;margin:6px;margin-left:-25px;margin-top:15px}
 #left>ul>li>ul>li:first-child {margin-top:15px}
+#left>ul>li>ul>li>ul>li {list-style-type:none;margin:3px;margin-left:-20px;margin-top:10px}
+#left>ul>li>ul>li>ul>li:first-child {margin-top:10px}
 #left_m {grid-area:sidebar;overflow:auto;scroll-behavior:smooth}
 #div_edit {margin:8px;margin-left:5px}
 #div_edit>img {height:30px;margin-left:15px;margin-top:5px;cursor:pointer}
 #div_edit>span:hover {font-size:190%}
 #navsec {margin-left:5px;}
 #right>section>img,#right>section>input,#right>section>textarea,#div_edit>img ,#right>section>select{border-radius:3px;font-size:100%}
-#right>section>textarea {min-height:25px;width:400px;font-family:'Arial';font-size:100%}
+#right>section>textarea {min-height:25px;width:600px;font-family:'Arial';font-size:100%}
 #right>section>img {height:250px;margin-left:6px}
 #right {margin-top:20px;margin-bottom:10px}
 #right>section {margin-top:8px;margin-left:3px}
@@ -123,7 +125,7 @@ body {margin:5px;padding:0px;border:0px;background-color:#444;font-family:'Arial
   #head {grid-area: header;font-size:150%;text-align:center;padding-top:30px}
   #div_edit {margin-left:30px}
   #stl,#str {vertical-align:middle;padding:7px;padding-left:30px;font-size:120%}
-  #right>section>input,#right>section>textarea,#right>section>select {display:inline-block;width:400px;}
+  #right>section>input,#right>section>textarea,#right>section>select {display:inline-block;width:600px;}
   #right>section>img {display:inline-block}
   #right>section>label {text-align:right;padding-right:5px;width:120px;vertical-align:top;display:inline-block}
   #footer {grid-area:footer;padding-left:30px;padding-top:10px}
