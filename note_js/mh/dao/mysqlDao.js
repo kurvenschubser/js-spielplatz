@@ -1,19 +1,31 @@
 module.exports=( function()  {
 	"use strict";
 	const sql = require("mysql");
+	const dbConDat=require("../dbConData.js");
 	let sqlCon;
 	let getSqlCon=(p)=>{
-		if (!sqlCon) {
-			let dbName=p===0?'fitness':'snipp';
-			sqlCon = sql.createConnection({
-				host:'localhost',
-				user:'root',
-				password:'xxx',
-				database:dbName
-			});
-			sqlCon.connect( function (err) {if (err) {sqlCon=null}});
-		}
-		return sqlCon;
+		let prom = new Promise((resolve,reject) => {
+			if (!sqlCon) {
+				dbConDat.getConData(2).then(
+					val=>{
+						sqlCon = sql.createConnection({
+							host:`${val.server}`,
+							user:`${val.user}`,
+							password:`${val.pwd}`,
+							database:p===0?'fitness':'snipp'
+						});
+						sqlCon.connect( function (err) {if (err) {sqlCon=null;console.log(err);reject(err);}});
+						resolve(sqlCon);
+					},
+					rej=>{
+						reject(rej);
+					}
+				);
+			}
+			else{resolve(sqlCon)}
+		});
+
+		return prom;
 	}
 
 	let getQueryStr=(p,a)=>{
@@ -40,12 +52,19 @@ module.exports=( function()  {
 	let getData=(p,a)=>{
 		let prom = new Promise((resolve,reject) => {
 			try{
-				let con=getSqlCon(p);
-				let qur=getQueryStr(p,a);
-				con.query(qur,function (error, results, fields) {
-					if (error) reject(error);
-					resolve(results);
-				});
+				getSqlCon(p).then(
+					val=>{
+						let qur=getQueryStr(p,a);
+						val.query(qur,function (error, results, fields) {
+							sqlCon.end();
+							if (error) reject(error);
+							resolve(results);
+						});
+
+					},
+					rej=>{
+						reject(rej)
+					});
 			}
 			catch(err){reject(err)}
 		});
@@ -55,25 +74,31 @@ module.exports=( function()  {
 	let insert=(m,p,a)=>{
 		let prom = new Promise((resolve,reject) => {
 			try{
-				let con=getSqlCon(p);
-				let sqlQu;
-				if(p==0){
-					if(a==0) sqlQu=`INSERT INTO f_arten (id, name,beschreibung) VALUES (${m.id}, '${m.Name}', '${m.Desc}')`;
-					else if(a==1) sqlQu=`INSERT INTO f_eigenschaften (id, name,beschreibung,farbe,sortfield) VALUES (${m.id}, '${m.Name}','${m.Desc}','${m.Farbe}',${m.sort})`;
-					else if(a==2) sqlQu=`INSERT INTO f_geraete (id, name,beschreibung,art,bild) VALUES (${m.id}, '${m.Name}','${m.Desc}',${m.Art},'${m.bild}')`;
-				}
-				else if(p==1){
-					if(a==0) sqlQu=`INSERT INTO lang (id, bez,beschr,datum,edit) VALUES (${m.id}, '${m.bez}', '${m.beschr}', '${m.datum}', '${m.edit}')`;
-					else if(a==1) sqlQu=`INSERT INTO f_thema (id, titel,spr,datum,edit) VALUES (${m.id}, '${m.titel}', ${m.spr}, '${m.datum}', '${m.edit}')`;
-					else if(a==2) sqlQu=`INSERT INTO f_eintrag (id, titel,text,lang,sub,sort,datum,edit) VALUES (${m.id}, '${m.titel}', '${m.text}', ${m.lang}, ${m.sub}, ${m.sort}, '${m.datum}', '${m.edit}')`;
-				}
-				if (sqlQu!=='') {
-					con.query(sqlQu, function (err, result) {
-						if (err) reject(err);
-						console.log("1 record inserted", m.id);
-						resolve(`${m.id}`);
+				getSqlCon(p).then(
+					val=>{
+						let sqlQu;
+						if(p==0){
+							if(a==0) sqlQu=`INSERT INTO f_arten (id, name,beschreibung) VALUES (${m.id}, '${m.Name}', '${m.Desc}')`;
+							else if(a==1) sqlQu=`INSERT INTO f_eigenschaften (id, name,beschreibung,farbe,sortfield) VALUES (${m.id}, '${m.Name}','${m.Desc}','${m.Farbe}',${m.sort})`;
+							else if(a==2) sqlQu=`INSERT INTO f_geraete (id, name,beschreibung,art,bild) VALUES (${m.id}, '${m.Name}','${m.Desc}',${m.Art},'${m.bild}')`;
+						}
+						else if(p==1){
+							if(a==0) sqlQu=`INSERT INTO lang (id, bez,beschr,datum,edit) VALUES (${m.id}, '${m.bez}', '${m.beschr}', '${m.datum}', '${m.edit}')`;
+							else if(a==1) sqlQu=`INSERT INTO f_thema (id, titel,spr,datum,edit) VALUES (${m.id}, '${m.titel}', ${m.spr}, '${m.datum}', '${m.edit}')`;
+							else if(a==2) sqlQu=`INSERT INTO f_eintrag (id, titel,text,lang,sub,sort,datum,edit) VALUES (${m.id}, '${m.titel}', '${m.text}', ${m.lang}, ${m.sub}, ${m.sort}, '${m.datum}', '${m.edit}')`;
+						}
+						if (sqlQu!=='') {
+							val.query(sqlQu, function (err, result) {
+								val.end();
+								if (err) reject(err);
+								console.log("1 record inserted", m.id);
+								resolve(`${m.id}`);
+							});
+						}
+					},
+					rej=>{
+						reject(rej)
 					});
-				}
 			}
 			catch(err){reject(err)}
 		});
@@ -104,11 +129,17 @@ module.exports=( function()  {
 		}
 		let prom = new Promise((resolve,reject) => {
 			try{
-				let con=getSqlCon(p);
-				con.query(sqlQu,function (error, results, fields) {
-					if (error) reject(error);
-					resolve(results);
-				});
+				let con=getSqlCon(p).then(
+					val=>{
+						val.query(sqlQu,function (error, results, fields) {
+							val.end();
+							if (error) reject(error);
+							resolve(results);
+						});
+					},
+					rej=>{
+						reject(rej);
+					});
 			}
 			catch(err){reject(err)}
 		});

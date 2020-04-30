@@ -1,9 +1,31 @@
 module.exports=( function()  {
 	"use strict";
 	const sql = require("mssql");
+	const dbConDat=require("../dbConData.js");
+	let config;
 	let getConf=(p)=>{
-		const config={user:'xxx',password:'xxx',server:'ARBEIT',database:p==0?'fitnessNeu':'snipp',pool: {max:10,min:0,idleTimeoutMillis:300000},options: {encrypt: true,enableArithAbort: true}}
-		return config;
+		let prom = new Promise((resolve,reject) => {
+			if (!config) {
+				dbConDat.getConData(3).then(
+					val => {
+						config={
+							user:`${val.user}`,
+							password:`${val.pwd}`,
+							server:`${val.server}`,
+							database:p===0?'fitnessNeu':'snipp',
+							pool: {max:10,min:0,idleTimeoutMillis:300000},
+							options: {encrypt: true,enableArithAbort: true}
+						}
+						resolve(config);
+					},
+					rej => {
+						reject(rej);
+					}
+				);
+			}
+			else{resolve(config)}
+		});
+		return prom;
 	}
 
 	let getQueryStr=(p,a)=>{
@@ -30,14 +52,22 @@ module.exports=( function()  {
 	let getData=(p,a)=>{
 		let prom = new Promise((resolve,reject) => {
 			try{
-				sql.connect(getConf(p)).then(pool => {
-					return pool.request().query(getQueryStr(p,a));
-				}).then(result => {
-					sql.close();
-					resolve(result.recordset);
-				}, rej=>{
-					reject(rej);
-				}).catch(err => {reject(rej)})
+				getConf(p).then(val=>{
+					sql.connect(val).then(pool => {
+						return pool.request().query(getQueryStr(p,a));
+					}).then(result => {
+						sql.close();
+						resolve(result.recordset);
+					}, rej=>{
+						sql.close();
+						reject(rej);
+					}).catch(err => {
+						sql.close();
+						reject(rej)
+					})
+				},rej=>{
+					reject(rej)
+				})
 			}
 			catch(err){reject(err)}
 		});
