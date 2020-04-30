@@ -18,7 +18,7 @@ const StorageType = {
 	//hier entscheiden welcher Speicher verwendet werden soll
 	//storage: 0 = Dao | 1 = Xml | 2 = MySql | 3 = MsSql | 4 = LowDb | 5 = MongoDb
 //##################################################################*/
-let ini=(function(app = AppType.Fitness, storage = StorageType.LowDb){
+let ini=(function(app = AppType.Programmierhilfe, storage = StorageType.LowDb){
 	//Liste der Programme
 	const LST_CONFOBJ=[
 	{id:0,titel:"Fitness - Stammdaten",v:"0.9.0.0",stor:{}},

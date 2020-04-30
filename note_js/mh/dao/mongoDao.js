@@ -1,7 +1,8 @@
-module.exports=( function()  {
+module.exports=(function () {
 	"use strict";
 	const mgo = require("mongodb").MongoClient;
-	let url=`mongodb+srv://js-michi:xxx.mongodb.net/test?retryWrites=true&w=majority`;
+	const dbConDat=require("../dbConData.js");
+	let url="";
 
 	let getData=(p,a)=>{
 		let prom = new Promise((resolve,reject) => {
@@ -19,27 +20,34 @@ module.exports=( function()  {
 					else if(a==1) {coll="f_thema";sort={ sub_desc: 1 };}
 					else if(a==2) {coll="f_eintrag";sort={ titel: 1 };}
 				}
-				mgo.connect(url, function(err, db) {
-					if (err) {reject(err);return;}
-					if (!db) {reject(Error('Die Verbindung zu MongoDb ist fehlgeschlagen!'));return;}
-					var dbo = db.db(dbs);
-					if (!dbo) {reject(Error(`Die Verbindung zur MongoDb Datenbank ${dbs} ist fehlgeschlagen!`));return;}
-					dbo.collection(coll).find({}).sort(sort).toArray(function(err, result) {
-						if (err) {reject (err);return;}
-						resolve(result);
-						db.close();
+				dbConDat.getConData(5).then(
+					val => {
+						url=`${val.server}://${val.user}:${val.pwd}.mongodb.net/test?retryWrites=true&w=majority`;
+						mgo.connect(url,{useNewUrlParser: true, useUnifiedTopology: true}, function(err, db) {
+							if (err) {reject(err);return;}
+							if (!db) {reject(Error('Die Verbindung zu MongoDb ist fehlgeschlagen!'));return;}
+							var dbo = db.db(dbs);
+							if (!dbo) {reject(Error(`Die Verbindung zur MongoDb Datenbank ${dbs} ist fehlgeschlagen!`));return;}
+							dbo.collection(coll).find({}).sort(sort).toArray(function(err, result) {
+								if (err) {reject (err);return;}
+								db.close();
+								resolve(result);
+							});
+						});
+					}, rej=>{
+						reject(rej)
 					});
-				});
 			}
 			catch(err){reject(err)}
 		});
 		return prom;
 	}
 
+
 	let insert=(m,p,a)=>{
 		let prom = new Promise((resolve,reject) => {
 			try{
-				let con=getSqlCon(p);
+
 				let sqlQu;
 				if(p==0){
 					if(a==0) sqlQu=`INSERT INTO f_arten (id, name,beschreibung) VALUES (${m.id}, '${m.Name}', '${m.Desc}')`;
@@ -51,13 +59,8 @@ module.exports=( function()  {
 					else if(a==1) sqlQu=`INSERT INTO f_thema (id, sub_desc,spr,datum,edit) VALUES (${m.id}, '${m.sub_desc}', ${m.spr}, '${m.datum}', '${m.edit}')`;
 					else if(a==2) sqlQu=`INSERT INTO f_eintrag (id, titel,text,lang,sub,sort,datum,edit) VALUES (${m.id}, '${m.titel}', '${m.text}', ${m.lang}, ${m.sub}, ${m.sort}, '${m.datum}', '${m.edit}')`;
 				}
-				if (sqlQu!=='') {
-					con.query(sqlQu, function (err, result) {
-						if (err) {reject(err);return;}
-						console.log("1 record inserted", m.id);
-						resolve(`${m.id}`);
-					});
-				}
+
+				reject(Error("MongoDb Insert ist nicht definiert!"));
 			}
 			catch(err){reject(err)}
 		});
@@ -87,10 +90,7 @@ module.exports=( function()  {
 					else if(a==2)//f_eintrag
 						sqlQu=`delete from f_eintrag where Id = ${m.Id}`
 				}
-				con.query(sqlQu,function (error, results, fields) {
-					if (error) {reject(error);return;}
-					resolve(results);
-				});
+				reject(Error("MongoDb Delete ist nicht definiert!"));
 			}
 			catch(err){reject(err)}
 		});
@@ -117,11 +117,7 @@ module.exports=( function()  {
 		}
 		let prom = new Promise((resolve,reject) => {
 			try{
-				let con=getSqlCon(p);
-				con.query(sqlQu,function (error, results, fields) {
-					if (error) {reject(error);return;}
-					resolve(results);
-				});
+				reject(Error("MongoDb getMaxId ist nicht definiert!"));
 			}
 			catch(err){reject(err)}
 		});
